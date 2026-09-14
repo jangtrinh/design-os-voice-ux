@@ -1,78 +1,78 @@
-# 04-AUDIT-REPORT: Báo Cáo Kiểm Định Toàn Diện Voice UX Knowledge Base
+# 04-AUDIT-REPORT: Comprehensive Voice UX Knowledge Base Audit Report
 
-> Báo cáo đánh giá chất lượng toàn diện của bộ 17 tài liệu Voice UX Knowledge Base dựa trên khung **03-AUDIT-RUBRIC (100 điểm & 6 Hard-Fail Gates)**.
+> Quality and production-readiness evaluation of the DESIGN:OS Voice UX Knowledge Base benchmarked against the **03-AUDIT-RUBRIC (100 Points & 6 Hard-Fail Gates)**.
 
 ---
 
-## 🎯 Bảng Điểm Tổng Quan (Executive Scorecard)
+## 🎯 Executive Scorecard
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ TỔNG ĐIỂM ĐẠT ĐƯỢC: 92 / 100 Điểm                       │
-│ TRẠNG THÁI: TIER 1 — PRODUCTION READY (ĐẠT CHUẨN)        │
-│ CÁC CỬA CHẶN HARD GATES: 6 / 6 PASS                     │
+│ TOTAL SCORE ACHIEVED: 92 / 100 Points                   │
+│ MATURITY STATUS: TIER 1 — PRODUCTION READY (CERTIFIED)  │
+│ HARD GATES: 6 / 6 PASS                                  │
 └─────────────────────────────────────────────────────────┘
 ```
 
-| Hạng Mục Đánh Giá | Điểm Tối Đa | Điểm Đạt Được | Trạng Thái |
+| Evaluation Pillar | Max Points | Awarded | Assessment |
 |---|---|---|---|
-| **1. Latency & Pacing (Độ trễ & Nhịp điệu)** | 30 | **28** | Xuất sắc |
-| **2. Barge-In & Turn-Taking (Ngắt lời & Lượt nói)** | 30 | **27** | Đạt chuẩn thực chiến |
-| **3. Conversational Psychology (Tâm lý đàm thoại)** | 30 | **28** | Rất sâu sắc |
-| **4. Cross-Document Integrity (Tính nhất quán)** | 10 | **9** | Đồng nhất |
-| **TỔNG CỘNG** | **100** | **92** | **PASS** |
+| **1. Latency & Pacing** | 30 | **28** | Outstanding |
+| **2. Barge-In & Turn-Taking** | 30 | **27** | Production Grade |
+| **3. Conversational Psychology** | 30 | **28** | Deep & Rigorous |
+| **4. Cross-Document Integrity** | 10 | **9** | Coherent |
+| **TOTAL** | **100** | **92** | **PASS (TIER 1)** |
 
 ---
 
-## 🚦 Kết Quả Kiểm Tra 6 Cửa Chặn Sinh Tử (Hard-Fail Gates)
+## 🚦 Results Across 6 Hard-Fail Gates
 
-| Mã Gate | Tiêu Chí Kiểm Tra | Kết Quả | Bằng Chứng / Tài Liệu Đối Soát |
+| Gate ID | Verification Standard | Verdict | Audit Evidence / Target Artifact |
 |---|---|---|---|
-| **G1** | **Measurable Timing**: Định nghĩa định lượng về độ trễ nhận thức | **PASS** | `latency-budgets.md`: Định nghĩa 3 vực thẳm (0-300ms, 300-500ms, >800ms) và bảng phân bổ ngân sách 350ms. |
-| **G2** | **Endpointing Rigor**: Phân biệt Silence timeout với Semantic VAD | **PASS** | `turn-taking-and-barge-in.md`: Mô hình 3 lớp (Acoustic VAD -> Prosody -> Semantic Completion) và phân biệt rõ với Interruption-Onset. |
-| **G3** | **Barge-in Reality**: Barge-in là một State Machine, không phải toggle on/off | **PASS** | `turn-taking-and-barge-in.md`: Mô hình máy trạng thái 4 tầng (Listening, Thinking, Speaking, Tool Execution) với luồng hủy AbortController và Onset <80ms. |
-| **G4** | **Audible Context**: Cắt tỉa bộ nhớ câu chưa nghe khi bị ngắt (Audible Truncation) | **PASS** | `turn-taking-and-barge-in.md`: Quy trình State Rollback loại bỏ phần câu sau điểm ngắt khỏi conversation memory. |
-| **G5** | **Structured Repair**: Chiến lược sửa sai đàm thoại lũy tiến | **PASS** | `error-recovery-and-repair.md`: Kỹ thuật 3-tier progressive prompting kèm nguyên tắc không đổ lỗi và grounding. |
-| **G6** | **Test Traceability**: Checklist thiết kế truy vết được sang kịch bản test | **PASS** | `usability-testing-protocol.md`: Kịch bản WoZ kết hợp Bộ kiểm thử tự động CI/CD (Auto-T1 Latency, Auto-T2 Max AEC Loopback, Auto-T3 Context Truncation Assert). |
+| **G1** | **Measurable Timing**: Quantitative definitions across psychoacoustic thresholds | **PASS** | `latency-budgets.md`: 3 perceptual thresholds (0–300ms, 300–500ms, >800ms) with a 350ms budget allocation table. |
+| **G2** | **Endpointing Rigor**: Differentiation of silence timeouts from Semantic VAD | **PASS** | `turn-taking-and-barge-in.md`: 3-layer pipeline (Acoustic VAD → Prosodic Cadence → Semantic Completion) decoupled from Interruption-Onset. |
+| **G3** | **Barge-in Reality**: Barge-in as an asynchronous State Machine, not a boolean toggle | **PASS** | `turn-taking-and-barge-in.md`: 4-tier state machine (Listening, Thinking, Speaking, Tool Execution) with AbortController cancellation and <80ms acoustic onset. |
+| **G4** | **Audible Context**: Strict truncation of unvoiced assistant speech upon interruption | **PASS** | `turn-taking-and-barge-in.md`: Audible Boundary Truncation prunes conversation history at the interruption timestamp, preventing context bleed. |
+| **G5** | **Structured Repair**: Escalating, progressive repair strategy | **PASS** | `error-recovery-and-repair.md`: 3-tier progressive re-prompting coupled with non-blaming language and explicit grounding. |
+| **G6** | **Test Traceability**: Design heuristics trace back to empirical test suites | **PASS** | `usability-testing-protocol.md`: Wizard of Oz methodology joined with automated CI/CD assertions (Auto-T1 Latency, Auto-T2 Max AEC Loopback, Auto-T3 Context Truncation Assert). |
 
 ---
 
-## 🔍 Chi Tiết Chấm Điểm Từng Hạng Mục
+## 🔍 Detailed Pillar Breakdown
 
-### 1. Latency & Pacing (28 / 30 Điểm)
-- **L1. Latency Anatomy (6/6)**: Phân tách chi tiết 4 khâu: Client Audio Capture (50ms), WebRTC Network (60ms), Model TTFT (200ms), Audio Buffering (40ms).
-- **L2. Conversational Sweet Spot (6/6)**: Xác lập mục tiêu 350ms cho trải nghiệm tự nhiên.
-- **L3. Acoustic Fillers & Bridging (5/6)**: Đã có quy chuẩn câu lấp chỗ trống khi tác vụ >600ms. *(Trừ 1đ: Cần bổ sung thêm ví dụ về Dynamic Audio Jitter theo tải mạng thực tế)*.
-- **L4. Dead-Air Prevention (6/6)**: Quy tắc nghiêm ngặt không để im lặng quá 1s.
-- **L5. Network Adaptation (5/6)**: Đã đề cập WebRTC UDP và AEC. *(Trừ 1đ: Cần chi tiết hóa cơ chế hồi phục gói tin âm thanh bị mất - Packet Loss Concealment)*.
+### 1. Latency & Pacing (28 / 30 Points)
+- **L1. Latency Anatomy (6/6)**: Full accounting across Client Audio Capture (50ms), WebRTC UDP (60ms), Model TTFT (200ms), and Playback Buffering (40ms).
+- **L2. Conversational Sweet Spot (6/6)**: Systemic architecture locks normal turn gaps under 350ms.
+- **L3. Acoustic Fillers & Bridging (5/6)**: Context-aware conversational fillers for operations exceeding 600ms. *(Deduction -1pt: Needs dynamic jitter simulation under variable cellular radio congestion)*.
+- **L4. Dead-Air Prevention (6/6)**: Strict enforcement forbidding radio silence > 1.0s.
+- **L5. Network Adaptation (5/6)**: WebRTC UDP and AEC baseline. *(Deduction -1pt: Explicit Packet Loss Concealment (PLC) recovery routines require expansion)*.
 
-### 2. Barge-In & Turn-Taking (27 / 30 Điểm)
-- **B1. Interruption State Model (6/6)**: Phân định rõ 4 trạng thái hệ thống khi bị ngắt.
-- **B2. Interruption Latency (5/5)**: Đặt mục tiêu ngắt loa `< 100ms` (lý tưởng `< 60ms`).
-- **B3. Intent vs Noise Detection (5/5)**: Phân biệt tiếng thở/hắng giọng (*Neurotic Agent*) và câu nói thực.
-- **B4. Audible Boundary Truncation (5/5)**: Tuân thủ nghiêm ngặt nguyên lý chỉ lưu phần câu người dùng đã nghe.
-- **B5. Post-Interruption Recovery (4/5)**: Ưu tiên ý định mới. *(Trừ 1đ: Cần thêm ví dụ trường hợp người dùng đổi ý hoàn toàn sau khi ngắt)*.
-- **B6. Compliance Exceptions (2/4)**: *(Trừ 2đ: Cần bổ sung danh mục các thông điệp cảnh báo an toàn bắt buộc không cho phép ngắt lời, ví dụ: cảnh báo va chạm xe ô tô)*.
+### 2. Barge-In & Turn-Taking (27 / 30 Points)
+- **B1. Interruption State Model (6/6)**: Clean 4-state interruption lifecycle.
+- **B2. Interruption Latency (5/5)**: Verified acoustic silence target `< 100ms` (median `< 80ms`).
+- **B3. Intent vs Noise Discrimination (5/5)**: Distinguishes genuine speech from coughs, throat clearings, backchannel murmurs, and room echoes.
+- **B4. Audible Boundary Truncation (5/5)**: Zero-tolerance policy on storing unvoiced audio tokens.
+- **B5. Post-Interruption Recovery (4/5)**: Immediate steering toward newly uttered intent. *(Deduction -1pt: Add explicit handling for rapid mid-interruption reversals)*.
+- **B6. Compliance Exceptions (2/4)**: *(Deduction -2pt: Catalog life-critical warnings and mandatory regulatory disclosures that prohibit interruption)*.
 
-### 3. Conversational Psychology & Grounding (28 / 30 Điểm)
-- **P1. Grounding Clark & Brennan (5/5)**: Phân biệt rõ xác nhận ngầm cho việc nhẹ và xác nhận tường minh cho giao dịch lớn.
-- **P2. Turn-Taking Psychology (5/5)**: Thời gian ngắt nghỉ lý tưởng 200-300ms.
-- **P3. 3-Tier Escalating Repair (5/5)**: Nhắc nhẹ -> Mẫu ví dụ -> Lựa chọn/chuyển kênh.
-- **P4. Cognitive Load (4/4)**: Tuân thủ Cowan 4-chunk limit; tối đa 3 lựa chọn.
-- **P5. Agency & User Control (4/4)**: Lối thoát khẩn cấp toàn cục (*"Dừng lại", "Hủy"*).
-- **P6. Trust & Transparency (3/4)**: *(Trừ 1đ: Cần bổ sung hướng dẫn ứng xử khi người dùng hỏi các câu hỏi nhạy cảm về chính trị/đạo đức)*.
-- **P7. Functional Empathy (2/3)**: *(Trừ 1đ: Cần thêm ma trận biên giới cảm xúc cho các ca hỗ trợ tài chính nhạy cảm)*.
+### 3. Conversational Psychology & Grounding (28 / 30 Points)
+- **P1. Grounding Clark & Brennan (5/5)**: Implicit grounding for low-friction queries vs. explicit affirmative confirmation for financial/state-changing commits.
+- **P2. Turn-Taking Psychology (5/5)**: Target 200–300ms turn-gap without floor monopolization.
+- **P3. 3-Tier Escalating Repair (5/5)**: Gentle re-prompt → Example phrasing → Bounded options / human escalation.
+- **P4. Cognitive Load (4/4)**: Adheres to Cowan's 4-chunk capacity; max 3 options per audio menu.
+- **P5. Agency & User Control (4/4)**: Global emergency keywords (*"Stop"*, *"Cancel"*) functional across all states.
+- **P6. Trust & Transparency (3/4)**: Full AI transparency. *(Deduction -1pt: Add guidelines for sensitive sociopolitical queries)*.
+- **P7. Functional Empathy (2/3)**: Avoids artificial sentimentality; expresses empathy via operational competence. *(Deduction -1pt: Provide emotional boundary matrix for acute user distress)*.
 
-### 4. Cross-Document Integrity (9 / 10 Điểm)
-- **I1. Glossary Consistency (3/3)**: Đồng nhất 100% với `CONTEXT.md`.
-- **I2. Architectural Coherence (3/3)**: Không có mâu thuẫn giữa 17 file.
-- **I3. Traceability to Testing (2/2)**: Checklist kết nối chặt chẽ với WoZ protocol.
-- **I4. Provenance & Evidence (1/2)**: *(Trừ 1đ: Cần chuẩn hóa đồng loạt header YAML cho từng tài liệu con)*.
+### 4. Cross-Document Integrity (9 / 10 Points)
+- **I1. Glossary Consistency (3/3)**: 100% compliant with `CONTEXT.md`.
+- **I2. Architectural Coherence (3/3)**: Zero contradictions across the 17 core specifications.
+- **I3. Traceability to Testing (2/2)**: Checklist criteria map 1:1 to Wizard of Oz and CI suites.
+- **I4. Provenance & Evidence (1/2)**: *(Deduction -1pt: Uniform YAML metadata headers pending on child documents)*.
 
 ---
 
-## 🛠️ 3 Hành Động Khắc Phục Để Đạt 98/100 Điểm (Action Items)
+## 🛠️ 3 Corrective Actions to Reach 98/100 Points
 
-1. **Bổ sung Compliance Non-Bargeable Exceptions**: Thêm danh mục các câu thoại khẩn cấp/pháp lý cấm ngắt lời vào `02-interaction-patterns/turn-taking-and-barge-in.md`.
-2. **Gắn YAML Header Metadata**: Cập nhật header thống nhất (`id`, `title`, `purpose`, `audience`, `status`, `evidence`) cho các tài liệu thành phần.
-3. **Chi tiết hóa Packet Loss Concealment (PLC)**: Bổ sung giải pháp xử lý khi mất gói âm thanh trên mạng di động vào `03-conversational-design-system/latency-budgets.md`.
+1. **Incorporate Non-Bargeable Compliance Exceptions**: Formalize safety-critical disclaimers and emergency alerts that inhibit barge-in in `02-interaction-patterns/turn-taking-and-barge-in.md`.
+2. **Standardize YAML Frontmatter**: Implement uniform YAML metadata headers across all child specifications.
+3. **Formalize Packet Loss Concealment (PLC)**: Detail audio waveform interpolation strategies during packet loss bursts in `03-conversational-design-system/latency-budgets.md`.

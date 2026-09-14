@@ -1,71 +1,71 @@
-# Tương Tác Phối Hợp Giọng Nói & Màn Hình (Multimodal Voice + Screen Handshake)
+# Multimodal Voice + Screen Handshake Architecture
 
-> "Giao diện tối ưu không phải là chỉ có giọng nói (Voice-only), cũng không phải chỉ có màn hình (GUI-only). Đó là sự phối hợp nhịp nhàng giữa hai giác quan: Miệng nói - Tai nghe - Mắt nhìn - Tay chạm." — Cheryl Platz, *Design Beyond Devices*.
+> "The optimal interface is neither pure voice nor pure visual. It is the synchronized orchestration of four human faculties: Mouth speaks, Ear listens, Eye scans, Hand touches." — Cheryl Platz, *Design Beyond Devices*.
 
 ---
 
-## 1. Ma Trận Ngữ Cảnh Sử Dụng (Contextual Attention Matrix)
+## 1. Contextual Attention Matrix
 
-Việc quyết định đưa thông tin qua Kênh Giọng Nói hay Kênh Thị Giác phụ thuộc hoàn toàn vào mức độ rảnh rỗi của mắt và tay người dùng:
+Deciding whether to route information via the auditory or visual channel is governed entirely by user availability across eye and hand modalities:
 
 ```
-                      MẮT RẢNH (Eyes-Free)       MẮT BẬN (Eyes-Busy)
-                  ┌──────────────────────────┬──────────────────────────┐
-TAY RẢNH          │ VÙNG ĐA PHƯƠNG THỨC      │ VÙNG GIỌNG NÓI ĐƠN LẺ    │
-(Hands-Free)      │ (Smart Display / Tablet) │ (Lái xe, Nấu ăn, Chạy bộ)│
-                  │ -> Nói lệnh, nhìn chi tiết│ -> 100% Âm thanh, không  │
-                  │    chạm nếu cần lướt     │    bắt nhìn màn hình     │
-                  ├──────────────────────────┼──────────────────────────┤
-TAY BẬN           │ VÙNG TRỢ LỰC GIỌNG NÓI   │ VÙNG CẤM NGUY HIỂM       │
-(Hands-Busy)      │ (Gõ phím, Bế con)        │ (Phẫu thuật, Sửa máy bay)│
-                  │ -> Ra lệnh bằng giọng,   │ -> Chỉ cảnh báo khẩn cấp,│
-                  │    mắt liếc xác nhận     │    tuyệt đối không làm   │
-                  │                          │    phân tâm              │
-                  └──────────────────────────┴──────────────────────────┘
+                          EYES-FREE                                EYES-BUSY
+          ┌────────────────────────────────────────┬────────────────────────────────────────┐
+HANDS-    │ MULTIMODAL SWEET SPOT                  │ AUDIO-FIRST / PURE VOICE               │
+FREE      │ (Smart Display / Tablet on Stand)      │ (Driving, Cooking, Running)            │
+          │ -> Voice command, glance at details,   │ -> 100% Acoustic feedback, zero        │
+          │    touch only to scroll/filter         │    demands on screen glance            │
+          ├────────────────────────────────────────┼────────────────────────────────────────┤
+HANDS-    │ VOICE-ACCELERATED GUI                  │ CRITICAL ATTENTION LOCKOUT             │
+BUSY      │ (Keyboard Input, Holding Infant)       │ (Surgery, Heavy Equipment Operation)   │
+          │ -> Voice commands, glance to verify    │ -> Emergency audio warnings only; zero │
+          │                                        │    visual or cognitive distractions    │
+          └────────────────────────────────────────┴────────────────────────────────────────┘
 ```
 
 ---
 
-## 2. Nguyên Tắc Phân Tải Hiển Thị (Visual Offloading Rules)
+## 2. Visual Offloading Rules
 
-Khi hệ thống có màn hình (Smart TV, Smartphone, Xe hơi thông minh, Loa thông minh có màn hình như Echo Show hay Nest Hub):
+When the system features an accompanying visual surface (Smart TVs, Smartphones, Automotive Infotainment Displays, Smart Displays like Echo Show or Nest Hub):
 
-### Quy Tắc 1: Voice Nói Ý Chính, Màn Hình Trưng Bày Chi Tiết
-* ❌ **Sai lầm (Đọc lại toàn bộ màn hình)**:
-  - Trợ lý ảo đọc to 10 dòng văn bản hiển thị trên màn hình. Người dùng đọc bằng mắt nhanh gấp 3 lần tốc độ nghe, nên họ sẽ cảm thấy cực kỳ sốt ruột.
-* ✅ **Chuẩn UX (Phân vai nhịp nhàng)**:
-  - **Giọng nói (Tóm lược & Kêu gọi)**: *"Mình tìm thấy 3 chuyến bay buổi sáng phù hợp nhất. Giá vé rẻ nhất là 1 triệu 2 của Vietnam Airlines."*
-  - **Màn hình (Bảng so sánh chi tiết)**: Hiển thị thẻ card so sánh giờ bay, số hiệu chuyến bay, hành lý đi kèm của cả 3 hãng.
+### Rule 1: Voice Summarizes & Prompts, Screen Carries Density
+* ❌ **Anti-Pattern (Echo Chamber / Screen Reading)**:
+  - The voice assistant reads aloud 10 lines of text already displayed. Users read visually 3x faster than auditory speech; reading aloud induces extreme impatience and cognitive friction.
+* ✅ **Production UX (Complementary Division of Labor)**:
+  - **Voice (Executive Summary & Actionable Call)**: *"I found 3 morning flights matching your schedule. The lowest fare is $120 on Delta."*
+  - **Screen (Structured Comparison Card)**: Card displaying departure times, flight numbers, stops, and baggage allowances across all 3 options.
 
-### Quy Tắc 2: Khi Nào BẮT BUỘC Phải Đẩy Lên Màn Hình?
-1. **Dữ liệu dạng bảng hoặc so sánh song song**: So sánh thông số kỹ thuật 2 dòng máy tính.
-2. **Danh sách dài hơn 3 mục**: Danh sách kết quả tìm kiếm nhà hàng, danh bạ điện thoại.
-3. **Thông tin bảo mật cao**: Số thẻ ngân hàng, mật khẩu OTP (đọc to bằng giọng nói nơi công cộng sẽ vi phạm an toàn riêng tư).
-4. **Bản đồ điều hướng phức tạp**: Sơ đồ nút giao thông ngã 5 phức tạp cần sự định vị không gian thị giác.
+### Rule 2: When Visual Offloading is Mandatory
+1. **Tabular Data or Side-by-Side Comparisons**: Spec sheets, pricing tiers, side-by-side product metrics.
+2. **Lists Exceeding 3 Items**: Restaurant search results, contact lists, multi-day weather forecasts.
+3. **Sensitive & PII Data**: Credit card numbers, account balances, one-time passcodes (broadcasting over speakers in public violates privacy and security).
+4. **Complex Spatial Navigation**: Multi-lane highway interchanges and dense urban intersections requiring 2D/3D spatial mapping.
 
 ---
 
-## 3. Quy Ước Bàn Giao Đa Kênh (The Handoff Protocol)
+## 3. The Cross-Device Handoff Protocol
 
-Khi người dùng chuyển dịch giữa các thiết bị (ví dụ: đang lái xe ra lệnh qua loa ô tô, khi đến nơi bước xuống xe mở điện thoại):
+When users transition across physical contexts and form factors (e.g., driver issues voice command to connected vehicle, arrives at destination, steps out and checks mobile device):
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Driver as Người lái xe
-    participant Car as Màn Hình Xe Hơi
+    actor Driver as Driver
+    participant Car as In-Vehicle Infotainment (IVI)
     participant Cloud as Voice Engine
-    participant Phone as Điện Thoại Di Động
+    participant Phone as Mobile Device
 
-    Driver->>Car: "Tìm quán cà phê có chỗ đỗ ô tô gần đây."
-    Car->>Cloud: Truy vấn địa điểm
-    Cloud->>Car: Hiển thị 2 gợi ý trên Taplo xe
-    Car->>Driver: "Có quán Highlands cách đây 500m có bãi xe lớn."
-    Driver->>Car: "Gửi chỉ đường và đặt chỗ trước nhé."
-    Cloud->>Phone: Bắn Notification đồng bộ thời gian thực
-    Driver->>Phone: Xuống xe, mở điện thoại -> Thấy ngay thẻ vé đặt chỗ & mã QR tại cửa quán.
+    Driver->>Car: "Find a coffee shop nearby with easy parking."
+    Car->>Cloud: Query spatial POI API
+    Cloud->>Car: Render top 2 candidates on dashboard display
+    Car->>Driver: "There's a Blue Bottle 500 meters ahead with a dedicated lot."
+    Driver->>Car: "Send directions and reserve a pickup slot."
+    Cloud->>Phone: Push synchronized real-time handoff payload
+    Driver->>Phone: Exits vehicle, unlocks phone -> Lockscreen displays reservation card & entry QR code.
 ```
 
-### Tiêu Chuẩn Thiết Kế Giao Tiếp Đa Kênh:
-- **Đồng bộ trạng thái tức thì (State Continuity)**: Nếu người dùng đang nói dở trên đồng hồ thông minh, họ có thể hoàn tất thanh toán trên điện thoại mà không cần bắt đầu lại từ đầu.
-- **Dấu hiệu định hướng trực quan (Visual Anchors)**: Khi loa thông minh cất tiếng nói về một món hàng, màn hình phải ngay lập tức làm nổi bật (highlight border) món hàng đó để ánh mắt người dùng bắt kịp nhịp nói của máy.
+### Cross-Device Design Standards
+
+- **State Continuity**: If a user initiates a workflow on a smartwatch, they can finalize authorization or payment on their phone without restarting the session.
+- **Visual Anchors**: When a voice assistant speaks about a specific item in a list, the companion display must synchronously highlight its container (glow border, elevation shift) to lock visual attention to auditory pacing.

@@ -1,38 +1,38 @@
 # 01-MANIFEST: Voice UX Knowledge Base Inventory
 
-> Bảng kiểm kê (inventory) toàn bộ các tài liệu trong Voice UX & Conversational Design Knowledge Base, phân định rõ Mục đích, Đối tượng độc giả, Trạng thái phát triển và Cơ sở chứng cứ thực nghiệm.
+> Complete inventory of all specifications in the DESIGN:OS Voice UX Knowledge Base, delineating Purpose, Target Audience, Lifecycle Status, and Empirical Evidence.
 
 ---
 
-## Bảng Kiểm Kê 17 Tài Liệu Cốt Lõi
+## Core Specification Inventory
 
-| ID | Tên Tài Liệu | Phân Loại | Mục Đích Cốt Lõi | Đối Tượng Đọc | Trạng Thái | Cơ Sở Chứng Cứ (Evidence) |
+| ID | Document | Category | Core Purpose | Target Audience | Status | Empirical Evidence Basis |
 |---|---|---|---|---|---|---|
-| **M00** | [`README.md`](./README.md) | Navigation | Master Index, bản đồ kiến trúc & phân cấp VUI Maturity Levels | Toàn team | **Stable** | Standard UX Architecture |
-| **M01** | [`CONTEXT.md`](./CONTEXT.md) | Governance | Bảng từ điển thuật ngữ chuẩn hóa (Canonical Terms vs Anti-terms) | Toàn team | **Stable** | Grice, Clark & Brennan, NNG |
-| **F01** | [`01-foundations/mental-models-and-affordance.md`](./01-foundations/mental-models-and-affordance.md) | Foundations | Giải quyết Vực thẳm thực thi (Gulf of Execution), tính vô hình & thoáng qua | Designer | **Stable** | Don Norman, Cathy Pearl |
-| **F02** | [`01-foundations/conversational-psychology.md`](./01-foundations/conversational-psychology.md) | Foundations | 4 Phương châm Grice, cấu trúc lượt lời & giới hạn 4 khối nhớ ngắn hạn | Designer, PM | **Stable** | Paul Grice (1975), Cowan (2001) |
-| **F03** | [`01-foundations/vui-heuristics.md`](./01-foundations/vui-heuristics.md) | Foundations | Chuyển dịch 10 Heuristics của Nielsen sang không gian âm thanh | Designer, QA | **Stable** | Nielsen Norman Group (NN/g) |
-| **IP01** | [`02-interaction-patterns/turn-taking-and-barge-in.md`](./02-interaction-patterns/turn-taking-and-barge-in.md) | Patterns | Cơ chế ngắt lời sub-100ms, Semantic VAD & cắt tỉa bộ nhớ (Audible Truncation) | Designer, Eng | **Validated** | Full-duplex WebRTC research |
-| **IP02** | [`02-interaction-patterns/error-recovery-and-repair.md`](./02-interaction-patterns/error-recovery-and-repair.md) | Patterns | 3-tier progressive prompting, nguyên tắc không đổ lỗi, grounding | Designer | **Stable** | Google Assistant, Conversational Analysis |
-| **IP03** | [`02-interaction-patterns/audio-feedback-and-earcons.md`](./02-interaction-patterns/audio-feedback-and-earcons.md) | Patterns | Thiết kế Earcons, sonic branding, phân bổ tần số 4 trạng thái cốt lõi | Sound Designer | **Validated** | Acoustic UX, Apple/Google Sound Design |
-| **IP04** | [`02-interaction-patterns/multimodal-handshake.md`](./02-interaction-patterns/multimodal-handshake.md) | Patterns | Bàn giao Voice + GUI, phân tải hiển thị, ma trận Hands-busy/Eyes-free | Product Designer| **Stable** | Cheryl Platz (*Design Beyond Devices*) |
-| **DS01** | [`03-conversational-design-system/persona-and-tone.md`](./03-conversational-design-system/persona-and-tone.md) | Design System | Bản đồ 4 trục persona, tránh Uncanny Valley & bẫy ELIZA, thấu cảm chức năng | Content, UX | **Stable** | Erika Hall, Reeves & Nass |
-| **DS02** | [`03-conversational-design-system/prompt-and-dialog-engineering.md`](./03-conversational-design-system/prompt-and-dialog-engineering.md) | Design System | Viết kịch bản cho đôi tai, System prompt chuẩn Voice LLM, SSML prosody | Prompt Eng, UX | **Validated** | W3C SSML 1.1, LLM System Prompts |
-| **DS03** | [`03-conversational-design-system/latency-budgets.md`](./03-conversational-design-system/latency-budgets.md) | Design System | Phân bổ ngân sách độ trễ 300ms, Acoustic Fillers & kiến trúc Native S2S | Architect, Perf | **Validated** | Psychoacoustics, LiveKit benchmarks |
-| **BM01** | [`04-benchmarks-and-case-studies/industry-benchmarks.md`](./04-benchmarks-and-case-studies/industry-benchmarks.md) | Benchmarks | So sánh thực chiến OpenAI Realtime, Gemini Live, Siri, Hume EVI, CarPlay | Toàn team | **Stable** | Empirical Benchmarking 2026 |
-| **BM02** | [`04-benchmarks-and-case-studies/open-source-repos-and-tools.md`](./04-benchmarks-and-case-studies/open-source-repos-and-tools.md) | Tooling | Khảo sát LiveKit Agents, Pipecat AI, Silero VAD, PatternFly Guidelines | Eng, Designer | **Stable** | GitHub Open-source Ecosystem |
-| **DB01** | [`05-debate-and-tradeoffs/5-persona-debate.md`](./05-debate-and-tradeoffs/5-persona-debate.md) | Strategy | Tranh biện 5 chuyên gia: STT-LLM-TTS vs S2S, Privacy, 5 cấm kỵ dùng Voice | Tech Lead, PM | **Validated** | `ak:predict` Multi-persona debate |
-| **CK01** | [`06-checklists-and-heuristics/vui-design-checklist.md`](./06-checklists-and-heuristics/vui-design-checklist.md) | Production QA | Checklist 25 tiêu chuẩn nghiệm thu trước khi release ra thị trường | QA, Tech Lead | **Production** | Industry Production Standards |
-| **CK02** | [`06-checklists-and-heuristics/usability-testing-protocol.md`](./06-checklists-and-heuristics/usability-testing-protocol.md) | Research | Quy trình test người dùng Wizard of Oz (WoZ), kịch bản 4 bước & chỉ số TCR/CER | UX Researcher | **Production** | Dahlbäck WoZ Methodology |
+| **M00** | [`README.md`](./README.md) | Navigation | Master Index, knowledge architecture & VUI Maturity Levels | All Roles | **Stable** | Standard UX Architecture |
+| **M01** | [`CONTEXT.md`](./CONTEXT.md) | Governance | Canonical glossary standard (Canonical Terms vs Anti-terms) | All Roles | **Stable** | Grice, Clark & Brennan, NN/g |
+| **F01** | [`01-foundations/mental-models-and-affordance.md`](./01-foundations/mental-models-and-affordance.md) | Foundations | Resolving the Gulf of Execution, invisibility & transience | Designers | **Stable** | Don Norman, Cathy Pearl |
+| **F02** | [`01-foundations/conversational-psychology.md`](./01-foundations/conversational-psychology.md) | Foundations | Gricean Maxims, turn structure & Cowan's 4-chunk capacity | Designers, PMs | **Stable** | Paul Grice (1975), Cowan (2001) |
+| **F03** | [`01-foundations/vui-heuristics.md`](./01-foundations/vui-heuristics.md) | Foundations | Translating Nielsen's 10 Heuristics to acoustic environments | Designers, QA | **Stable** | Nielsen Norman Group (NN/g) |
+| **IP01** | [`02-interaction-patterns/turn-taking-and-barge-in.md`](./02-interaction-patterns/turn-taking-and-barge-in.md) | Patterns | Sub-100ms barge-in, Semantic VAD & Audible Boundary Truncation | Designers, Eng | **Validated** | Full-duplex WebRTC research |
+| **IP02** | [`02-interaction-patterns/error-recovery-and-repair.md`](./02-interaction-patterns/error-recovery-and-repair.md) | Patterns | 3-tier progressive re-prompting, non-blaming error culture | Designers | **Stable** | Google Assistant, Conversation Analysis |
+| **IP03** | [`02-interaction-patterns/audio-feedback-and-earcons.md`](./02-interaction-patterns/audio-feedback-and-earcons.md) | Patterns | Earcon design, sonic branding, 4-state acoustic frequency allocation | Sound Designers | **Validated** | Acoustic UX, Apple/Google Sound Design |
+| **IP04** | [`02-interaction-patterns/multimodal-handshake.md`](./02-interaction-patterns/multimodal-handshake.md) | Patterns | Voice + GUI coordination, visual offloading, hands-busy matrix | Product Designers | **Stable** | Cheryl Platz (*Design Beyond Devices*) |
+| **DS01** | [`03-conversational-design-system/persona-and-tone.md`](./03-conversational-design-system/persona-and-tone.md) | Design System | 4-axis persona framework, avoiding Uncanny Valley & ELIZA effect | Content, UX | **Stable** | Erika Hall, Reeves & Nass |
+| **DS02** | [`03-conversational-design-system/prompt-and-dialog-engineering.md`](./03-conversational-design-system/prompt-and-dialog-engineering.md) | Design System | Writing for the ear, Voice LLM System Prompt standard, SSML | Prompt Eng, UX | **Validated** | W3C SSML 1.1, LLM System Prompts |
+| **DS03** | [`03-conversational-design-system/latency-budgets.md`](./03-conversational-design-system/latency-budgets.md) | Design System | 300ms latency budgeting, acoustic fillers & Native S2S architectures | Architects, Perf | **Validated** | Psychoacoustics, LiveKit benchmarks |
+| **BM01** | [`04-benchmarks-and-case-studies/industry-benchmarks.md`](./04-benchmarks-and-case-studies/industry-benchmarks.md) | Benchmarks | Empirical tear-downs of OpenAI Realtime, Gemini Live, Siri, Hume, CarPlay | All Roles | **Stable** | Empirical Benchmarking 2026 |
+| **BM02** | [`04-benchmarks-and-case-studies/open-source-repos-and-tools.md`](./04-benchmarks-and-case-studies/open-source-repos-and-tools.md) | Tooling | Survey of LiveKit Agents, Pipecat AI, Silero VAD, PatternFly | Eng, Designers | **Stable** | GitHub Open-source Ecosystem |
+| **DB01** | [`05-debate-and-tradeoffs/5-persona-debate.md`](./05-debate-and-tradeoffs/5-persona-debate.md) | Strategy | 5-expert debate: STT-LLM-TTS vs S2S, privacy, and voice anti-patterns | Tech Leads, PMs | **Validated** | Multi-persona strategic review |
+| **CK01** | [`06-checklists-and-heuristics/vui-design-checklist.md`](./06-checklists-and-heuristics/vui-design-checklist.md) | Production QA | 25-item production readiness checklist | QA, Tech Leads | **Production** | Industry Production Standards |
+| **CK02** | [`06-checklists-and-heuristics/usability-testing-protocol.md`](./06-checklists-and-heuristics/usability-testing-protocol.md) | Research | Wizard of Oz (WoZ) user testing protocol, 4-step script, TCR/CER metrics | UX Researchers | **Production** | Dahlbäck WoZ Methodology |
 
 ---
 
-## Quy Ước Nhãn Chứng Cứ Trong Tài Liệu
+## Evidence Classification Tags
 
-Để đảm bảo tính trung thực kỹ thuật và tránh việc biến giả định chủ quan thành "best practice", mọi luận điểm trong Knowledge Base được phân cấp bằng 4 nhãn:
+To prevent subjective bias from being masqueraded as universal truth, every claim across this Knowledge Base is explicitly categorized under one of four epistemological tags:
 
-- `[FACT]`: Sự thật vật lý, sinh học thính giác hoặc tâm lý học đã được khoa học chứng minh qua thí nghiệm (ví dụ: Cowan 4-chunk limit, độ trễ nhận thức 200ms).
-- `[RULE]`: Quy tắc thiết kế bắt buộc không được vi phạm (ví dụ: cấm danh sách âm thanh quá 3 mục, cấm đọc mã số thẻ ngân hàng nơi công cộng).
-- `[RECOMMENDATION]`: Đề xuất kinh nghiệm dựa trên thực tế triển khai sản phẩm hàng đầu (ví dụ: dùng xưng hô "Mình - Bạn", đặt ngưỡng VAD wait 800ms).
-- `[OPEN QUESTION]`: Vấn đề mở hoặc nan đề kỹ thuật còn đang tranh luận (ví dụ: mô hình speech-to-speech có nên nhại cảm xúc khóc/cười của người dùng hay không).
+- `[FACT]`: A proven physical, psychoacoustic, physiological, or neurological truth verified by empirical science (e.g., Cowan's 4-chunk working memory ceiling, 200ms human conversational turn-gap).
+- `[RULE]`: An inviolable design constraint whose breach precipitates catastrophic failure (e.g., prohibiting audio menus > 3 items, forbidding spoken card credentials in public).
+- `[RECOMMENDATION]`: An industry-tested heuristic synthesized from production deployments (e.g., conversational pacing, 800ms adaptive silence thresholds).
+- `[OPEN QUESTION]`: An active technical or philosophical debate with legitimate trade-offs on multiple sides (e.g., whether speech-to-speech agents should mirror human emotional extremes such as crying or laughter).

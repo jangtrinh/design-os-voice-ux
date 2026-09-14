@@ -1,71 +1,71 @@
-# Tâm Lý Học Hội Thoại & Giới Hạn Nhận Thức (Conversational Psychology & Cognitive Load)
+# Conversational Psychology & Cognitive Load
 
-> Giao tiếp qua giọng nói không phải là việc đọc to văn bản trên màn hình. Đó là một vũ điệu tâm lý học hai chiều tuân theo các quy ước văn hóa, phương châm hợp tác và dung lượng ghi nhớ nghiêm ngặt của não bộ.
+> Spoken dialogue is not merely text read aloud from a screen. It is a two-way psychological dance governed by cultural conventions, cooperative principles, and the strict limits of human working memory.
 
 ---
 
-## 1. Bốn Phương Châm Hội Thoại Của Grice (Gricean Maxims)
+## 1. Gricean Maxims of Conversation
 
-Triết gia ngôn ngữ học Paul Grice đã đúc kết **Nguyên lý Hợp tác (Cooperative Principle)** với 4 phương châm căn bản điều phối hành vi giao tiếp tự nhiên:
+Linguistic philosopher Paul Grice formulated the **Cooperative Principle**, defined by four foundational maxims that govern natural human communication:
 
 ```mermaid
 graph TD
-    G[Nguyên Lý Hợp Tác Grice] --> M1[1. Phương Châm Lượng - Quantity]
-    G --> M2[2. Phương Châm Chất - Quality]
-    G --> M3[3. Phương Châm Quan Hệ - Relation]
-    G --> M4[4. Phương Châm Cách Thức - Manner]
+    G[Grice's Cooperative Principle] --> M1[1. Maxim of Quantity]
+    G --> M2[2. Maxim of Quality]
+    G --> M3[3. Maxim of Relation]
+    G --> M4[4. Maxim of Manner]
 
-    M1 --> D1["Cung cấp vừa đủ thông tin, không thừa không thiếu"]
-    M2 --> D2["Chỉ nói điều có bằng chứng xác thực, không bịa đặt"]
-    M3 --> D3["Nói điều có liên quan trực tiếp đến ngữ cảnh"]
-    M4 --> D4["Nói gãy gọn, mạch lạc, tránh mập mờ"]
+    M1 --> D1["Provide sufficient information: neither too little nor too much"]
+    M2 --> D2["Speak only what is substantiated; do not hallucinate"]
+    M3 --> D3["Be relevant; directly address the conversational context"]
+    M4 --> D4["Be perspicuous: concise, orderly, and unambiguous"]
 ```
 
-### Ứng Dụng 4 Phương Châm Vào Thiết Kế VUI:
+### Applying Gricean Maxims to VUI Design:
 
-| Phương Châm | Lỗi Thường Gặp Của AI Voice | Cách Thiết Kế Chuẩn UX |
-|-------------|------------------------------|------------------------|
-| **1. Maxim of Quantity** | Nói tràng giang đại hải, đọc cả đoạn văn bản 200 từ khiến người nghe mệt mỏi. | Giới hạn câu trả lời trong **1-3 câu ngắn** (dưới 30 từ cho mỗi lượt nói). |
-| **2. Maxim of Quality** | Ảo giác (Hallucination), tự tin phát biểu thông tin sai lệch về số liệu hoặc chính sách. | Khi không chắc chắn, thừa nhận giới hạn và đề xuất cách tra cứu an toàn. |
-| **3. Maxim of Relation** | Trả lời lạc đề, đưa thêm các lời khuyên không được yêu cầu. | Đi thẳng vào câu trả lời trực tiếp trước, mở rộng ngữ cảnh sau nếu người dùng muốn. |
-| **4. Maxim of Manner** | Sử dụng thuật ngữ kỹ thuật, đọc mã lỗi (`"Lỗi HTTP 404"`), cú pháp lủng củng. | Sử dụng ngôn ngữ giao tiếp đời thường, cấu trúc câu chủ động ngắn gọn. |
+| Maxim | Common Voice AI Failure | Canonical UX Best Practice |
+|-------|-------------------------|----------------------------|
+| **1. Maxim of Quantity** | Verbose monologues; reading 200-word text blocks that induce cognitive fatigue. | Bound responses to **1–3 concise sentences** (< 30 words per turn). |
+| **2. Maxim of Quality** | Hallucinations; stating inaccurate metrics, fabricated policies, or false confirmations with unearned confidence. | State boundaries transparently when confidence is low; offer verified lookup paths. |
+| **3. Maxim of Relation** | Tangential responses; volunteering unsolicited advice or irrelevant options. | Deliver the direct answer first; offer contextual expansion only if requested. |
+| **4. Maxim of Manner** | Technical jargon, raw HTTP error codes (`"HTTP 404 Error"`), or convoluted grammar. | Use natural spoken phrasing with active, straightforward sentence structures. |
 
 ---
 
-## 2. Giới Hạn Bộ Nhớ Đệm Âm Thanh (Echoic Memory & Cowan's 4-Chunk Limit)
+## 2. Auditory Buffer Limits: Echoic Memory & Cowan's 4-Chunk Limit
 
-Trong khi thị giác cho phép con người quét lướt và xem lại nhiều lần thì **Kênh thính giác xử lý tuần tự (Serial Processing)**:
+While vision enables scanning, rereading, and spatial indexing, **auditory processing is strictly serial**:
 
-- **Quy luật Miller (7 ± 2)**: Áp dụng cho thông tin tĩnh có hỗ trợ thị giác.
-- **Quy luật Cowan (4 ± 1 chunks)**: Dung lượng bộ nhớ làm việc thực tế của con người, đặc biệt khi tiếp nhận thông tin qua âm thanh mà không có màn hình hỗ trợ.
-- **Tác động thứ tự (Primacy & Recency Effect)**:
-  - Khi nghe một danh sách qua giọng nói, người dùng có xu hướng nhớ **mục đầu tiên** (*Primacy*) và **mục cuối cùng** (*Recency*), các mục ở giữa thường bị xóa sạch trong bộ nhớ ngắn hạn.
+- **Miller's Law (7 ± 2 items)**: Applies primarily to static, visually supported information.
+- **Cowan's Law (4 ± 1 chunks)**: The true capacity limit of human working memory, particularly in pure audio environments lacking visual offloading.
+- **Primacy & Recency Effects**:
+  - In spoken lists, listeners remember the **first item** (*Primacy*) and the **last item** (*Recency*); intermediate options are quickly overwritten in working memory.
 
-### Quy Tắc Thiết Kế Cho Danh Sách Âm Thanh (Audio Lists):
-1. **Quy tắc Tối Đa 3 Lựa Chọn**: Trong một lượt nói bằng giọng nói, **không bao giờ cung cấp quá 3 lựa chọn**.
-   - *Vi phạm*: `"Chúng tôi có 8 chi nhánh: Quận 1, Quận 3, Quận 5, Quận 7, Tân Bình, Bình Thạnh, Gò Vấp và Phú Nhuận."` (Não bộ bị quá tải ngay lập tức).
-   - *Chuẩn UX*: `"Chúng tôi có 8 chi nhánh. Gần bạn nhất là Quận 1 và Quận 3. Bạn muốn nghe tiếp các quận khác không?"`
-2. **Đưa thông tin quan trọng lên đầu hoặc cuối**: Đặt hành động phổ biến nhất ở vị trí số 1 hoặc chốt ở vị trí cuối cùng kèm câu hỏi hành động.
-3. **Cấu trúc: Nhãn trước, Mô tả sau (Category First)**: Giúp người nghe kích hoạt khung nhận thức trước khi tiếp nhận chi tiết.
-   - *Kém*: `"Nhấn 1 để nghe thông tin khuyến mãi chuyến bay đi Đà Nẵng giá 500k."`
-   - *Tốt*: `"Chuyến bay Đà Nẵng giá 500k: Hãy nói 'Chi tiết' để xem ngay."`
+### Design Principles for Audio Lists:
+1. **The Rule of Three**: Never present more than **three options** in a single voice turn.
+   - *Violation*: `"We have 8 branches: District 1, District 3, District 5, District 7, Tan Binh, Binh Thanh, Go Vap, and Phu Nhuan."` (Immediate cognitive overload).
+   - *UX Standard*: `"We have 8 locations. The closest to you are District 1 and District 3. Would you like to hear the remaining branches?"`
+2. **Anchor Critical Information**: Position the most frequent action first, or anchor it at the end immediately before the call to action.
+3. **Category First (Label before Action)**: Prime the user's mental schema before delivering the operational detail.
+   - *Poor*: `"Press 1 for promo details on round-trip flights to Da Nang starting at $50."`
+   - *Effective*: `"Da Nang flights from $50: Say 'Details' to view now."`
 
 ---
 
-## 3. Tâm Lý Học Luân Phiên Lượt Lời (Turn-Taking Dynamics)
+## 3. Turn-Taking Dynamics
 
-Theo nghiên cứu kinh điển của Sacks, Schegloff và Jefferson (1974), cuộc trò chuyện tự nhiên của con người diễn ra với khoảng ngắt nghỉ trung bình giữa hai lượt nói chỉ khoảng **200ms**:
+In seminal research by Sacks, Schegloff, and Jefferson (1974), natural human conversation operates with a mean turn-transition gap of approximately **200 ms**:
 
 ```
-Người A: "Hôm nay trời đẹp nhỉ?"  [Nghỉ ~200ms]
-Người B: "Đúng rồi, mát mẻ ghê!"
+Speaker A: "Nice weather today, isn't it?"  [~200 ms pause]
+Speaker B: "Absolutely, very refreshing!"
 ```
 
-- Nếu máy phản hồi quá nhanh (**< 100ms**): Tạo cảm giác máy móc, cướp lời, thiếu sự "suy nghĩ", gây cảm giác giật mình.
-- Nếu máy phản hồi quá chậm (**> 800ms** mà không có âm báo): Người dùng tưởng máy bị đơ hoặc micro bị ngắt, dẫn đến việc họ cất tiếng hỏi lại (`"Alo?", "Có nghe không?"`), gây ra xung đột va chạm âm thanh (*Audio Collision*).
+- **Machine response too fast (< 100 ms)**: Feels robotic, interruptive, or unthoughtful, startling the user.
+- **Machine response too slow (> 800 ms without auditory cues)**: Users suspect system freeze or dropped audio, prompting them to check in (`"Hello?", "Can you hear me?"`), which triggers destructive **audio collisions**.
 
-### Bảng Ngưỡng Nhận Thức Thời Gian Trong Hội Thoại:
-- **0 - 200ms**: Phản xạ tức thì (Backchannel cues như *"Dạ"*, *"Ừm"*).
-- **200 - 400ms**: Khoảng trễ tự nhiên lý tưởng nhất cho câu trả lời thông minh.
-- **400 - 700ms**: Chấp nhận được đối với các câu hỏi phức tạp.
-- **> 700ms**: Bắt buộc phải có **Acoustic Filler** (*"Để mình kiểm tra một chút nhé..."* hoặc âm thanh đệm nhịp nhẹ nhàng).
+### Conversational Latency Thresholds:
+- **0–200 ms**: Immediate reflexes (backchannel tokens like *"Mm-hmm"*, *"Right"*).
+- **200–400 ms**: The ideal conversational sweet spot for intelligent responses.
+- **400–700 ms**: Acceptable latency for complex generative or database queries.
+- **> 700 ms**: Requires an **Acoustic Filler** or holding tone (*"Let me look that up for you..."* or an ambient thinking chime).

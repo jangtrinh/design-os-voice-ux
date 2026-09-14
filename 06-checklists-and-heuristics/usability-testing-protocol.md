@@ -1,102 +1,102 @@
-# Quy Trình Kiểm Thử Khả Dụng VUI (Wizard of Oz Usability Protocol & Metrics)
+# VUI Usability Testing Protocol & Metrics
 
-> Phương pháp "Phù thủy xứ Oz" (*Wizard of Oz - WoZ*) là tiêu chuẩn vàng trong nghiên cứu trải nghiệm Voice UX: Một chuyên viên nghiên cứu bí mật đóng vai cỗ máy AI để tương tác với người dùng trước khi đội ngũ kỹ thuật viết dù chỉ một dòng code.
+> The "Wizard of Oz" (WoZ) methodology represents the gold standard in Voice UX empirical research: a hidden researcher simulates the conversational AI system, interacting with participants in real time before engineers write a single line of production code.
 
 ---
 
-## 1. Thiết Lập Mô Hình Phù Thủy Xứ Oz (WoZ Setup Architecture)
+## 1. Wizard of Oz Architecture & Setup
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User as Người tham gia kiểm thử (Participant)
-    participant Room as Phòng Thử Nghiệm (Micro + Loa)
-    actor Wizard as "Phù Thủy" Ẩn Danh (UX Researcher)
-    participant Console as Bảng Điều Khiển Âm Thanh (Soundboard)
+    actor User as Test Participant
+    participant Room as Acoustic Testing Lab (Mic + Speaker)
+    actor Wizard as Hidden "Wizard" (UX Researcher)
+    participant Console as Audio Soundboard & TTS Console
 
-    User->>Room: "Tôi muốn đặt vé xem phim tối nay."
-    Room->>Wizard: Truyền âm thanh người dùng nói đến tai nghe riêng
-    Note over Wizard, Console: Researcher chọn nút câu thoại định sẵn hoặc gõ text
-    Wizard->>Console: Kích hoạt câu thoại TTS đã chuẩn hóa
-    Console->>Room: Phát ra loa: "Bạn muốn xem phim hành động hay tình cảm?"
-    User->>User: Tin tưởng tuyệt đối mình đang nói chuyện với AI thật!
+    User->>Room: "I want to book movie tickets for tonight."
+    Room->>Wizard: Audio streamed to Wizard's isolated headphones
+    Note over Wizard, Console: Researcher triggers canned response button or enters prompt
+    Wizard->>Console: Dispatches normalized TTS audio clip
+    Console->>Room: Emits through lab speaker: "Would you prefer an action movie or a romance?"
+    User->>User: Fully convinced they are interacting with an autonomous AI system!
 ```
 
-### Các Thành Phần Cần Chuẩn Bị:
-1. **Phòng cách âm hoặc bàn thử nghiệm riêng biệt**: Người tham gia không nhìn thấy Researcher.
-2. **Hệ thống TTS giả lập**: Researcher gõ phím hoặc chọn nhanh các mẫu câu đã thu âm sẵn để phát ra loa phòng thử nghiệm.
-3. **Kịch bản nhiệm vụ (Task Prompts)**: Giao nhiệm vụ tự nhiên cho người dùng (ví dụ: *"Bạn hãy thử dùng giọng nói để đổi giờ chuyến bay sáng mai sang buổi chiều"*).
+### Essential Hardware & Software Components:
+1. **Acoustic Isolation**: Participant and Researcher are physically separated; the participant cannot see or directly hear the Wizard's physical actions.
+2. **Simulated Soundboard & Fast TTS Console**: Researcher triggers pre-recorded audio snippets via keyboard macros or types text prompts that are immediately verbalized through neural TTS.
+3. **Realistic Task Prompts**: Realistic, scenario-based prompts assigned to participants without dictating rigid vocal phrasing (e.g., *"Try using your voice to reschedule tomorrow morning's flight to the afternoon"*).
 
 ---
 
-## 2. Kịch Bản Điều Phối Kiểm Thử 4 Giai Đoạn (4-Stage Testing Script)
+## 2. 4-Stage Usability Testing Protocol
 
-### Giai Đoạn 1: Làm Quen & Phá Băng (Warm-up - 5 phút)
-* **Mục tiêu**: Giúp người tham gia quen với việc nói chuyện vào một cái loa hoặc thiết bị vô hình.
-* **Lời dặn Researcher**: *"Hôm nay bạn sẽ trải nghiệm một hệ thống trợ lý giọng nói mẫu. Hãy nói tự nhiên như đang nói chuyện bình thường. Nếu có gì bất tiện, đó là lỗi của hệ thống, hoàn toàn không phải lỗi của bạn."*
+### Stage 1: Warm-Up & Psychological Safety (5 minutes)
+* **Objective**: Acclimate the participant to speaking into a headless, invisible acoustic interface.
+* **Researcher Framing**: *"Today you will test a prototype voice assistant. Please speak naturally as you would in everyday conversation. If anything goes wrong, it is entirely the system's fault, never yours."*
 
-### Giai Đoạn 2: Nhiệm Vụ Luồng Suôn Sẻ (Happy Path Tasks - 10 phút)
-* Yêu cầu người dùng thực hiện các tác vụ đơn giản: tra cứu thời tiết, đặt báo thức, tìm địa điểm ăn uống.
-* **Quan sát**: Người dùng dùng từ ngữ gì? Họ có dùng cú pháp gò bó không? Tốc độ nói như thế nào?
+### Stage 2: Happy Path Execution (10 minutes)
+* Participants execute baseline tasks: checking weather forecasts, setting alarms, querying local dining recommendations.
+* **Observational Focus**: What vocabulary and syntax do participants naturally select? Do they constrain their speech artificially? What is their baseline speaking rate and pause duration?
 
-### Giai Đoạn 3: Cố Tình Chèn Tình Huống Gây Lỗi (Edge Case & Error Stress Test - 15 phút)
-* **Kỹ thuật WoZ**: "Phù thủy" cố tình kích hoạt lỗi:
-  - Cố tình im lặng 4 giây (kiểm tra phản ứng khi không có phản hồi).
-  - Cố tình nói sai 1 chi tiết nhỏ (kiểm tra xem người dùng sửa máy như thế nào).
-  - Cố tình nói dông dài (xem người dùng có ngắt lời - barge-in không).
+### Stage 3: Edge Case & Error Stress Testing (15 minutes)
+* **WoZ Injections**: The Wizard intentionally introduces simulated system failures:
+  - Injects a 4-second artificial delay (evaluates participant response to unannounced dead air).
+  - Injects a minor factual misunderstanding (evaluates how effortlessly users initiate conversational repair).
+  - Delivers an overly verbose synthetic response (tests whether the user attempts natural barge-in).
 
-### Giai Đoạn 4: Phỏng Vấn Hậu Kiểm Thử (Debrief & Post-Interview - 10 phút)
-* Đặt câu hỏi đo lường cảm xúc:
-  - *"Bạn cảm thấy giọng điệu của trợ lý như thế nào? Có lúc nào bạn thấy khó chịu hay bực mình không?"*
-  - *"Có khoảnh khắc nào bạn không biết mình phải nói gì tiếp theo không?"*
-
----
-
-## 3. Các Chỉ Số Định Lượng Đánh Giá Trải Nghiệm VUI (Voice UX Metrics)
-
-| Chỉ Số | Tên Tiếng Anh | Công Thức / Định Nghĩa | Ngưỡng Đạt Chuẩn (Benchmark) |
-|--------|---------------|------------------------|------------------------------|
-| **Tỷ Lệ Hoàn Thành Tác Vụ** | Task Completion Rate (TCR) | `(Số tác vụ thành công / Tổng số tác vụ) * 100` | **> 85%** |
-| **Số Lượt Đàm Thoại Trung Bình** | Average Turns per Task (ATT) | Số lần người và máy qua lại để chốt xong 1 việc | Càng gần con số tối ưu càng tốt (thường 2 - 4 lượt) |
-| **Tỷ Lệ Va Chạm Ngắt Lời** | Barge-in Friction Rate | Tỷ lệ số lần người dùng ngắt lời nhưng máy không nhận ra | **< 5%** |
-| **Tỷ Lệ Lạc Luồng Đàm Thoại** | Conversational Dead-end Rate | Số lần người dùng phải kêu cứu hoặc bắt đầu lại từ đầu | **< 3%** |
-| **Tỷ Lệ Lỗi Ý Niệm** | Concept Error Rate (CER) | Tỷ lệ hệ thống hiểu sai bản chất ý định (nghiêm trọng hơn lỗi chính tả WER) | **< 5%** |
+### Stage 4: Post-Test Debrief & Qualitative Interview (10 minutes)
+* Structured affective inquiry:
+  - *"How did the assistant's cadence and tone feel? Were there moments that felt frustrating or awkward?"*
+  - *"Was there any point where you felt disoriented and did not know what to say next?"*
 
 ---
 
-## 4. Thang Đo Cảm Nhận Khả Dụng Âm Thanh (SAS - Subjective Acoustic Usability Scale)
+## 3. Quantitative Voice UX Metrics
 
-Sau khi kiểm thử, người tham gia đánh giá 5 câu hỏi theo thang điểm từ 1 (Hoàn toàn không đồng ý) đến 5 (Hoàn toàn đồng ý):
-
-1. *"Trợ lý ảo phản hồi nhanh chóng và đúng lúc."*
-2. *"Các câu trả lời ngắn gọn, súc tích và dễ nhớ."*
-3. *"Tôi dễ dàng ngắt lời hoặc đổi ý mà không gặp khó khăn gì."*
-4. *"Khi có hiểu lầm, trợ lý ảo giúp tôi sửa lại vấn đề rất dễ dàng."*
-5. *"Tôi cảm thấy thoải mái và tự nhiên khi giao tiếp bằng giọng nói với hệ thống này."*
-
-👉 **Điểm trung bình mục tiêu**: **≥ 4.2 / 5.0**.
+| Metric | Formal Identifier | Definition / Formula | Target Benchmark |
+|--------|-------------------|----------------------|------------------|
+| **Task Completion Rate** | Task Completion Rate (TCR) | `(Successful Tasks / Total Tasks) * 100` | **> 85%** |
+| **Average Turns per Task** | Average Turns per Task (ATT) | Total conversational turns exchanged to settle an intent | As close to theoretical optimum as possible (typically 2–4 turns) |
+| **Barge-In Friction Rate** | Barge-In Friction Rate | Percentage of attempted user interruptions not acknowledged by system | **< 5%** |
+| **Conversational Dead-End Rate** | Conversational Dead-End Rate | Frequency of catastrophic failure requiring manual bailout or session reset | **< 3%** |
+| **Concept Error Rate** | Concept Error Rate (CER) | Frequency of semantic intent misclassification (distinct from acoustic WER) | **< 5%** |
 
 ---
 
-## 5. Quy Trình Kiểm Thử Kỹ Thuật Tự Động (Automated Technical Benchmark Testing)
+## 4. Subjective Acoustic Usability Scale (SAS)
 
-Bên cạnh phương pháp Wizard of Oz tập trung vào cảm nhận con người, hệ thống **bắt buộc phải có kịch bản kiểm thử tự động bằng máy (Automated CI/CD Test Suite)** để xác thực 3 thuộc tính kỹ thuật mà con người không thể đo bằng mắt thường:
+Following the session, participants evaluate 5 standardized statements on a 1 (Strongly Disagree) to 5 (Strongly Agree) Likert scale:
+
+1. *"The voice assistant responded promptly and at the right conversational tempo."*
+2. *"Responses were concise, easy to comprehend, and effortless to remember."*
+3. *"I could easily interrupt or change my mind without friction or delay."*
+4. *"When a misunderstanding occurred, the assistant guided me through recovery seamlessly."*
+5. *"I felt comfortable and natural communicating with this system via voice."*
+
+👉 **Target Usability Benchmark**: **Mean Score ≥ 4.2 / 5.0**.
+
+---
+
+## 5. Automated Technical Benchmark Testing (CI/CD Quality Gates)
+
+Complementing the human-centered Wizard of Oz protocol, voice products **must enforce an automated technical benchmark test suite in CI/CD pipelines** to validate three core acoustic and latency properties that cannot be measured accurately with human perception alone:
 
 ```mermaid
 graph TD
-    CI[Automated Test Runner] --> T1[Test 1: Barge-In Latency Benchmark]
-    CI --> T2[Test 2: Maximum-Volume AEC Loopback]
-    CI --> T3[Test 3: Audible Context Truncation]
+    CI[Automated CI/CD Test Runner] --> T1[Auto-T1: Acoustic Barge-In Stop Latency]
+    CI --> T2[Auto-T2: Maximum-Volume AEC Loopback]
+    CI --> T3[Auto-T3: Audible Context Truncation]
 
-    T1 --> R1["Đo timestamp: User Audio Injection -> Loa Silence (<100ms)"]
-    T2 --> R2["Phát âm lượng 100% loa; bơm tín hiệu giả; đo rò rỉ âm sang micro (< -40dB)"]
-    T3 --> R3["Chèn ngắt lời tại giây thứ 2; kiểm tra conversation memory không chứa giây 3-5"]
+    T1 --> R1["Common Clock measurement: User Audio Injection -> Acoustic Silence (<100ms)"]
+    T2 --> R2["Playback at 100% volume; inject simulated noise; verify mic bleed (< -40dBFS)"]
+    T3 --> R3["Inject barge-in at second 2; assert session state excludes seconds 3-5"]
 ```
 
-### Chi Tiết 3 Bài Test Kỹ Thuật Bắt Buộc:
+### Detailed Automated Technical Test Suite:
 
-| Bài Test | Phương Pháp Kiểm Tra | Tiêu Chuẩn Vượt Qua (Pass Criteria) |
+| Test Identifier | Empirical Verification Methodology | Mandatory Pass Criteria |
 |---|---|---|
-| **Auto-T1: Acoustic Barge-in Stop Latency** | Bơm file âm thanh ngắt lời giả lập vào luồng WebRTC khi bot đang phát loa câu 10 giây. **Đo lường trên đồng hồ dùng chung (Common Clock) từ thời điểm user cất tiếng (Onset) đến mẫu âm thanh cuối cùng thực tế phát ra khỏi DAC/màng loa (bao gồm xả sạch Audio Playback Buffer & Jitter Buffer)**. *(Lưu ý: Không chỉ đo timestamp packet mạng vì âm thanh đệm trong buffer vẫn có thể tiếp tục phát đè lên người dùng).* | `p50 < 80ms`, `p95 < 100ms` (Acoustic silence); Transport packet stop: `p50 < 40ms` |
-| **Auto-T2: Max-Volume AEC Loopback** | Cho loa phát nhạc và phát giọng nói TTS ở mức 100% volume trong phòng kín. Micro thu âm liên tục và kiểm tra qua bộ lọc AEC. | Tín hiệu tự lọt vào micro phải `< -40dBFS`; không kích hoạt false-positive VAD. |
-| **Auto-T3: Context Truncation Assert** | Bot đang đọc danh sách: *"1, 2, 3, 4, 5"*. Giả lập ngắt lời ngay khi từ *"2"* vừa phát xong. Kiểm tra object session state trong database. | Lịch sử đàm thoại `context.messages` chỉ chứa *"1, 2"*; hoàn toàn vắng mặt *"3, 4, 5"*. |
+| **Auto-T1: Acoustic Barge-In Stop Latency** | Injects a calibrated synthetic interruption audio sample into the WebRTC stream while the assistant is mid-playback of a 10-second utterance. **Measured on a Common Clock from user onset timestamp to the final acoustic sample physically exiting the DAC/speaker diaphragm (including draining OS playback & jitter buffers)**. *(Note: Measuring network transport packet cancellation alone is insufficient, as un-drained local playback buffers will continue to talk over the user).* | `p50 < 80ms`, `p95 < 100ms` (acoustic silence); Transport packet cancellation: `p50 < 40ms` |
+| **Auto-T2: Max-Volume AEC Loopback** | Streams synthetic speech and music through device speakers at 100% volume in an enclosed acoustic test chamber. Simultaneously captures continuous microphone input processed through hardware/software AEC. | Residual loopback audio bleed into microphone stream must remain `< -40dBFS`; zero false-positive VAD triggers. |
+| **Auto-T3: Audible Context Truncation Assert** | Assistant recites an enumerated prompt: *"1, 2, 3, 4, 5"*. Injects a simulated user barge-in interruption immediately after the word *"2"* is physically voiced. Asserts state against the session state database. | Conversation history in `context.messages` contains only *"1, 2"*; completely omitting unvoiced tokens *"3, 4, 5"*. |

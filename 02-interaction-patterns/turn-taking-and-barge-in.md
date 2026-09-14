@@ -1,129 +1,128 @@
-# Nghệ Thuật Luân Phiên Lượt Lời & Ngắt Lời (Turn-Taking, Barge-In & State Rollback)
+# Turn-Taking, Barge-In & State Rollback Architecture
 
-> Khác biệt căn bản giữa một "cỗ máy phát thanh" và một "người đàm thoại thực thụ" nằm ở khả năng cảm nhận thời điểm người đối diện cất tiếng và nhường lời ngay lập tức.
+> The defining boundary between a "broadcasting machine" and a "genuine conversationalist" is the ability to sense when the interlocutor speaks and yield the floor instantaneously.
 
 ---
 
-## 1. Bản Chất Của Tương Tác Hai Chiều (Full-Duplex vs Half-Duplex)
+## 1. Full-Duplex vs. Half-Duplex Interaction
 
-Trong nhiều thập kỷ, các hệ thống VUI truyền thống (như IVR tổng đài điện thoại, bộ đàm bộ đội) hoạt động ở chế độ **Half-Duplex** (Bán song công):
-- Một bên nói, một bên chỉ được nghe.
-- Người dùng bị khóa micro khi máy đang phát âm thanh.
-- Gây ra sự ức chế cùng cực khi máy đọc sai hoặc nói quá dài dòng.
+For decades, legacy VUI systems (such as telephone IVRs and push-to-talk radios) operated in **Half-Duplex** mode:
+- One party speaks while the other is forced into listen-only mode.
+- The user's microphone is muted during audio output playback.
+- This creates severe cognitive friction whenever the system misreads intent or delivers verbose prompts.
 
-Trong kỷ nguyên Voice AI hiện đại (Speech-to-Speech như OpenAI Realtime, Gemini Live), tiêu chuẩn vàng là **Full-Duplex** (Song công toàn phần):
-- Micro luôn lắng nghe liên tục trong khi loa vẫn đang phát.
-- Hệ thống có khả năng triệt tiêu tiếng vọng âm thanh (**Acoustic Echo Cancellation - AEC**) để không tự nghe lại giọng của chính mình.
+In modern Voice AI architectures (Speech-to-Speech models such as OpenAI Realtime API and Gemini Live), the engineering gold standard is **Full-Duplex**:
+- Microphones continuously sample inbound audio while speakers stream outbound audio.
+- Robust **Acoustic Echo Cancellation (AEC)** prevents the system from feeding its own output back into the automatic speech recognition (ASR) pipeline.
 
-- Micro luôn lắng nghe liên tục trong khi loa vẫn đang phát.
-- Hệ thống có khả năng triệt tiêu tiếng vọng âm thanh (**Acoustic Echo Cancellation - AEC**) để không tự nghe lại giọng của chính mình.
+### 4-State Interruption Matrix
 
-### Mô Hình Máy Trạng Thái Ngắt Lời 4 Tầng (4-State Interruption Matrix)
+Barge-in is not confined to the assistant's playback phase (`Speaking`). A production voice agent must handle interruptions across all 4 lifecycle states:
 
-Barge-in không chỉ xảy ra khi bot đang nói (Speaking). Hệ thống phải xử lý ngắt lời trên toàn bộ 4 trạng thái vòng đời tương tác:
-
-| Trạng Thái Hệ Thống | Hành Vi Ngắt Lời Của Người Dùng | Phản Ứng Kỹ Thuật & UX Của Voice Agent |
+| System State | User Interruption Behavior | Technical & UX Response |
 |---|---|---|
-| **1. Listening (Đang nghe)** | Người dùng tự sửa câu nói dở (*"Đặt vé đi Huế... à không, đi Đà Nẵng"*). | Reset bộ đệm ASR cục bộ, bóc tách thực thể mới nhất, gia hạn silence timeout thêm 600ms. |
-| **2. Thinking (Đang suy luận)** | Người dùng đổi ý hoặc nói thêm (*"Thôi không cần tìm nữa đâu"*). | Hủy lập tức luồng inference LLM (AbortController signal), chuyển sang xử lý lệnh mới, tiết kiệm chi phí token. |
-| **3. Speaking (Đang phát loa)** | Người dùng cất tiếng ngắt lời thông tin bot đang đọc. | Kích hoạt Interruption-Onset (<80ms), ngắt luồng audio ra loa, thực hiện Audible Boundary Truncation. |
-| **4. Tool/API Execution** | Người dùng hô *"Dừng lại"* khi bot đang gọi API thanh toán/đặt vé. | Chuyển sang trạng thái `cancellation-pending`, gửi tín hiệu hủy tới provider và đối soát (reconciliation): Nếu provider hủy kịp -> báo hủy thành công. Nếu provider đã commit -> chuyển sang `compensation-pending`. Cấm tự ý thông báo đang hoàn tiền trước khi provider xác nhận tiếp nhận hoàn tiền; nếu thất bại/từ chối, chuyển sang quy trình hỗ trợ tra soát kèm mã giao dịch. |
+| **1. Listening** | Mid-utterance self-repair (*"Book a flight to Austin... wait, make that Boston"*). | Flush local ASR buffer, extract latest entity, extend silence endpoint timeout by +600ms. |
+| **2. Thinking** | User changes mind or appends intent (*"Actually, never mind searching"*). | Immediately abort LLM inference stream via `AbortController` signal, ingest new prompt tokens, and minimize billable token usage. |
+| **3. Speaking** | User interrupts ongoing text-to-speech (TTS) playback. | Fire Interruption-Onset (<80ms), sever outbound audio stream, and execute Audible Boundary Truncation. |
+| **4. Tool/API Execution** | User issues *"Stop!"* while system executes external mutation (e.g., payment, booking). | Transition to `CancellationPending`. Transmit abort signal to downstream provider and reconcile: If provider cancels successfully -> confirm cancellation. If provider committed -> transition to `CompensationPending`. Never assert a refund is active until the provider confirms receipt; if rejected or failed, route to human support reconciliation with reference transaction ID. |
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Listening: User cất tiếng
+    [*] --> Listening: User starts speaking
     Listening --> Listening: Self-Repair (Reset ASR buffer)
-    Listening --> Thinking: Endpointing (User dứt câu)
+    Listening --> Thinking: Endpointing (User turn complete)
 
     Thinking --> ThinkingCancelled: Barge-in during Thinking (AbortController)
-    ThinkingCancelled --> Listening: Xử lý ý định mới
+    ThinkingCancelled --> Listening: Process new intent
 
-    Thinking --> Speaking: Bắt đầu phát âm thanh (Audio stream)
+    Thinking --> Speaking: Stream audio output
     Speaking --> SpeakingInterrupted: Barge-in (<80ms Onset)
-    SpeakingInterrupted --> AudibleTruncation: Cắt tỉa memory theo ranh giới âm
-    AudibleTruncation --> Listening: Xử lý ý định mới
+    SpeakingInterrupted --> AudibleTruncation: Prune memory to audible boundary
+    AudibleTruncation --> Listening: Process new intent
 
-    Thinking --> ToolExecution: Tác vụ gọi API ngoại vi
-    ToolExecution --> CancellationPending: Barge-in "Hủy/Dừng"
-    CancellationPending --> CancellationConfirmed: Provider xác nhận hủy kịp
-    CancellationPending --> CompensationPending: Provider đã commit (Gửi yêu cầu hoàn tiền)
-    CancellationConfirmed --> Listening: Thông báo đã hủy an toàn
-    CompensationPending --> CompensationAccepted: Provider chấp nhận hoàn tiền
-    CompensationPending --> CompensationFailed: Provider từ chối hoặc lỗi hoàn tiền
-    CompensationAccepted --> Listening: Thông báo giao dịch đã commit và lệnh hoàn tiền đã được tiếp nhận
-    CompensationFailed --> Listening: Thông báo trung thực không thể tự động hoàn tiền, chuyển tiếp hỗ trợ đối soát
+    Thinking --> ToolExecution: External API/Tool invocation
+    ToolExecution --> CancellationPending: Barge-in "Cancel/Stop"
+    CancellationPending --> CancellationConfirmed: Provider confirms cancellation
+    CancellationPending --> CompensationPending: Provider already committed (Dispatch compensation request)
+    CancellationConfirmed --> Listening: Report safe cancellation
+    CompensationPending --> CompensationAccepted: Provider accepts refund/compensation
+    CompensationPending --> CompensationFailed: Provider rejects or compensation error
+    CompensationAccepted --> Listening: Inform transaction committed and compensation queued/accepted
+    CompensationFailed --> Listening: Transparently report unable to auto-compensate, escalate to support reconciliation with transaction ID
 
-    Speaking --> Idle: Phát hết câu trọn vẹn
-    ToolExecution --> Speaking: Trả kết quả API
+    Speaking --> Idle: Sentence completes cleanly
+    ToolExecution --> Speaking: Return API result
 ```
 
 ---
 
-## 2. Hai Thất Bại Kinh Điển Của Cơ Chế Ngắt Lời (Barge-In Failure Modes)
+## 2. Classic Barge-In Failure Modes
 
-### Lỗi 1: Cỗ Xe Tăng Băng Băng (The Barrel-Ahead)
-- **Hiện tượng**: Người dùng liên tục nói: *"Khoan đã", "Dừng lại", "Sai rồi"* nhưng trợ lý ảo vẫn tiếp tục đọc vanh vách hết danh sách dài 2 phút.
-- **Hậu quả UX**: Người dùng cảm thấy bất lực, đập bàn phím hoặc cúp máy ngay lập tức.
+### Anti-Pattern 1: The Barrel-Ahead Agent
+- **Symptom**: The user repeats *"Wait"*, *"Stop"*, or *"That's incorrect"*, yet the assistant relentlessly barrels through a 2-minute spoken list.
+- **UX Consequence**: Cognitive overload, intense user helplessness, and immediate session termination.
 
-### Lỗi 2: Trợ Lý Hoang Tưởng (The Neurotic / Jumpy Agent)
-- **Hiện tượng**: VAD (Voice Activity Detection) được cài đặt quá nhạy cảm. Người dùng chỉ thở dài, hắng giọng, tiếng trẻ con khóc ở xa, hoặc một tiếng *"Ừm"* đệm nhịp, máy liền giật mình im bặt và xin lỗi: *"Tôi xin lỗi, bạn vừa nói gì cơ?"*.
-- **Hậu quả UX**: Làm gãy vụn mạch suy nghĩ của người dùng, biến cuộc trò chuyện thành một cơn ác mộng giật cục.
+### Anti-Pattern 2: The Neurotic / Jumpy Agent
+- **Symptom**: Voice Activity Detection (VAD) is over-sensitized. A sigh, throat clear, distant child cry, or backchannel affirmation (*"Mm-hmm"*) abruptly cuts audio playback, triggering: *"I'm sorry, what did you just say?"*.
+- **UX Consequence**: Disrupts conversational cadence and fragments the user's train of thought into a frustrating, stuttered exchange.
 
 ---
 
-## 3. Nhận Diện Điểm Dừng Ngữ Nghĩa (Semantic End-of-Turn Detection)
+## 3. Semantic End-of-Turn Detection
 
-Để giải quyết tình trạng "nhạy cảm quá đà", hệ thống Voice UX hiện đại không chỉ dựa vào khoảng lặng vật lý (Silence Duration) mà kết hợp **3 lớp phân tích tín hiệu**:
+To prevent hyper-sensitive cutoffs and sluggish response latencies, production Voice UX discards static silence timers in favor of a **3-tier signal analysis pipeline**:
 
 ```mermaid
 graph TD
-    RawAudio[Tín hiệu âm thanh đầu vào] --> VAD[1. Acoustic VAD: Phát hiện năng lượng giọng nói]
-    VAD --> Prosody[2. Prosodic Analysis: Phân tích cao độ & ngữ điệu]
-    Prosody --> Semantics[3. Semantic LLM: Phân tích cấu trúc ngữ pháp]
-    Semantics --> Decision{Quyết định nhường lời hay lắng nghe tiếp?}
+    RawAudio[Inbound Audio Stream] --> VAD[1. Acoustic VAD: Speech Energy & Noise Gating]
+    VAD --> Prosody[2. Prosodic Analysis: Pitch Trajectory & Cadence]
+    Prosody --> Semantics[3. Semantic LLM: Syntactic & Grammatical Completeness]
+    Semantics --> Decision{Yield floor or extend listening?}
 ```
 
-1. **Acoustic VAD (Năng lượng âm thanh)**: Xác định có giọng người thật (khử tiếng gõ bàn phím, tiếng còi xe).
-2. **Prosodic Analysis (Âm sắc & Ngữ điệu)**:
-   - Nếu cao độ đi lên ở cuối từ (Rising pitch) -> Người dùng đang ngập ngừng suy nghĩ (ví dụ: *"Tôi muốn mua một vé bay đi... ừm..."*). Hệ thống phải kiên nhẫn đợi thêm 800ms - 1.2s.
-   - Nếu cao độ đi xuống dứt khoát (Falling pitch) -> Người dùng đã kết thúc câu trọn vẹn. Hệ thống có thể phản hồi sau 250ms.
-3. **Semantic Completion (Ngữ nghĩa hoàn chỉnh)**:
-   - Mô hình ngôn ngữ đánh giá câu nói: `"Tôi muốn gửi tiền cho anh Nam số tiền là..."` -> Rõ ràng chưa hết câu, không được cướp lời!
+1. **Acoustic VAD (Energy & Waveform Filtering)**: Confirms genuine vocal formant energy while filtering non-vocal transients (keyboard clicks, passing sirens).
+2. **Prosodic Analysis (Pitch Trajectory & Intonation)**:
+   - **Rising Pitch at Word Boundary**: Indicates hesitation or mid-sentence formulation (*"I'd like to reserve a table for... um..."*). The system dynamically pads the silence timeout by 800ms – 1.2s.
+   - **Falling Pitch with Decisive Cadence**: Indicates turn completion. The system yields the floor and begins response streaming within 250ms.
+3. **Semantic Completion (Grammatical Context)**:
+   - Language model evaluates incomplete syntax: `"I want to transfer funds to John in the amount of..."` -> Grammatically incomplete clause; yielding or barging in is strictly prevented.
 
 ---
 
-## 4. Kỹ Thuật Phục Hồi Trạng Thái (State Rollback Protocol)
+## 4. State Rollback Protocol
 
-Khi người dùng ngắt lời, điều gì sẽ xảy ra với bộ nhớ và ngữ cảnh đàm thoại?
+When barge-in occurs, how does the system reconcile memory buffers and conversational state?
 
-* **Kịch bản sai lầm**: Trợ lý ảo lưu toàn bộ câu nói dang dở của mình vào lịch sử chat. Lượt sau, mô hình AI bị ảo giác hoặc tự mâu thuẫn với câu nói chưa kịp đọc hết của chính mình.
-* **Kịch bản chuẩn mực (Rollback Protocol)**:
-  1. **Xác định điểm bị cắt (Truncation Point)**: Hệ thống ghi nhận chính xác giây thứ mấy và từ ngữ nào mà loa bị dừng lại.
-  2. **Cắt tỉa bộ nhớ đệm (History Pruning)**: Lịch sử đàm thoại chỉ lưu lại phần thực tế mà người dùng đã nghe được.
-  3. **Ưu tiên ý định mới (New Intent Dominance)**: Ý định trong câu ngắt lời của người dùng sẽ ghi đè lên tác vụ cũ hoặc trở thành một nhánh phụ mới trong cây đối thoại.
+- **Naive Anti-Pattern**: The assistant appends its full, planned response text into conversation history. On subsequent turns, the LLM hallucinates context from statements the user never actually heard.
+- **Audible Boundary Rollback Protocol**:
+  1. **Identify Truncation Point**: Pinpoint the exact audio frame and token where playback was severed.
+  2. **Memory Pruning (Audible Boundary Truncation)**: Truncate dialogue context to reflect only the audio fragments physically heard by the user.
+  3. **New Intent Dominance**: Ingest the interrupting utterance as the dominant intent, superseding stale task arguments or branching into a nested sub-dialogue.
 
-### Bảng Chỉ Số Đo Lường Hiệu Quả Barge-In:
-| Chỉ Số | Ý Nghĩa | Ngưỡng Kỳ Vọng UX |
-|--------|---------|-------------------|
-| **Barge-In Latency** | Thời gian từ lúc người dùng phát âm đến lúc loa ngắt hẳn | **< 100ms** (lý tưởng < 60ms) |
-| **False Interruption Rate** | Tỷ lệ máy dừng nói do tiếng ồn môi trường hoặc tiếng thở | **< 2%** |
-| **Cut-off Frustration Score** | Điểm khảo sát người dùng về việc bị cướp lời | **< 5/100** |
+### Barge-In Performance Telemetry
+
+| Telemetry Metric | Definition | Production UX Target |
+|---|---|---|
+| **Barge-In Stop Latency** | Duration from initial user vocalization to complete speaker output cutoff | **< 100ms** (optimal < 60ms) |
+| **False Interruption Rate** | Percentage of cutoffs triggered by ambient noise, coughs, or respiration | **< 2%** |
+| **Cut-off Frustration Score** | User dissatisfaction rating resulting from premature assistant cutoffs | **< 5 / 100** |
 
 ---
 
-## 5. Ngoại Lệ Bắt Buộc CẤM Ngắt Lời (Non-Bargeable Compliance & Safety Prompts)
+## 5. Non-Bargeable Compliance & Safety Prompts
 
-Mặc dù Barge-in là quyền năng tối cao của người dùng trong 95% tình huống, có **3 trường hợp bắt buộc phải KHÓA ngắt lời** để bảo đảm an toàn sinh mạng và pháp lý:
+While full barge-in capability is paramount across 95% of interactions, **3 critical scenarios mandate temporary barge-in lockout** to ensure life safety and legal compliance:
 
-1. **Cảnh báo an toàn khẩn cấp (Emergency Alerts)**:
-   - *Ví dụ*: Cảnh báo xe sắp va chạm (*"Chú ý phanh gấp!"*), cảnh báo cháy nổ hoặc sơ cứu khẩn cấp.
-2. **Xác nhận giao dịch tài chính giá trị lớn (Irreversible High-Value Transactions)**:
-   - *Quy tắc*: **BẮT BUỘC xác nhận tường minh (Explicit Confirmation)**. Không bao giờ tự động thực thi sau tiếng bíp đếm ngược.
-   - *Ví dụ*: *"Bạn đang chuyển năm mươi triệu đồng cho tài khoản Nguyễn Văn A. Bạn có đồng ý thực hiện giao dịch này không?"*
-3. **Tuyên bố miễn trừ trách nhiệm y tế & pháp lý (Legal Disclaimers)**:
-   - *Ví dụ*: Thông điệp cảnh báo tác dụng phụ nguy hiểm của thuốc theo luật định.
+1. **Emergency & Life-Safety Alerts**:
+   - *Example*: Imminent vehicle collision warnings (*"Brake immediately!"*), fire evacuations, or acute medical instructions.
+2. **High-Value / Irreversible Financial Authorizations**:
+   - *Rule*: **Mandatory Explicit Confirmation**. Never auto-execute following a countdown tone.
+   - *Example*: *"You are authorizing a transfer of $5,000 to John Doe. Do you confirm this transaction?"*
+3. **Regulatory & Legal Disclaimers**:
+   - *Example*: Statutorily mandated medication warnings, loan APR disclosures, and non-negotiable terms.
 
-### Quy Trình Kỹ Thuật Khi Gặp Câu Thoại Non-Bargeable:
-- **Nguyên tắc cốt lõi**: Khóa ngắt lời thông thường (không để bot chuyển đề tài dở dang), **NHƯNG LUÔN DUY TRÌ MICRO Ở TRẠNG THÁI LẮNG NGHE LỆNH HỦY (Cancellation Listener)**.
-- Nếu người dùng hô to: *"HỦY", "DỪNG LẠI", "KHÔNG PHẢI"*, hệ thống **ngay lập tức hủy bỏ giao dịch/tác vụ** và dừng phát thông báo. Tuyệt đối không tắt micro làm mất quyền kiểm soát của người dùng.
-- Kích hoạt song song đèn viền màn hình (Visual Alert) và rung phản hồi (Haptic) để đồng bộ đa giác quan.
+### Technical Safeguards for Non-Bargeable Sequences
+
+- **Core Rule**: Inhibit standard intent switching (preventing the agent from abandoning mandatory disclosures mid-flight), **WHILE KEEPING AN ACTIVE CANCELLATION LISTENER ON THE MICROPHONE**.
+- If the user vocally commands *"CANCEL"*, *"ABORT"*, or *"STOP"*, the system **instantly halts the workflow** and mutes output. Never disable the microphone or revoke user agency.
+- Pair auditory prompts with visual boundary rings (Visual Alert) and synchronized haptic pulses to deliver multimodal reinforcement.

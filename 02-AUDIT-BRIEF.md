@@ -1,57 +1,57 @@
-# 02-AUDIT-BRIEF: Bối Cảnh & Định Hướng Kiểm Định Voice UX
+# 02-AUDIT-BRIEF: Voice UX Audit Context & Directives
 
-> Bản tóm tắt 1 trang xác định phạm vi áp dụng thực tế, kiến trúc kỹ thuật của hệ thống và các trọng tâm rủi ro cần soi lỗi trong đợt kiểm định Voice UX Knowledge Base.
-
----
-
-## 1. Bối Cảnh Sản Phẩm & Phạm Vi Ứng Dụng (Product Scope)
-
-- **Mục tiêu hệ thống**: Xây dựng bộ quy chuẩn thiết kế và kỹ nghệ cho các **Voice AI Agents thế hệ mới (Full-Duplex Speech-to-Speech & Multimodal)** phục vụ:
-  1. Trợ lý giọng nói đa phương thức (Smartphone / Tablet / Smart Display).
-  2. Hệ thống đàm thoại rảnh tay trong xe hơi thông minh (Automotive In-Cabin VUI).
-  3. Trợ lý ảo dịch vụ khách hàng thời gian thực (Real-time Customer Voice Support).
-- **Phạm vi loại trừ (Cố ý không bao gồm)**: Các hệ thống tổng đài bấm phím truyền thống dạng cây nhị phân tĩnh (Legacy DTMF IVR) hoặc các lệnh thoại ngoại tuyến cục bộ chỉ nhận diện 1 từ khóa (Offline Hotword Engine).
+> Executive one-page brief defining target operational scope, reference architectural stacks, and high-risk failure modes evaluated during the DESIGN:OS Voice UX audit.
 
 ---
 
-## 2. Ngăn Xếp Kỹ Thuật Tham Chiếu (Reference Voice Stack)
+## 1. Product Scope & Operational Context
 
-Hệ thống kiến thức được thiết kế để áp dụng cho hai nhóm kiến trúc đàm thoại chủ lực:
+- **System Mission**: Establish rigorous engineering and design standards for **next-generation Voice AI Agents (Full-Duplex Speech-to-Speech & Multimodal)** operating across:
+  1. Multimodal Smart Assistants (Smartphone, Tablet, Smart Displays).
+  2. In-Cabin Automotive Voice Interfaces (Hands-free, Eyes-free environments).
+  3. Real-Time Customer Voice Support & Contact Center Automation.
+- **Explicit Exclusions**: Legacy touch-tone interactive voice response (DTMF IVR tree navigation) and offline, single-keyword acoustic triggers (Offline Hotword Engines).
+
+---
+
+## 2. Reference Voice Stack Architecture
+
+The knowledge base is built to govern two predominant conversational architectures:
 
 ```
-Nhóm 1 - Native Audio-to-Audio (Khuyên dùng):
-Micro/WebRTC ──► WebAssembly VAD ──► Speech-to-Speech LLM (Gemini Live / OpenAI Realtime) ──► Low-latency Audio Stream
+Pattern 1 — Native Audio-to-Audio (Recommended):
+Mic/WebRTC ──► WebAssembly VAD ──► Speech-to-Speech Model (Gemini Live / OpenAI Realtime) ──► Low-Latency Audio Stream
 
-Nhóm 2 - Optimized Cascaded Pipeline:
-Micro ──► Silero VAD (<10ms) ──► Streaming ASR (Deepgram Nova-2) ──► Fast LLM ──► Streaming TTS (Cartesia/ElevenLabs)
+Pattern 2 — Optimized Cascaded Pipeline:
+Mic ──► Silero VAD (<10ms) ──► Streaming ASR (Deepgram Nova-2) ──► Low-Latency LLM ──► Streaming TTS (Cartesia/ElevenLabs)
 ```
 
-- **Giao thức vận chuyển**: WebRTC UDP hai chiều (Full-Duplex) có Acoustic Echo Cancellation (AEC).
-- **Ngân sách độ trễ mục tiêu**: `< 400ms` từ khi người dùng dứt lời đến khi loa phát âm thanh.
+- **Transport Layer**: Bidirectional WebRTC UDP (Full-Duplex) with Acoustic Echo Cancellation (AEC).
+- **Target Conversational Budget**: `< 400ms` total turn-gap from speech endpointing to speaker playback acoustic onset.
 
 ---
 
-## 3. Các Điểm Thất Bại Thực Tế Cần Soi Lỗi (Critical Failure Modes)
+## 3. Critical Failure Modes Evaluated
 
-Đợt audit cần tập trung bóc tách 5 "điểm mù" lớn nhất thường bị các tài liệu lý thuyết bỏ quên:
+The audit targets 5 catastrophic pitfalls frequently omitted from theoretical UX literature:
 
-1. **Bẫy va chạm ngắt lời (Barge-in Collision & State Bleed)**:
-   - Khi người dùng ngắt lời ở giây thứ 2 của câu nói 5 giây, liệu bộ nhớ hội thoại có bị "nhiễm độc" bởi 3 giây sau mà người dùng chưa hề nghe không?
-2. **Khoảng lặng chết chóc (Dead-Air Latency Gap)**:
-   - Khi hệ thống cần gọi Tool/API hoặc tra cứu RAG mất 1.5s - 2.5s, cơ chế lấp khoảng trống (Acoustic Fillers) được thiết kế như thế nào để người dùng không tưởng bị rớt mạng?
-3. **Vòng lặp sửa lỗi vô tận (Repetitive Repair Loop)**:
-   - Khi nhận diện sai (ASR misrecognition), trợ lý có bị rơi vào vòng luẩn quẩn *"Xin lỗi, bạn có thể nói lại không?"* khiến người dùng ức chế cúp máy?
-4. **Giả lập thấu cảm lố lăng (Uncanny Empathy)**:
-   - Tránh việc bot AI giả vờ khóc cười hoặc đưa ra lời khuyên y tế/tài chính sai lệch khi chưa đủ dữ liệu xác thực.
-5. **Ngộ nhận về sự hoàn hảo của giọng nói (Voice Overreach)**:
-   - Bắt người dùng nghe đọc danh sách dài, số liệu phức tạp thay vì chủ động phân tải hiển thị sang màn hình (Visual Offloading).
+1. **Barge-In Collision & State Bleed**:
+   - When a user interrupts at second 2 of a 5-second synthesized sentence, does conversation memory retain the unvoiced 3 seconds, polluting future context (`Audible Boundary Truncation`)?
+2. **Dead-Air Latency Cliff**:
+   - When external tool execution, API calls, or RAG lookups consume 1.5s–2.5s, how are acoustic fillers, earcons, and bridging prosody deployed to prevent the impression of a dropped call?
+3. **Infinite Repair Loop (The "Deaf Agent" Trap)**:
+   - When ASR misrecognition occurs, does the agent trap the user in repetitive cycles of *"Sorry, could you repeat that?"*, provoking caller abandonment?
+4. **Uncanny Empathy & Affective Overreach**:
+   - Does the agent perform artificial emotional intimacy (feigned weeping, unearned excitement) or offer speculative medical/financial advice without verified grounding?
+5. **Auditory Overreach (Forced Listening)**:
+   - Does the agent force users to ingest dense lists, coordinates, or financial transactions aurally instead of triggering proactive Visual Offloading to paired screens?
 
 ---
 
-## 4. Tiêu Chuẩn "Sẵn Sàng Ra Mắt" (Launch-Ready Criteria)
+## 4. Production Readiness Gate Criteria
 
-Một tính năng Voice AI chỉ được xem là **Production Ready** khi vượt qua:
-- **Độ trễ ngắt lời (Barge-in latency)**: `< 100ms` (User nói -> Loa ngắt ngay).
-- **Tỷ lệ hoàn thành tác vụ (TCR)**: `> 85%` trong bài test Wizard of Oz.
-- **Tính trọn vẹn ngữ cảnh (Context Integrity)**: 100% các câu nói bị ngắt được cắt tỉa theo ranh giới âm thanh thực tế (`Audible Boundary Truncation`).
-- **Lối thoát khẩn cấp toàn cục**: Nhận diện tức thì lệnh *"Dừng lại"*, *"Hủy"* ở 100% các trạng thái.
+A voice feature is certified as **Tier 1 Production Ready** only when satisfying:
+- **Acoustic Barge-In Latency**: `< 100ms` (`p50 < 80ms`) from vocal onset to DAC speaker silence.
+- **Task Completion Rate (TCR)**: `> 85%` across Wizard of Oz usability benchmarks.
+- **Contextual Memory Integrity**: 100% of interrupted turns pruned precisely at the audible boundary.
+- **Global Emergency Escape**: Zero-latency recognition of universal bail-out keywords (*"Stop"*, *"Cancel"*, *"Human"*) across 100% of system states.

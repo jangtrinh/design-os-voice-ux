@@ -1,68 +1,68 @@
-# Nền Tảng Tâm Lý & Khả Năng Thấu Thị Của Giọng Nói (Mental Models & Acoustic Affordance)
+# Mental Models & Acoustic Affordance
 
-> "Trong giao diện đồ họa (GUI), người dùng nhìn thấy những gì có thể làm. Trong giao diện giọng nói (VUI), người dùng phải tưởng tượng ra những gì hệ thống có thể nghe." — Cathy Pearl, *Designing Voice User Interfaces*.
+> "In graphical user interfaces (GUIs), users see what they can do. In voice user interfaces (VUIs), users must imagine what the system can hear." — Cathy Pearl, *Designing Voice User Interfaces*.
 
 ---
 
-## 1. Bản Chất Của Kênh Âm Thanh: Vô Hình & Thoáng Qua (Invisibility & Transience)
+## 1. The Nature of the Auditory Channel: Invisibility & Transience
 
-Khác với màn hình máy tính hay điện thoại, âm thanh sở hữu hai đặc tính cố hữu chi phối toàn bộ tâm lý người dùng:
+Unlike desktop or mobile displays, sound possesses two inherent properties that govern user psychology:
 
-1. **Tính vô hình (Invisibility / Zero Affordance)**: Không có nút bấm, không có thanh cuộn, không có menu để khám phá. Người dùng bước vào một "khoảng tối nhận thức" nếu hệ thống không chủ động định hướng.
-2. **Tính thoáng qua (Transience)**: Một từ ngữ khi được phát âm ra sẽ tan biến ngay lập tức trong không gian. Người nghe không thể "quét mắt đọc lại" như trên một trang giấy hay màn hình mà buộc phải ghi nhớ bằng bộ nhớ đệm âm thanh (*Echoic Memory*).
+1. **Invisibility (Zero Affordance)**: There are no buttons, scrollbars, or menus to explore. Users step into a cognitive void unless the system actively provides orientation.
+2. **Transience**: Once spoken, words vanish instantly into physical space. Listeners cannot "scan back and re-read" as they would on paper or screen; they must retain information using transient auditory sensory memory (*Echoic Memory*).
 
 ```mermaid
 graph LR
-    subgraph GUI ["Giao Diện Đồ Họa (GUI)"]
-        A[Nút bấm / Menu] --> B[Nhận diện trực quan]
-        B --> C[Tải nhận thức thấp]
+    subgraph GUI ["Graphical User Interface (GUI)"]
+        A[Buttons / Menus] --> B[Visual recognition]
+        B --> C[Low cognitive load]
     end
 
-    subgraph VUI ["Giao Diện Giọng Nói (VUI)"]
-        D[Không có thành phần hiển thị] --> E[Phải nhớ & tưởng tượng]
-        E --> F[Tải nhận thức cao]
+    subgraph VUI ["Voice User Interface (VUI)"]
+        D[Zero visual components] --> E[Recall & mental projection]
+        E --> F[High cognitive load]
     end
 ```
 
 ---
 
-## 2. Vực Thẳm Thực Thi Trong VUI (The Gulf of Execution)
+## 2. The Gulf of Execution in VUI
 
-Khái niệm *Gulf of Execution* của Don Norman mô tả khoảng cách giữa **ý định của người dùng** và **hành động thực tế cần làm** trên hệ thống:
+Don Norman's *Gulf of Execution* describes the cognitive gap between a **user's intent** and the **actual actions required** to execute that intent on the system:
 
-* **Trong GUI**: Nhìn thấy icon kính lúp -> biết chỗ gõ tìm kiếm -> khoảng cách hẹp.
-* **Trong VUI**: Người dùng muốn huỷ đơn hàng -> Họ không biết nên nói: `"Hủy đơn hàng"`, `"Tôi muốn xóa đơn vừa đặt"`, hay `"Hủy cái áo thun vừa mua"`. Họ sợ bị hệ thống từ chối hoặc báo lỗi.
+* **In GUI**: Spotting a magnifying glass icon -> knowing where to click and type -> narrow gulf.
+* **In VUI**: A user wants to cancel an order -> They hesitate: should they say `"Cancel order"`, `"Delete my recent purchase"`, or `"Cancel the t-shirt I just bought"`? They fear system rejection or unrecoverable error states.
 
-### Cách Thu Hẹp Vực Thẳm Thực Thi Trong VUI:
-- **Lời mớm định hướng (Verbal Breadcrumbs)**: Luôn lồng ghép gợi ý hành động tiếp theo vào câu trả lời của trợ lý ảo mà không làm dài dòng câu nói.
-  - *Kém*: `"Bạn cần gì nữa không?"` (Quá mơ hồ, khiến người dùng lúng túng).
-  - *Tốt*: `"Đơn hàng của bạn đã được xác nhận. Bạn muốn nhận mã theo dõi qua tin nhắn hay nghe thêm chi tiết giao hàng?"`
-- **Ví dụ mẫu tự nhiên (In-context Exemplars)**: Khi người dùng im lặng hoặc ngập ngừng, đưa ra 1-2 mẫu câu lệnh ngắn gọn.
+### Bridging the Gulf of Execution in VUI:
+- **Verbal Breadcrumbs**: Seamlessly embed next-step affordances into system prompts without bloating dialog length.
+  - *Poor*: `"Anything else you need?"` (Overly open-ended, induces user hesitation).
+  - *Effective*: `"Your order is confirmed. Would you like your tracking number by text, or delivery details read aloud?"`
+- **In-Context Exemplars**: When the user pauses or hesitates, provide one or two concise utterance models.
 
 ---
 
-## 3. Dấu Hiệu Âm Thanh (Acoustic Signifiers)
+## 3. Acoustic Signifiers
 
-Nếu GUI dựa vào biểu tượng và màu sắc để báo hiệu trạng thái tương tác thì VUI sử dụng **Acoustic Signifiers** để gửi tín hiệu đến đôi tai người dùng:
+Where GUIs rely on icons and colors to signal interactive states, VUIs utilize **Acoustic Signifiers** to convey system status directly to the listener's ears:
 
-| Trạng Thái Hệ Thống | Dấu Hiệu Âm Thanh Chuẩn | Tần Số / Âm Sắc Khuyên Dùng | Phản Ứng Tâm Lý Của Người Dùng |
-|---------------------|--------------------------|------------------------------|---------------------------------|
-| **Ready / Awoken**  | Âm bíp ngắn thăng dần (Ascending tone) | ~400Hz -> 800Hz, <150ms | "Máy đã thức dậy và đang mở micro nghe mình nói." |
-| **Thinking**        | Âm thanh trầm tuần hoàn (Ambient pulse) | 200-300Hz, chu kỳ 1.2s | "Máy đã ghi nhận xong, đang tính toán, đừng ngắt lời." |
-| **Success**         | Hợp âm 2 nốt trong trẻo (Major chord chime) | Âm sắc ấm, không chói | "Hành động đã hoàn tất an toàn." |
-| **Failure / Reject**| Âm bíp giáng nhẹ (Descending subtle tone) | ~500Hz -> 300Hz, mềm mại | "Có điều gì đó chưa ổn, cần thử lại." |
+| System State | Canonical Auditory Cue | Recommended Frequency / Timbre | Psychological Impact & User Perception |
+|--------------|------------------------|--------------------------------|----------------------------------------|
+| **Ready / Awoken** | Ascending tone chime | ~400 Hz -> 800 Hz, <150 ms | "The system is awake and opening its microphone to listen." |
+| **Thinking** | Ambient pulse | 200–300 Hz, 1.2 s cycle | "Speech received; processing logic in progress. Do not interrupt." |
+| **Success** | Major chord chime | Warm timbre, non-piercing | "Action completed safely and verified." |
+| **Failure / Reject** | Descending subtle tone | ~500 Hz -> 300 Hz, soft decay | "Something went wrong; conversational repair needed." |
 
 > [!CAUTION]
-> Tuyệt đối tránh sử dụng các âm thanh báo động chói tai (như tiếng còi báo động, âm sắc kim loại nhọn) vì kênh thính giác kết nối trực tiếp đến hạch hạnh nhân (*Amygdala*), gây phản ứng giật mình và ức chế nhận thức của người dùng.
+> Avoid harsh or jarring alarm tones (such as piercing sirens or metallic buzzes). Auditory pathways connect directly to the *Amygdala*, triggering startle reflexes and cognitive freezing.
 
 ---
 
-## 4. Mô Hình Tâm Lý: Con Người vs Công Cụ (Tool vs Human Partner)
+## 4. Mental Models: Tool vs. Human Partner
 
-Khi giao tiếp bằng giọng nói, con người vô thức kích hoạt **Mô hình giao tiếp xã hội (Social Actor Theory - Reeves & Nass)**:
-- Con người tự động gán phẩm chất xã hội, sự tôn trọng và cảm xúc cho một thực thể nói năng lưu loát.
-- **Cái bẫy kỳ vọng quá mức (The Expectation Trap)**: Nếu giọng nói của AI quá giống người (ngắt nghỉ, thở, cười cợt) trong khi khả năng suy luận logic lại bị giới hạn, người dùng sẽ kỳ vọng hệ thống thông minh như một chuyên gia thực thụ. Khi gặp lỗi nhỏ, sự thất vọng sẽ tăng gấp nhiều lần (*Uncanny Valley of Conversational Intelligence*).
+When interacting via speech, humans subconsciously activate **Social Actor Theory (Reeves & Nass)**:
+- Users automatically attribute social presence, respect, and emotional intent to an entity that speaks fluently.
+- **The Expectation Trap**: If a voice agent sounds overly human (natural breathing, chuckles, disfluencies) while its underlying reasoning remains rigid or brittle, users expect the competence of a human expert. When a minor edge case fails, user disillusionment is amplified exponentially (*The Uncanny Valley of Conversational Intelligence*).
 
-### Quy Tắc Thiết Kế Cốt Lõi:
-1. **Minh bạch về danh tính**: Hệ thống luôn thừa nhận mình là một trợ lý ảo, không bao giờ nói dối là con người.
-2. **Khiêm tốn nhưng đĩnh đạc**: Không xin lỗi dài dòng khi gặp lỗi (tránh `"Tôi vô cùng xin lỗi vì sự bất tiện khủng khiếp này..."`), mà tập trung ngay vào giải pháp thay thế.
+### Core Design Principles:
+1. **Identity Transparency**: The system must always acknowledge its identity as an AI assistant and never impersonate a human.
+2. **Graceful Humility**: Avoid lengthy apologies during failures (refrain from `"I am terribly sorry for this dreadful inconvenience..."`); pivot immediately to actionable recovery paths.

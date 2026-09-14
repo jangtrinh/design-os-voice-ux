@@ -1,82 +1,82 @@
-# Khắc Phục Lỗi & Thương Lượng Ý Nghĩa Đàm Thoại (Error Recovery & Conversational Repair)
+# Conversational Repair & Error Recovery Architecture
 
-> Trong giao tiếp con người, việc nghe nhầm hay ngập ngừng xảy ra liên tục nhưng hiếm khi làm đổ vỡ cuộc trò chuyện, bởi con người sử dụng cơ chế "Tự sửa chữa" (Conversational Repair). Một VUI xuất sắc không phải là hệ thống không bao giờ hiểu sai, mà là hệ thống biết cách gỡ lỗi một cách duyên dáng.
-
----
-
-## 1. Phân Loại Lỗi Trong Giao Diện Giọng Nói
-
-| Loại Lỗi | Nguyên Nhân Thực Tế | Trải Nghiệm Của Người Dùng |
-|----------|----------------------|----------------------------|
-| **1. No Input (Im lặng)** | Người dùng chưa nghĩ ra câu trả lời, môi trường ồn làm át micro, hoặc họ không biết phải nói gì. | Người dùng bối rối, ngần ngại. |
-| **2. Low Confidence (Nghe không rõ)** | Tạp âm nền lớn, người dùng nói quá nhỏ, phát âm không chuẩn địa phương. | Người dùng tưởng hệ thống đơ. |
-| **3. Misrecognition (Nhận dạng sai từ)** | STT nhận nhầm từ (ví dụ: *"Hà Nội"* thành *"Hà Nam"*). | Người dùng ngạc nhiên vì máy làm sai lệnh. |
-| **4. Unhandled Intent (Không hiểu ý định)** | Hệ thống hiểu từng từ ngữ nhưng không có tính năng tương ứng trong logic phần mềm. | Người dùng thất vọng vì kỳ vọng bị hụt hẫng. |
+> In human communication, slips of the tongue and misunderstandings occur constantly yet rarely derail dialogue because humans rely on "Conversational Repair." An exceptional VUI is not one that never misinterprets, but one that recovers and repairs breakdowns gracefully.
 
 ---
 
-## 2. Kỹ Thuật Gợi Ý Lũy Tiến 3 Bước (3-Tier Progressive Re-prompting)
+## 1. Error Taxonomy in Voice User Interfaces
 
-Khi người dùng im lặng hoặc hệ thống không thể xử lý, tuyệt đối không lặp lại nguyên văn câu hỏi cũ 3 lần liên tiếp. Hãy áp dụng chiến lược tăng dần tính cụ thể:
+| Error Category | Root Cause | User Experience & Impact |
+|---|---|---|
+| **1. No Input (Silence / Timeout)** | User is formulating thoughts, ambient noise drowns out speech, or user is uncertain of what to say. | User feels hesitant, awkward, or pressured. |
+| **2. Low Confidence (Acoustic Ambiguity)** | High ambient noise, soft speech amplitude, heavy regional accent, or microphone clipping. | User suspects system freeze or unresponsiveness. |
+| **3. Misrecognition (ASR Entity Distortion)** | STT transcribes incorrect phonetic tokens (e.g., *"Austin"* transcribed as *"Boston"*). | User experiences surprise or annoyance at incorrect actions. |
+| **4. Unhandled Intent (Out-of-Domain)** | System transcribes tokens accurately, but business logic or tooling lacks an executable handler. | User encounters mismatched product expectations and friction. |
+
+---
+
+## 2. 3-Tier Progressive Re-prompting
+
+When silence occurs or the system fails to parse user intent, never repeat an identical prompt three consecutive times. Apply an escalating scaffolding strategy that progressively narrows the parameter space:
 
 ```mermaid
 graph TD
-    Start[Người dùng không phản hồi / Không hiểu] --> Tier1[Tầng 1: Lời nhắc nhẹ nhàng]
-    Tier1 -->|Vẫn im lặng / Lỗi lần 2| Tier2[Tầng 2: Gợi ý kèm ví dụ mẫu]
-    Tier2 -->|Vẫn lỗi lần 3| Tier3[Tầng 3: Giới hạn lựa chọn hoặc Chuyển kênh]
+    Start[No User Response / Recognition Failure] --> Tier1[Tier 1: Gentle Nudge]
+    Tier1 -->|Continued Silence / Error 2| Tier2[Tier 2: Scaffolded Exemplar]
+    Tier2 -->|Persistent Failure / Error 3| Tier3[Tier 3: Bounded Fallback or Channel Switch]
 ```
 
-### Ví Dụ Kịch Bản Đặt Phòng Khách Sạn:
+### Exemplar Dialogue: Hotel Reservation Flow
 
-- **Lần lỗi 1 (Tầng 1 - Gentle Nudge)**:
-  - *Mục tiêu*: Giúp người dùng biết máy vẫn đang đợi mà không gây áp lực.
-  - *Câu thoại*: `"Bạn muốn đặt phòng ở thành phố nào?"`
-- **Lần lỗi 2 (Tầng 2 - Scaffolded Example)**:
-  - *Mục tiêu*: Thu hẹp phạm vi và cung cấp mẫu câu trả lời chuẩn.
-  - *Câu thoại*: `"Bạn có thể nói tên thành phố như Đà Nẵng, Nha Trang, hoặc Phú Quốc."`
-- **Lần lỗi 3 (Tầng 3 - Safe Fallback / Channel Switch)**:
-  - *Mục tiêu*: Dừng vòng lặp bế tắc, đưa ra lối thoát an toàn.
-  - *Câu thoại*: `"Hình như đường truyền không ổn định. Mình vừa gửi link chọn khách sạn qua màn hình điện thoại của bạn, hoặc bạn muốn gặp nhân viên hỗ trợ không?"`
+- **Error 1 (Tier 1 — Gentle Nudge)**:
+  - *Objective*: Signal that the system is actively waiting without imposing cognitive pressure.
+  - *Prompt*: `"Which city would you like to book a hotel in?"`
+- **Error 2 (Tier 2 — Scaffolded Exemplar)**:
+  - *Objective*: Constrain input scope and model an explicit phrasing template.
+  - *Prompt*: `"You can say a destination like Seattle, Chicago, or San Francisco."`
+- **Error 3 (Tier 3 — Safe Fallback / Channel Switch)**:
+  - *Objective*: Break the failure loop and provide an immediate, safe exit path.
+  - *Prompt*: `"It looks like our connection is choppy. I've sent a hotel selection link directly to your phone screen, or would you like me to connect you with a specialist?"`
 
 ---
 
-## 3. Nguyên Tắc "Không Đổ Lỗi Cho Người Dùng" (Never Blame the User)
+## 3. The "Never Blame the User" Principle
 
-Một lỗi vi phạm phổ biến nhất trong thiết kế hội thoại là chuyển áp lực sang người dùng bằng những câu thoại khó chịu:
+A critical failure mode in conversational UX is transferring cognitive burden or fault onto the speaker via defensive or accusatory prompts:
 
-* ❌ **Tuyệt đối tránh**:
-  - `"Bạn nói quá nhỏ, tôi không nghe thấy."` (Khiến người dùng cảm thấy bị chỉ trích).
-  - `"Câu lệnh của bạn không hợp lệ."` (Ngôn ngữ lập trình viên).
-  - `"Tôi không hiểu bạn đang nói cái gì cả."` (Thô lỗ, cộc cằn).
-* ✅ **Mẫu câu chuẩn UX**:
-  - `"Xin lỗi, khu vực xung quanh hơi ồn nên mình chưa nghe rõ. Bạn có thể nói lại điểm đến được không?"` (Nhận trách nhiệm về phía hệ thống/môi trường).
-  - `"Mình nghe chưa trọn vẹn. Bạn muốn xem lịch bay hay kiểm tra giá vé?"`
+* ❌ **Strictly Prohibited (Anti-Patterns)**:
+  - `"You are speaking too softly; I can't hear you."` (Accusatory; penalizes user acoustics).
+  - `"Invalid command syntax."` (Developer exception leakage).
+  - `"I have no idea what you're saying."` (Hostile, abrasive).
+* ✅ **Production VUI Patterns**:
+  - `"Sorry, background noise made that hard to catch. Could you repeat your destination?"` (System assumes responsibility for environmental constraints).
+  - `"I didn't catch that completely. Would you like to check flight schedules or compare airfares?"` (Provides constructive forward paths).
 
 ---
 
-## 4. Các Mẫu Đàm Thoại Thương Lượng Ý Nghĩa (Repair Patterns)
+## 4. Conversational Repair Patterns
 
-### Mẫu 1: Xác Nhận Ngầm (Implicit Confirmation)
-Dùng khi độ tin cậy của thuật ngữ cao (>85%). Không làm gián đoạn luồng đàm thoại, tự sửa nếu người dùng phát hiện sai:
+### Pattern 1: Implicit Confirmation
+Deployed when entity confidence is high (>85%). Keeps dialogue velocity high while allowing effortless self-repair if an error slipped through:
 ```
-User: "Chuyển 500 nghìn cho mẹ."
-Agent: "Đang chuyển 500 nghìn cho Mẹ. Bạn dùng tài khoản Vietcombank hay Techcombank?"
-(Nếu sai người nhận, người dùng chỉ cần cất tiếng ngắt lời: "Không, cho Ba cơ!")
-```
-
-### Mẫu 2: Xác Nhận Tường Minh (Explicit Confirmation)
-Dùng khi độ tin cậy ở mức trung bình (50-75%) hoặc giao dịch rủi ro cao (chuyển số tiền lớn, xóa file):
-```
-Agent: "Bạn muốn chuyển 50 triệu đồng cho Nguyễn Văn A, đúng không?"
-User: "Đúng rồi."
-Agent: "Đã hoàn tất chuyển khoản."
+User: "Send $50 to Mom."
+Agent: "Sending $50 to Mom. Would you like to use your Checking or Savings account?"
+(If recipient was misrecognized, user simply barges in: "No, send it to Dad!")
 ```
 
-### Mẫu 3: Thu Hẹp Nhánh Chọn Lọc (Disambiguation)
-Khi có 2 thực thể trùng tên hoặc mơ hồ:
+### Pattern 2: Explicit Confirmation
+Deployed when confidence falls into moderate thresholds (50–75%) or prior to high-stakes, irreversible operations (wire transfers, record deletion):
 ```
-User: "Gọi cho Tuấn."
-Agent: "Bạn muốn gọi cho Tuấn Marketing hay Tuấn Anh trai?"
-User: "Tuấn Marketing."
-Agent: "Đang gọi cho Tuấn Marketing..."
+Agent: "You would like to transfer $5,000 to John Doe, is that correct?"
+User: "Yes."
+Agent: "Transfer completed successfully."
+```
+
+### Pattern 3: Disambiguation (Option Narrowing)
+Deployed when colliding entities or polysemic references are detected:
+```
+User: "Call Alex."
+Agent: "Would you like to call Alex from Marketing or Alex Rivera?"
+User: "Alex from Marketing."
+Agent: "Calling Alex from Marketing..."
 ```
