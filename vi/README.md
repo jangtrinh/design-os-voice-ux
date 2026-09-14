@@ -99,21 +99,16 @@ graph TD
 
 ---
 
-## 🎮 Trình Giả Lập Bài Học Tương Tác & Giáo Trình (Academy Demo & Curriculum)
+## 🎓 Chương Trình Đào Tạo Voice UX Academy
 
-Bản prototype tương tác hoàn chỉnh sẵn sàng chạy tại [`demo/index.html`](../demo/index.html), vận hành các bài học tương tác theo cấu trúc chuẩn trong [`curriculum/`](../curriculum/).
+Hệ thống bài học tương tác thực chứng được quy hoạch chi tiết trong thư mục [`curriculum/`](../curriculum/).
 
-Học viện hiện thực hóa trọn vẹn tri thức Voice UX theo cấu trúc micro-learning phong cách Uxcel & Brilliant với 2 chế độ:
+Học viện được thiết kế theo cấu trúc micro-learning phong cách Uxcel & Brilliant với 2 chế độ:
 
 | Chế độ | Trọng tâm Sư phạm | Mô hình Tương tác |
 |---|---|---|
 | **📖 Phần Học (Learn Mode)** | Khám phá mô hình tâm trí âm học có hướng dẫn. | Graphic UI Visuals động (Floor Timeline, Waveform Endpointing, Latency Waterfall, Barge-in States). |
 | **🎯 Phần Test (Test Mode)** | Đánh giá năng lực thực chiến không dùng lý thuyết thụ động. | Thử thách xúc giác trực tiếp (Timeline Error Spotter, Waveform Boundary Setter, Pipeline Node Repair, Debounce Filter Tuning). |
-
-Mở trình giả lập trên trình duyệt máy tính:
-```bash
-open demo/index.html
-```
 
 ---
 

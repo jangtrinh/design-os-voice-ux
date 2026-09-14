@@ -100,21 +100,16 @@ graph TD
 
 ---
 
-## 🎮 Interactive Academy Demo Player & Curriculum
+## 🎓 Voice UX Academy Curriculum
 
-An executable interactive prototype is available at [`demo/index.html`](./demo/index.html), running interactive micro-lessons specified in [`curriculum/`](./curriculum/).
+A structured, evidence-based micro-learning curriculum specified in [`curriculum/`](./curriculum/).
 
-The academy implements the pedagogical specifications through an Uxcel/Brilliant-inspired micro-learning architecture featuring two distinct modes:
+The academy is designed around an Uxcel/Brilliant-inspired micro-learning architecture featuring two distinct modes:
 
 | Mode | Pedagogical Focus | Interaction Model |
 |---|---|---|
 | **📖 Learn Mode** | Guided exploration of acoustic mental models. | Interactive Graphic UI Visuals (Floor Timeline, Waveform Endpointing, Latency Waterfall, Barge-in States). |
 | **🎯 Test Mode** | Formative skill assessment without passive text. | Direct tactile challenges (Timeline Error Spotter, Waveform Boundary Setter, Pipeline Node Repair, Debounce Filter Tuning). |
-
-To run the interactive player locally:
-```bash
-open demo/index.html
-```
 
 ---
 
