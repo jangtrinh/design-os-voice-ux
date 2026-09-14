@@ -97,6 +97,6 @@ graph TD
 
 | Bài Test | Phương Pháp Kiểm Tra | Tiêu Chuẩn Vượt Qua (Pass Criteria) |
 |---|---|---|
-| **Auto-T1: Barge-in Stop Latency** | Bơm file âm thanh ngắt lời giả lập vào luồng WebRTC khi bot đang nói câu 10 giây. Đo chênh lệch thời gian giữa packet âm thanh đầu tiên của user và packet cuối cùng của bot. | `p50 < 80ms`, `p95 < 100ms` |
+| **Auto-T1: Acoustic Barge-in Stop Latency** | Bơm file âm thanh ngắt lời giả lập vào luồng WebRTC khi bot đang phát loa câu 10 giây. **Đo lường trên đồng hồ dùng chung (Common Clock) từ thời điểm user cất tiếng (Onset) đến mẫu âm thanh cuối cùng thực tế phát ra khỏi DAC/màng loa (bao gồm xả sạch Audio Playback Buffer & Jitter Buffer)**. *(Lưu ý: Không chỉ đo timestamp packet mạng vì âm thanh đệm trong buffer vẫn có thể tiếp tục phát đè lên người dùng).* | `p50 < 80ms`, `p95 < 100ms` (Acoustic silence); Transport packet stop: `p50 < 40ms` |
 | **Auto-T2: Max-Volume AEC Loopback** | Cho loa phát nhạc và phát giọng nói TTS ở mức 100% volume trong phòng kín. Micro thu âm liên tục và kiểm tra qua bộ lọc AEC. | Tín hiệu tự lọt vào micro phải `< -40dBFS`; không kích hoạt false-positive VAD. |
 | **Auto-T3: Context Truncation Assert** | Bot đang đọc danh sách: *"1, 2, 3, 4, 5"*. Giả lập ngắt lời ngay khi từ *"2"* vừa phát xong. Kiểm tra object session state trong database. | Lịch sử đàm thoại `context.messages` chỉ chứa *"1, 2"*; hoàn toàn vắng mặt *"3, 4, 5"*. |

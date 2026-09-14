@@ -27,26 +27,29 @@ Barge-in không chỉ xảy ra khi bot đang nói (Speaking). Hệ thống phả
 | **1. Listening (Đang nghe)** | Người dùng tự sửa câu nói dở (*"Đặt vé đi Huế... à không, đi Đà Nẵng"*). | Reset bộ đệm ASR cục bộ, bóc tách thực thể mới nhất, gia hạn silence timeout thêm 600ms. |
 | **2. Thinking (Đang suy luận)** | Người dùng đổi ý hoặc nói thêm (*"Thôi không cần tìm nữa đâu"*). | Hủy lập tức luồng inference LLM (AbortController signal), chuyển sang xử lý lệnh mới, tiết kiệm chi phí token. |
 | **3. Speaking (Đang phát loa)** | Người dùng cất tiếng ngắt lời thông tin bot đang đọc. | Kích hoạt Interruption-Onset (<80ms), ngắt luồng audio ra loa, thực hiện Audible Boundary Truncation. |
-| **4. Tool/API Execution** | Người dùng hô *"Dừng lại"* khi bot đang gọi API thanh toán/đặt vé. | Gửi lệnh `CANCEL` tới transaction worker, rollback trạng thái cơ sở dữ liệu, phát âm báo xác nhận đã hủy an toàn. |
+| **4. Tool/API Execution** | Người dùng hô *"Dừng lại"* khi bot đang gọi API thanh toán/đặt vé. | Chuyển sang `cancellation-pending`, gửi tín hiệu hủy tới provider, đối soát kết quả (reconciliation): chỉ báo thành công khi provider xác nhận hủy; nếu đã commit thì kích hoạt quy trình hoàn tiền/bồi hoàn (compensation). |
 
 ```mermaid
 stateDiagram-v2
     [*] --> Listening: User cất tiếng
     Listening --> Listening: Self-Repair (Reset ASR buffer)
     Listening --> Thinking: Endpointing (User dứt câu)
-    
+
     Thinking --> ThinkingCancelled: Barge-in during Thinking (AbortController)
     ThinkingCancelled --> Listening: Xử lý ý định mới
-    
+
     Thinking --> Speaking: Bắt đầu phát âm thanh (Audio stream)
     Speaking --> SpeakingInterrupted: Barge-in (<80ms Onset)
     SpeakingInterrupted --> AudibleTruncation: Cắt tỉa memory theo ranh giới âm
     AudibleTruncation --> Listening: Xử lý ý định mới
-    
+
     Thinking --> ToolExecution: Tác vụ gọi API ngoại vi
-    ToolExecution --> ToolCancelled: Barge-in "Hủy/Dừng" (API Abort & Rollback)
-    ToolCancelled --> Listening: Xác nhận đã hủy an toàn
-    
+    ToolExecution --> CancellationPending: Barge-in "Hủy/Dừng"
+    CancellationPending --> CancellationConfirmed: Provider xác nhận hủy thành công
+    CancellationPending --> CompensationRequired: Provider đã xử lý xong (Kích hoạt hoàn tiền)
+    CancellationConfirmed --> Listening: Thông báo đã hủy an toàn
+    CompensationRequired --> Listening: Thông báo giao dịch đã hoàn tất, đang hoàn tiền
+
     Speaking --> Idle: Phát hết câu trọn vẹn
     ToolExecution --> Speaking: Trả kết quả API
 ```
