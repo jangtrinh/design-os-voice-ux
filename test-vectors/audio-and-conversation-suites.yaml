@@ -1,0 +1,121 @@
+schema_version: "1.0"
+test_suite_id: "voice-ux-production-test-vectors"
+description: "Machine-readable acoustic and conversational test vectors for regression testing and CI/CD validation."
+
+acoustic_impairment_vectors:
+  - id: ACOU-01-CLEAN-HEADSET
+    title: "Baseline Clean Studio Audio"
+    parameters:
+      snr_db: 30.0
+      rt60_ms: 120
+      packet_loss_pct: 0.0
+      jitter_ms: 5
+      echo_delay_ms: 0
+      mic_distance_cm: 5
+    pass_criteria:
+      max_wer_pct: 3.0
+      min_polqa_mos: 4.4
+      first_packet_latency_ms: 250
+
+  - id: ACOU-02-FARFIELD-KITCHEN
+    title: "Far-Field Kitchen Noise with Exhaust Fan"
+    parameters:
+      snr_db: 3.5
+      rt60_ms: 550
+      packet_loss_pct: 0.5
+      jitter_ms: 15
+      echo_delay_ms: 25
+      mic_distance_cm: 180
+    pass_criteria:
+      max_wer_pct: 6.5
+      min_polqa_mos: 3.6
+      beamformer_gain_db: 14.0
+
+  - id: ACOU-03-MOBILE-4G-BURST-LOSS
+    title: "Cellular 4G Handover Burst Packet Loss"
+    parameters:
+      snr_db: 18.0
+      rt60_ms: 200
+      packet_loss_pct: 8.5
+      burst_loss_duration_ms: 280
+      jitter_ms: 85
+    pass_criteria:
+      max_wer_pct: 5.5
+      plc_fec_recovery_rate_pct: 95.0
+      buffer_underruns: 0
+
+  - id: ACOU-04-SPEAKERPHONE-ECHO
+    title: "Acoustic Coupling Laptop Speakerphone"
+    parameters:
+      snr_db: 15.0
+      rt60_ms: 420
+      erl_db: 8.0
+      target_erle_db: 38.0
+      double_talk_active: true
+    pass_criteria:
+      false_barge_in_count: 0
+      echo_leakage_dbfs: -48.0
+
+conversational_stress_vectors:
+  - id: CONV-01-COGNITIVE-HESITATION
+    title: "Mid-Sentence Hesitation with Preposition Pause"
+    script:
+      utterance_part1: "I need to book a flight to Chicago on..."
+      pause_duration_ms: 550
+      utterance_part2: "...Friday morning."
+    expected_behavior:
+      vad_triggered_during_pause: false
+      floor_retained: true
+      turn_split_count: 1
+      final_intent: "BOOK_FLIGHT(origin=CURRENT, dest=CHICAGO, date=FRIDAY_MORNING)"
+
+  - id: CONV-02-SUB-100MS-BARGE-IN
+    title: "Interruption during Long Agent Response"
+    script:
+      agent_initial_utterance: "Your total balance across all accounts is four thousand..."
+      interruption_timestamp_ms: 1400
+      user_interrupt_speech: "Just checking account!"
+    expected_behavior:
+      audio_halt_latency_ms: 85
+      cosine_fade_applied: true
+      context_truncated_at_sample: true
+      agent_next_speech: "Your checking account balance is one thousand two hundred dollars."
+
+  - id: CONV-03-DTMF-KEYPAD-OVERRIDE
+    title: "DTMF Keypad Tone Override during Voice Readout"
+    script:
+      agent_prompt: "Please say your six digit account number, or enter it on your keypad."
+      dtmf_event:
+        digit: "4"
+        timestamp_ms: 800
+        payload_type: 101
+    expected_behavior:
+      audio_halt_latency_ms: 45
+      asr_bypassed: true
+      keypad_slot_appended: "4"
+
+  - id: CONV-04-CLINICAL-EMERGENCY-ESCAPE
+    title: "Red-Flag Cardiac Symptom Detection"
+    script:
+      user_utterance: "I can't catch my breath and my chest feels like an elephant is sitting on it."
+    expected_behavior:
+      clinical_triage_level: 1
+      booking_flow_aborted: true
+      immediate_emergency_statement: true
+      sip_warm_transfer_target: "sip:triage-nurse@hospital.internal"
+      transfer_latency_ms: 180
+
+  - id: CONV-05-BEREAVEMENT-AFFECT-SHIFT
+    title: "Acoustic Affect Shift to Compassionate Grounding"
+    script:
+      user_utterance: "I'm calling about my mother's account... she passed away yesterday."
+      acoustic_profile:
+        speech_rate_wpm: 92
+        pitch_drop_semitones: -3.5
+        energy_dbfs: -29.0
+    expected_behavior:
+      detected_affect: "grief_bereavement"
+      switched_voice_persona: "compassionate_grounded"
+      agent_response_rate_wpm: 118
+      initial_acoustic_pause_ms: 500
+      sycophancy_tokens_detected: 0

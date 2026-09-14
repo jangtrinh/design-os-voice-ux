@@ -24,19 +24,26 @@ graph TD
     A --> E["04. Benchmarks & Tooling"]
     A --> F["05. 5-Persona Debate"]
     A --> G["06. Checklists & Testing"]
+    A --> H["07. Production Evidence"]
 
     B --> B1["Mental Models & Affordance"]
     B --> B2["Conversational Psychology"]
     B --> B3["NN/g VUI Heuristics"]
+    B --> B4["Microphone SNR & Front-End"]
 
     C --> C1["Turn-Taking & Barge-In"]
     C --> C2["Error Recovery & Repair"]
     C --> C3["Earcons & Audio Feedback"]
     C --> C4["Multimodal Handshake"]
+    C --> C5["AEC & Echo Control"]
+    C --> C6["Opus & Jitter Resilience"]
+    C --> C7["Semantic VAD Endpointing"]
 
     D --> D1["Persona & Tone of Voice"]
     D --> D2["Prompt & Dialog Engineering"]
     D --> D3["Latency Budgets & Pacing"]
+    D --> D4["S2S Prosody & Expression"]
+    D --> D5["Industry Verticals: Health, Bank, Auto, Telco"]
 
     E --> E1["Industry Benchmarks"]
     E --> E2["Open Source Frameworks"]
@@ -45,13 +52,18 @@ graph TD
 
     G --> G1["Design Review Checklist"]
     G --> G2["Wizard of Oz Usability Protocol"]
+
+    H --> H1["Transcripts Comparison"]
+    H --> H2["Reference Architectures"]
+    H --> H3["CI/CD Test Vectors"]
+    H --> H4["Voice Quality Scorecard"]
 ```
 
 ---
 
 ## 📋 Audit Pack & Governance Documents
 
-- **[`01-MANIFEST.md`](./01-MANIFEST.md)**: Inventory of all 17 core specifications with Purpose, Audience, Lifecycle Status, and Empirical Evidence.
+- **[`01-MANIFEST.md`](./01-MANIFEST.md)**: Inventory of all 26 core specifications and engineering artifacts with Purpose, Audience, Lifecycle Status, and Empirical Evidence.
 - **[`02-AUDIT-BRIEF.md`](./02-AUDIT-BRIEF.md)**: Operational context, reference voice architectures (WebRTC / Native S2S), and 5 fatal failure modes.
 - **[`03-AUDIT-RUBRIC.md`](./03-AUDIT-RUBRIC.md)**: 100-Point scoring rubric across 4 pillars and 6 non-negotiable Hard-Fail Gates.
 - **[`04-AUDIT-REPORT.md`](./04-AUDIT-REPORT.md)**: Official verification report (92/100 Points, Tier 1 Production Ready certification).
@@ -65,21 +77,30 @@ graph TD
 - **[`mental-models-and-affordance.md`](./01-foundations/mental-models-and-affordance.md)**: Bridging Don Norman's *Gulf of Execution* in invisible interfaces. Acoustic signifiers, ephemeral audio dynamics, and mental model scaffolding.
 - **[`conversational-psychology.md`](./01-foundations/conversational-psychology.md)**: Grice's 4 Conversational Maxims, turn construction units, and Cowan's working memory capacity (4-chunk limit).
 - **[`vui-heuristics.md`](./01-foundations/vui-heuristics.md)**: Translating Nielsen Norman Group's (NN/g) 10 Usability Heuristics into audio-first conversational environments.
+- **[`microphone-snr-acoustic-front-end.md`](./01-foundations/microphone-snr-acoustic-front-end.md)**: Physical acoustics, microphone arrays, beamforming, AGC, noise suppression, far-field physics, and ITU-T P.863 (POLQA) standards.
 
 ---
 
-### [02. Interaction Patterns (Conversational Mechanics)](./02-interaction-patterns/)
+### [02. Interaction Patterns (Conversational Mechanics & Deep Acoustics)](./02-interaction-patterns/)
 - **[`turn-taking-and-barge-in.md`](./02-interaction-patterns/turn-taking-and-barge-in.md)**: Natural interruption handling (<80ms acoustic onset), Semantic End-of-Turn prediction, state rollback, and Audible Boundary Truncation.
 - **[`error-recovery-and-repair.md`](./02-interaction-patterns/error-recovery-and-repair.md)**: Conversational repair architecture, 3-tier progressive re-prompting, and non-blaming error culture.
 - **[`audio-feedback-and-earcons.md`](./02-interaction-patterns/audio-feedback-and-earcons.md)**: Earcon acoustics, sonic branding, and frequency allocation across core assistant states (Listening, Thinking, Speaking).
 - **[`multimodal-handshake.md`](./02-interaction-patterns/multimodal-handshake.md)**: Voice + GUI orchestration, Hands-busy/Eyes-free contexts, and selective Visual Offloading.
+- **[`deep-acoustics/aec-echo-control.md`](./02-interaction-patterns/deep-acoustics/aec-echo-control.md)**: Acoustic Echo Cancellation (AEC), ERL/ERLE budgets, Double-Talk Detection (DTD), speakerphone coupling, and preventing false self-barge-ins.
+- **[`deep-acoustics/opus-jitter-resilience.md`](./02-interaction-patterns/deep-acoustics/opus-jitter-resilience.md)**: Opus codec (RFC 6716), in-band FEC, Packet Loss Concealment (PLC), DTX/CNG, and WebRTC NetEQ adaptive jitter buffers.
+- **[`deep-acoustics/semantic-vad-endpointing.md`](./02-interaction-patterns/deep-acoustics/semantic-vad-endpointing.md)**: Neural VAD (Silero v5), fundamental pitch contour ($F_0$) turn-yielding cues, and autoregressive syntactic turn closure.
 
 ---
 
-### [03. Conversational Design System (Production Standards)](./03-conversational-design-system/)
+### [03. Conversational Design System (Production Standards & Verticals)](./03-conversational-design-system/)
 - **[`persona-and-tone.md`](./03-conversational-design-system/persona-and-tone.md)**: 4-axis persona framework, avoiding the Uncanny Valley, mitigating the ELIZA effect, and functional empathy.
 - **[`prompt-and-dialog-engineering.md`](./03-conversational-design-system/prompt-and-dialog-engineering.md)**: Writing for the ear, Voice LLM System Prompt architecture, and SSML prosodic markers.
 - **[`latency-budgets.md`](./03-conversational-design-system/latency-budgets.md)**: Conversational latency budgeting (<400ms target), conversational acoustic fillers, and streaming playback pipelines.
+- **[`s2s-prosody-expression.md`](./03-conversational-design-system/s2s-prosody-expression.md)**: Speech-to-Speech (S2S) prosodic dimensions ($F_0$, tempo, energy), affective grounding vs toxic positivity, and paralinguistic backchannels.
+- **[`verticals/healthcare-hipaa.md`](./03-conversational-design-system/verticals/healthcare-hipaa.md)**: Healthcare clinical triage, HIPAA ePHI compliance, real-time PII redaction, Emergency Severity Index (ESI), and 911 red-flag escape hatches.
+- **[`verticals/banking-voice-biometrics.md`](./03-conversational-design-system/verticals/banking-voice-biometrics.md)**: Voice biometrics (ECAPA-TDNN), Presentation Attack Detection (PAD), deepfake anti-spoofing, and multi-tier step-up authentication.
+- **[`verticals/automotive-infotainment.md`](./03-conversational-design-system/verticals/automotive-infotainment.md)**: In-car voice UX, ISO 15005 dialogue management, NHTSA driver distraction limits, in-cabin noise profiles, and ADAS emergency preemption.
+- **[`verticals/telephony-sip-ivr.md`](./03-conversational-design-system/verticals/telephony-sip-ivr.md)**: Telephony SIP trunking (RFC 3261), G.711 $\leftrightarrow$ Opus transcoding, RFC 4733 DTMF tone fallback, and warm SIP REFER with encrypted UUI context.
 
 ---
 
@@ -97,6 +118,15 @@ graph TD
 ### [06. Checklists & Usability Testing (QA & Protocols)](./06-checklists-and-heuristics/)
 - **[`vui-design-checklist.md`](./06-checklists-and-heuristics/vui-design-checklist.md)**: 25-item production release acceptance checklist.
 - **[`usability-testing-protocol.md`](./06-checklists-and-heuristics/usability-testing-protocol.md)**: Wizard of Oz (WoZ) test protocol, 4-phase test script, metrics (TCR, CER, SAS), and automated CI/CD audio test suites (Auto-T1, Auto-T2, Auto-T3).
+
+---
+
+## 🛠️ Production Evidence & Engineering Artifacts
+
+- **[`examples/good-vs-bad/transcripts-comparison.md`](./examples/good-vs-bad/transcripts-comparison.md)**: Side-by-side production transcripts with acoustic root causes for hesitation pauses, echo false barge-in, emotional misalignment, and warm SIP transfers.
+- **[`architectures/voice-reference-architectures.md`](./architectures/voice-reference-architectures.md)**: Complete topology blueprints for WebRTC Native S2S, Carrier SIP SBC Telephony, and Embedded Automotive In-Cabin Voice.
+- **[`test-vectors/audio-and-conversation-suites.yaml`](./test-vectors/audio-and-conversation-suites.yaml)**: Machine-readable test vectors defining acoustic impairments (`snr_db`, `rt60_ms`, `packet_loss_pct`) and dialog stress cases.
+- **[`benchmarks/voice-quality-scorecard.md`](./benchmarks/voice-quality-scorecard.md)**: Unified 6-layer quantitative evaluation rubric with 6 non-negotiable Hard-Fail Gates.
 
 ---
 
