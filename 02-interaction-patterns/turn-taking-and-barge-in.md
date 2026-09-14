@@ -27,7 +27,7 @@ Barge-in không chỉ xảy ra khi bot đang nói (Speaking). Hệ thống phả
 | **1. Listening (Đang nghe)** | Người dùng tự sửa câu nói dở (*"Đặt vé đi Huế... à không, đi Đà Nẵng"*). | Reset bộ đệm ASR cục bộ, bóc tách thực thể mới nhất, gia hạn silence timeout thêm 600ms. |
 | **2. Thinking (Đang suy luận)** | Người dùng đổi ý hoặc nói thêm (*"Thôi không cần tìm nữa đâu"*). | Hủy lập tức luồng inference LLM (AbortController signal), chuyển sang xử lý lệnh mới, tiết kiệm chi phí token. |
 | **3. Speaking (Đang phát loa)** | Người dùng cất tiếng ngắt lời thông tin bot đang đọc. | Kích hoạt Interruption-Onset (<80ms), ngắt luồng audio ra loa, thực hiện Audible Boundary Truncation. |
-| **4. Tool/API Execution** | Người dùng hô *"Dừng lại"* khi bot đang gọi API thanh toán/đặt vé. | Chuyển sang `cancellation-pending`, gửi tín hiệu hủy tới provider, đối soát kết quả (reconciliation): chỉ báo thành công khi provider xác nhận hủy; nếu đã commit thì kích hoạt quy trình hoàn tiền/bồi hoàn (compensation). |
+| **4. Tool/API Execution** | Người dùng hô *"Dừng lại"* khi bot đang gọi API thanh toán/đặt vé. | Chuyển sang trạng thái `cancellation-pending`, gửi tín hiệu hủy tới provider và đối soát (reconciliation): Nếu provider hủy kịp -> báo hủy thành công. Nếu provider đã commit -> chuyển sang `compensation-pending`. Cấm tự ý thông báo đang hoàn tiền trước khi provider xác nhận tiếp nhận hoàn tiền; nếu thất bại/từ chối, chuyển sang quy trình hỗ trợ tra soát kèm mã giao dịch. |
 
 ```mermaid
 stateDiagram-v2
@@ -45,10 +45,13 @@ stateDiagram-v2
 
     Thinking --> ToolExecution: Tác vụ gọi API ngoại vi
     ToolExecution --> CancellationPending: Barge-in "Hủy/Dừng"
-    CancellationPending --> CancellationConfirmed: Provider xác nhận hủy thành công
-    CancellationPending --> CompensationRequired: Provider đã xử lý xong (Kích hoạt hoàn tiền)
+    CancellationPending --> CancellationConfirmed: Provider xác nhận hủy kịp
+    CancellationPending --> CompensationPending: Provider đã commit (Gửi yêu cầu hoàn tiền)
     CancellationConfirmed --> Listening: Thông báo đã hủy an toàn
-    CompensationRequired --> Listening: Thông báo giao dịch đã hoàn tất, đang hoàn tiền
+    CompensationPending --> CompensationAccepted: Provider chấp nhận hoàn tiền
+    CompensationPending --> CompensationFailed: Provider từ chối hoặc lỗi hoàn tiền
+    CompensationAccepted --> Listening: Thông báo giao dịch đã commit và lệnh hoàn tiền đã được tiếp nhận
+    CompensationFailed --> Listening: Thông báo trung thực không thể tự động hoàn tiền, chuyển tiếp hỗ trợ đối soát
 
     Speaking --> Idle: Phát hết câu trọn vẹn
     ToolExecution --> Speaking: Trả kết quả API
