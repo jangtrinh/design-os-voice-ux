@@ -1,0 +1,267 @@
+schema_version: "1.0"
+
+lesson:
+  id: m03-l01
+  module_id: m03
+  title: "The 200ms Cadence & VAD Endpointing"
+  track: free
+  estimated_minutes: 10
+  objectives:
+    - id: obj-200ms-cadence
+      verb: explain
+      concept: "Human conversational floor transition cadence (~200ms gap, Levinson & Torreira 2015)"
+    - id: obj-vad-tuning
+      verb: tune
+      concept: "Calibrating VAD energy thresholds and hangtime buffers to avoid clipping"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-200ms-cadence]
+    content:
+      headline: "The 200ms Reflex"
+      body: "Across every human language, the average gap between speakers in casual conversation is approximately 200 milliseconds."
+      takeaway: "If an AI takes 1,500ms to respond, humans perceive hesitation or technical failure."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [user, agent]
+        natural_gap_ms: 208
+        actual_gap_ms: 1650
+        status: "sluggish"
+    interaction:
+      type: scrub
+      required: true
+    completion:
+      event: timeline_scrubbed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-vad-tuning]
+    content:
+      headline: "Voice Activity Detection (VAD) Mechanics"
+      body: "VAD determines when speech starts and when silence indicates the speaker is finished (hangtime)."
+      takeaway: "Too short hangtime (<300ms) truncates slow speakers; too long (>800ms) guarantees high latency."
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        energy_envelope: true
+        vad_threshold_db: -38
+        hangtime_ms: 450
+        speech_segments: [[400, 1800], [2100, 3600]]
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 2
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-vad-tuning]
+    content:
+      headline: "Calibrating the VAD Threshold"
+      body: "Drag the dB threshold line above the background noise floor (-45 dB) but below whispered speech (-32 dB)."
+      takeaway: "Setting threshold too low causes ambient fan noise to keep the microphone permanently open."
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        noise_floor_db: -48
+        speech_level_db: -28
+        interactive_threshold: true
+        current_threshold_db: -52
+    interaction:
+      type: drag-threshold
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-200ms-cadence]
+    content:
+      headline: "Acoustic Fillers to Bridge the Gap"
+      body: "When deep reasoning or database lookup takes 1,000ms, inject an acoustic filler ('Got it...', 'Let me check...') within 300ms."
+      takeaway: "Fillers hold conversational custody, resetting the user's impatience timer."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [user, filler, agent_response]
+        filler_timing_ms: 250
+        perceived_latency_ms: 250
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-200ms-cadence]
+    prompt: "According to Levinson & Torreira's cross-linguistic study (2015), what is the universal human baseline for turn-transition silence?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        quiz_options: ["50ms", "200ms", "800ms", "1500ms"]
+    assessment:
+      type: single_choice
+      answer: "200ms"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "It is approximately one fifth of a second."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "The universal baseline is ~200ms."
+          penalty: 0.25
+      explanation: "Linguistic corpora across 10 diverse languages confirm a mode gap of ~200ms in natural human turn-taking."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-vad-tuning]
+    prompt: "An assistant in a coffee shop keeps thinking the user is still speaking because of background café music at -40 dB. Adjust the VAD sensitivity threshold."
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        noise_level_db: -40
+        speech_level_db: -24
+        interactive_slider: true
+    assessment:
+      type: slider_tune
+      answer: { min: -35, max: -30 }
+      scoring:
+        max_points: 1
+        tolerance: 3
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Place the threshold strictly above the -40 dB background music level."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "A threshold around -34 dB to -32 dB cuts out the café noise while capturing voice."
+          penalty: 0.25
+      explanation: "Setting VAD threshold to -32 dB rejects the -40 dB background music while capturing -24 dB speech cleanly."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-vad-tuning]
+    prompt: "A user says: 'I need to reschedule for... Tuesday.' The assistant immediately replies: 'Sorry, I didn't get that' before 'Tuesday' is spoken. Why?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        pause_duration_ms: 400
+        configured_hangtime_ms: 250
+        premature_trigger: true
+    assessment:
+      type: single_choice
+      answer: "hangtime_shorter_than_pause"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "The user paused for 400ms, but what was the VAD hangtime setting?"
+          penalty: 0.1
+      explanation: "A 250ms hangtime is too aggressive; human cognitive pauses routinely reach 400ms-600ms."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-vad-tuning, obj-200ms-cadence]
+    prompt: "You need to minimize endpointing latency without clipping slow-speaking elderly users. What is the production architecture solution?"
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        neural_vad_comparison: true
+    assessment:
+      type: single_choice
+      answer: "hybrid_semantic_vad_plus_dynamic_hangtime"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Fixed static timers force a compromise between clipping and lag."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Dynamic hangtime extends silence buffers if the preceding grammar indicates an incomplete sentence."
+          penalty: 0.25
+      explanation: "Semantic VAD checks sentence completeness. If grammatical completion is detected, hangtime drops to 250ms; if incomplete, it expands to 700ms."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m03-l01
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

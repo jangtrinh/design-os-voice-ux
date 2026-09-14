@@ -1,0 +1,261 @@
+schema_version: "1.0"
+
+lesson:
+  id: m05-l02
+  module_id: m05
+  title: "Tool Calling, Fillers & Speculative Execution"
+  track: pro
+  estimated_minutes: 12
+  objectives:
+    - id: obj-tool-call-latency
+      verb: explain
+      concept: "Bridging the multi-second latency gap during external API tool execution"
+    - id: obj-acoustic-fillers
+      verb: apply
+      concept: "Injecting contextual acoustic fillers (<300ms) while awaiting async tool response payloads"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-tool-call-latency]
+    content:
+      headline: "The 3-Second API Abyss"
+      body: "User asks: 'Are there any appointments open this Friday?' The LLM calls `check_calendar()`. It takes 2,400ms. Complete dead silence reigns."
+      takeaway: "During tool execution, caller anxiety escalates after 1.5 seconds of silence."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [user, tool_call, dead_silence, response]
+        tool_latency_ms: 2400
+        anxiety_spike_time_ms: 1500
+        status: "dead_air"
+    interaction:
+      type: scrub
+      required: true
+    completion:
+      event: timeline_scrubbed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-acoustic-fillers]
+    content:
+      headline: "Contextual Fillers & Parallel Execution"
+      body: "Emit an immediate verbal acknowledgement within 300ms while the API call runs in the background."
+      takeaway: "Pattern: 'Looking at Friday's schedule now...' (plays in 250ms) -> Tool resolves -> Seamlessly stream results."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        flow:
+          - { step: "User Finished", time_ms: 0 }
+          - { step: "Emit Filler: 'Checking now...'", time_ms: 250 }
+          - { step: "API Query Dispatched", time_ms: 260 }
+          - { step: "API Payload Returned", time_ms: 1800 }
+          - { step: "Stream Result Speech", time_ms: 1950 }
+    interaction:
+      type: inspect-state
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 2
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-acoustic-fillers]
+    content:
+      headline: "Connecting the Tool Filler Node"
+      body: "Rewire the broken pipeline so the Orchestrator routes intent directly to the Filler Generator before waiting on the DB Client."
+      takeaway: "Acoustic filler generation must be triggered concurrently with the asynchronous API promise."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        rewire_mode: true
+        broken_node: "filler_generator"
+    interaction:
+      type: node-repair
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-tool-call-latency]
+    content:
+      headline: "Speculative Execution"
+      body: "Pre-fetch slot availability based on user speech *before* VAD silence endpointing finishes."
+      takeaway: "Speculative tool calls initiated at 80% ASR certainty shave 500ms off total turnaround."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        speculative_trigger: true
+        lead_time_ms: 480
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-acoustic-fillers]
+    prompt: "When an external tool call is expected to take longer than 1.5 seconds, what is the required UX pattern?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        filler_quiz: true
+    assessment:
+      type: single_choice
+      answer: "contextual_acoustic_filler_under_300ms"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Never leave the caller in dead air."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Play a quick contextual filler (e.g. 'Let me look that up...') within 300ms."
+          penalty: 0.25
+      explanation: "Acoustic fillers bridge the waiting gap, reassuring the caller that the system is actively working."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-acoustic-fillers]
+    prompt: "Select the most natural contextual filler for a flight booking query taking 2.2 seconds to resolve."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        filler_options: true
+    assessment:
+      type: single_choice
+      answer: "checking_nonstop_flights_to_chicago"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Generic robotic beeps are inferior to context-aware verbal acknowledgment."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "'Checking nonstop flights to Chicago for you right now...' confirms both intent and action."
+          penalty: 0.25
+      explanation: "Context-rich fillers confirm semantic understanding while masking the API roundtrip latency."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-tool-call-latency]
+    prompt: "In load testing, the assistant says 'Checking your records...', but then the database times out after 8 seconds and the call hangs up silently. What failure mode is this?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        timeout_error: true
+    assessment:
+      type: single_choice
+      answer: "unhandled_tool_timeout_and_missing_fallback"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "What should happen if a tool fails to respond within 3 seconds?"
+          penalty: 0.1
+      explanation: "Every external tool call must have a strict 3-second circuit-breaker with a graceful conversational fallback."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-tool-call-latency, obj-acoustic-fillers]
+    prompt: "You are designing an emergency dispatch voice bot (911/115). An address lookup API takes 1.8 seconds. Should you use an acoustic filler?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        emergency_dispatch_context: true
+    assessment:
+      type: single_choice
+      answer: "no_filler_confirm_address_directly_asap"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "In life-or-death emergency contexts, casual fillers like 'Looking that up!' waste precious seconds and sound callous."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Keep channel open with an immediate earcon tone or immediate urgent verification."
+          penalty: 0.25
+      explanation: "In emergency triage, conversational fluff is dangerous and off-putting; use low-latency micro-earcon clicks instead of wordy fillers."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m05-l02
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

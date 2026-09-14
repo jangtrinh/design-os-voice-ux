@@ -1,0 +1,268 @@
+schema_version: "1.0"
+
+lesson:
+  id: m05-l01
+  module_id: m05
+  title: "Streaming Latency Budgets & Waterfall Economics"
+  track: pro
+  estimated_minutes: 12
+  objectives:
+    - id: obj-latency-budget
+      verb: identify
+      concept: "The sub-800ms end-to-end voice latency budget across cascading pipeline stages"
+    - id: obj-waterfall-optimization
+      verb: tune
+      concept: "Optimizing TTFT (Time To First Token) and TTFB (Time To First Byte) for streaming audio"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-latency-budget]
+    content:
+      headline: "The 1.8-Second Dead Silence"
+      body: "Watch this cascading pipeline (Deepgram -> Claude 3.5 -> ElevenLabs). By the time audio arrives, 1,850ms of awkward silence has passed."
+      takeaway: "Batch architectures cannot sustain real-time conversational voice. Streaming from token 1 is mandatory."
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        stages:
+          - { name: "VAD Endpoint", duration_ms: 500, color: "blue" }
+          - { name: "ASR Transcription", duration_ms: 350, color: "amber" }
+          - { name: "LLM Batch Response", duration_ms: 650, color: "purple" }
+          - { name: "TTS Audio Synthesis", duration_ms: 350, color: "emerald" }
+        total_ms: 1850
+        budget_line_ms: 800
+        status: "breached"
+    interaction:
+      type: inspect-stage
+      required: true
+    completion:
+      event: stage_inspected
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-latency-budget]
+    content:
+      headline: "The Sub-800ms Latency Waterfall"
+      body: "VAD: 250ms. Network: 50ms. LLM TTFT: 200ms. TTS TTFB: 150ms. WebRTC Playout: 50ms. Total = 700ms."
+      takeaway: "Streaming allows TTS synthesis to start while the LLM is still generating subsequent words."
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        stages:
+          - { name: "VAD Endpoint", duration_ms: 250, color: "blue" }
+          - { name: "WebRTC Transport", duration_ms: 50, color: "sky" }
+          - { name: "LLM First Token (TTFT)", duration_ms: 200, color: "purple" }
+          - { name: "TTS First Chunk (TTFB)", duration_ms: 150, color: "emerald" }
+          - { name: "Jitter Playout Buffer", duration_ms: 50, color: "teal" }
+        total_ms: 700
+        budget_line_ms: 800
+        status: "pass"
+    interaction:
+      type: inspect-stage
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 3
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-waterfall-optimization]
+    content:
+      headline: "Tune the Audio Chunk Size"
+      body: "Adjust the streaming buffer chunk size from 100ms down to 25ms to observe jitter vs latency tradeoffs."
+      takeaway: "Smaller chunk sizes reduce time-to-first-sound, but require robust jitter buffers on spotty mobile networks."
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        chunk_size_ms: 25
+        min_chunk: 10
+        max_chunk: 200
+        interactive_tuning: true
+    interaction:
+      type: tune-budget
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-latency-budget]
+    content:
+      headline: "Native S2S vs Cascaded Pipelines"
+      body: "Native Speech-to-Speech models (GPT-4o Realtime, Gemini Live) eliminate STT and TTS serialization entirely."
+      takeaway: "Native S2S reduces architectural overhead by 200-300ms and preserves human prosody, laughs, and whispers."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        comparison_mode: "cascaded_vs_native"
+        cascaded_latency_ms: 750
+        native_s2s_latency_ms: 380
+    interaction:
+      type: inspect-state
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-latency-budget]
+    prompt: "In a production voice agent, what is the maximum acceptable end-to-end latency before callers perceive unnatural dead air?"
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        threshold_quiz: true
+    assessment:
+      type: single_choice
+      answer: "800ms"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Beyond 1,000ms feels sluggish; human tolerance caps around 800ms."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "800ms is the recognized ceiling for natural conversational pacing."
+          penalty: 0.25
+      explanation: "Industry benchmarks (LiveKit, OpenAI) define 800ms as the upper threshold for conversational responsiveness."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-waterfall-optimization]
+    prompt: "Your total latency is 1,120ms (VAD: 450ms, ASR: 120ms, LLM: 400ms, TTS: 150ms). Tune the VAD hangtime and switch to streaming TTFT to get under 650ms."
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        interactive_slashing: true
+        target_max_ms: 650
+    assessment:
+      type: single_choice
+      answer: "cut_vad_to_250ms_stream_tokens_at_150ms"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Reduce VAD hangtime from 450ms to 250ms, and stream tokens directly to TTS."
+          penalty: 0.1
+      explanation: "Trimming VAD to 250ms and streaming first tokens to TTS reduces end-to-end turnaround to ~600ms."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-waterfall-optimization]
+    prompt: "The audio playback crackles and stutters periodically on 4G cellular networks. What pipeline configuration is misconfigured?"
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        jitter_buffer_underrun: true
+    assessment:
+      type: single_choice
+      answer: "jitter_buffer_too_small_underrun"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "If audio packets arrive with variable jitter, a 10ms buffer will constantly starve."
+          penalty: 0.1
+      explanation: "A jitter buffer that is too small (<30ms) suffers buffer underrun on variable mobile cellular connections."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-latency-budget, obj-waterfall-optimization]
+    prompt: "You are choosing between a Cascaded Pipeline (Deepgram + Claude 3.5 + Cartesia) vs Native S2S (OpenAI Realtime API) for an enterprise call center requiring strict RAG validation. What is the architectural decision?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        rag_audit_required: true
+        strict_guardrails: true
+    assessment:
+      type: single_choice
+      answer: "cascaded_pipeline_for_deterministic_rag_guardrails"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Native S2S operates as a black box where intermediate text cannot be easily intercepted and filtered."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Cascaded pipelines allow strict JSON schema validation and text guardrail screening before speech is synthesized."
+          penalty: 0.25
+      explanation: "When strict enterprise compliance and deterministic RAG guardrails are mandatory, cascaded pipelines allow text interception and validation before TTS."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m05-l01
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

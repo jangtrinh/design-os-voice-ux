@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VoiceUXCurriculumManifestSchema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "academy",
+    "tracks",
+    "modules",
+    "progression",
+    "runtime"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["1.0"] },
+    "academy": {
+      "type": "object",
+      "required": ["id", "title", "locale", "default_track"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "locale": { "type": "string" },
+        "default_track": { "type": "string" }
+      }
+    },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "access", "modules"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "access": { "type": "string", "enum": ["public", "subscription"] },
+          "modules": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "order", "title", "track", "prerequisites", "outcomes", "lessons"],
+        "properties": {
+          "id": { "type": "string" },
+          "order": { "type": "integer" },
+          "title": { "type": "string" },
+          "track": { "type": "string" },
+          "prerequisites": { "type": "array", "items": { "type": "string" } },
+          "outcomes": { "type": "array", "items": { "type": "string" } },
+          "lessons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "order", "title", "source", "duration_minutes", "xp"],
+              "properties": {
+                "id": { "type": "string" },
+                "order": { "type": "integer" },
+                "title": { "type": "string" },
+                "source": { "type": "string" },
+                "duration_minutes": { "type": "integer" },
+                "xp": { "type": "integer" },
+                "prerequisites": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "progression": {
+      "type": "object",
+      "required": ["unlock_strategy", "lesson_pass_score", "module_completion"],
+      "properties": {
+        "unlock_strategy": { "type": "string", "enum": ["sequential", "open", "checkpoint_gated"] },
+        "lesson_pass_score": { "type": "number" },
+        "module_completion": {
+          "type": "object",
+          "properties": {
+            "require_all_lessons": { "type": "boolean" },
+            "require_capstone": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["lesson_schema", "widget_registry", "telemetry_schema"],
+      "properties": {
+        "lesson_schema": { "type": "string" },
+        "widget_registry": { "type": "string" },
+        "telemetry_schema": { "type": "string" }
+      }
+    }
+  }
+}

@@ -19,11 +19,6 @@ graph TD
     A --> E[04. Benchmarks & Repos]
     A --> F[05. 5-Persona Debate]
     A --> G[06. Checklists & Testing]
-    A --> H[07. Interactive Pedagogy]
-
-    H --> H1[10 Bản Đặc Tả Sư Phạm]
-    H --> H2[7 Nguồn Tham Chiếu Gốc]
-    H --> H3[Web Demo Học & Test]
 
     B --> B1[Mental Models & Affordance]
     B --> B2[Conversational Psychology]
@@ -104,28 +99,11 @@ graph TD
 
 ---
 
-### [07. Interactive Pedagogy (Sư Phạm Tương Tác & Học Tập Thực Chứng)](../07-interactive-pedagogy/)
-Chuyển hóa tri thức tĩnh thành các bài học tương tác slide-by-slide phân tầng Free/Pro (Learn Mode vs. Test Mode), dựa trên 7 nguồn tham chiếu chính thức hàng đầu.
-- **[`README.md`](../07-interactive-pedagogy/README.md)**: Bản mục lục chủ đạo, khung sư phạm tương tác và ma trận bằng chứng đa nguồn.
-- **[`01-learning-principles.md`](../07-interactive-pedagogy/01-learning-principles.md)**: Thuyết nhận thức đa phương tiện Mayer, Active Learning (Freeman et al. PNAS) và chu trình học 6 bước.
-- **[`02-conversation-design-rules.md`](../07-interactive-pedagogy/02-conversation-design-rules.md)**: Tải nhận thức thính giác, giới hạn 4 khối nhớ Cowan, The One Breath Test (<25 từ), và Gricean Maxims.
-- **[`03-turn-taking-latency-repair.md`](../07-interactive-pedagogy/03-turn-taking-latency-repair.md)**: Nhịp chuyển lượt 200ms, Barge-in sub-100ms với Audible Boundary Truncation, acoustic fillers và sửa lỗi không đổ người dùng.
-- **[`04-feedback-scaffolding.md`](../07-interactive-pedagogy/04-feedback-scaffolding.md)**: Thang gợi ý 4 bậc tiến tiến (Nudge → Principle → Next Step → Solution) và Alexa 3-tier progressive reprompting.
-- **[`05-exercises-simulations.md`](../07-interactive-pedagogy/05-exercises-simulations.md)**: 5 primitive tương tác: Locate, Tune, Repair, Predict, và Adversarial Sandbox.
-- **[`06-assessment-mastery.md`](../07-interactive-pedagogy/06-assessment-mastery.md)**: Phân tầng Free vs. Pro và rubric 5 tiêu chí định lượng cấp chứng chỉ với telemetry thật.
-- **[`07-accessibility-inclusive-voice.md`](../07-interactive-pedagogy/07-accessibility-inclusive-voice.md)**: Bộ ba phản hồi Earcon + Haptics + Visual Cue và Apple HIG Audio Session Management (Audio Ducking).
-- **[`08-ai-voice-safety-trust.md`](../07-interactive-pedagogy/08-ai-voice-safety-trust.md)**: Minh bạch danh tính AI bắt buộc (EU AI Act), Calibrated Confidence (<0.75 routing) và bảo mật dữ liệu âm thanh.
-- **[`09-source-comparison-matrix.md`](../07-interactive-pedagogy/09-source-comparison-matrix.md)**: Bảng đối chiếu chéo 7 nguồn (Apple, Google, Alexa, OpenAI, LiveKit, Brilliant, Uxcel).
-- **[`10-evidence-cards.md`](../07-interactive-pedagogy/10-evidence-cards.md)**: Kho thẻ bằng chứng thực nghiệm chính thức từ `EVID-PD01` đến `EVID-PD10`.
-- **[`sources/`](../07-interactive-pedagogy/sources/)**: Trích xuất chi tiết từ Apple HIG, Google CxD, Amazon Alexa, OpenAI Realtime, LiveKit, Brilliant, và Uxcel.
+## 🎮 Trình Giả Lập Bài Học Tương Tác & Giáo Trình (Academy Demo & Curriculum)
 
----
+Bản prototype tương tác hoàn chỉnh sẵn sàng chạy tại [`demo/index.html`](../demo/index.html), vận hành các bài học tương tác theo cấu trúc chuẩn trong [`curriculum/`](../curriculum/).
 
-## 🎮 Trình Giả Lập Bài Học Tương Tác (Interactive Demo Player)
-
-Bản prototype tương tác hoàn chỉnh sẵn sàng chạy tại [`demo/index.html`](../demo/index.html).
-
-Ứng dụng hiện thực hóa trọn vẹn đặc tả Interactive Pedagogy theo cấu trúc micro-learning phong cách Uxcel & Brilliant với 2 chế độ:
+Học viện hiện thực hóa trọn vẹn tri thức Voice UX theo cấu trúc micro-learning phong cách Uxcel & Brilliant với 2 chế độ:
 
 | Chế độ | Trọng tâm Sư phạm | Mô hình Tương tác |
 |---|---|---|

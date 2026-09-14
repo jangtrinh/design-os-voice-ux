@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VoiceUXLessonSchema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "lesson",
+    "slides",
+    "player_state_machine",
+    "telemetry",
+    "pass_criteria"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["1.0"]
+    },
+    "lesson": {
+      "type": "object",
+      "required": [
+        "id",
+        "module_id",
+        "title",
+        "track",
+        "estimated_minutes",
+        "objectives"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "module_id": { "type": "string" },
+        "title": { "type": "string" },
+        "track": { "type": "string", "enum": ["free", "pro"] },
+        "estimated_minutes": { "type": "integer", "minimum": 3, "maximum": 20 },
+        "prerequisites": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "objectives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "verb", "concept"],
+            "properties": {
+              "id": { "type": "string" },
+              "verb": { "type": "string", "enum": ["identify", "explain", "apply", "diagnose", "tune", "decide"] },
+              "concept": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "slides": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["id", "phase", "stage", "objective_ids", "visual"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": ["l1", "l2", "l3", "l4", "t1", "t2", "t3", "t4"]
+          },
+          "phase": {
+            "type": "string",
+            "enum": ["learn", "test"]
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "hook",
+              "model",
+              "practice",
+              "transfer",
+              "recognize",
+              "apply",
+              "diagnose",
+              "production_decision"
+            ]
+          },
+          "objective_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "headline": { "type": "string" },
+              "body": { "type": "string" },
+              "takeaway": { "type": "string" }
+            }
+          },
+          "prompt": { "type": "string" },
+          "visual": {
+            "type": "object",
+            "required": ["widget", "props"],
+            "properties": {
+              "widget": { "type": "string" },
+              "version": { "type": "integer", "default": 1 },
+              "props": { "type": "object" }
+            }
+          },
+          "interaction": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "required": { "type": "boolean", "default": true }
+            }
+          },
+          "assessment": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["single_choice", "multiple_choice", "region_select", "slider_tune", "node_repair", "reorder", "code_patch"]
+              },
+              "answer": {},
+              "scoring": {
+                "type": "object",
+                "required": ["max_points"],
+                "properties": {
+                  "max_points": { "type": "number" },
+                  "tolerance": { "type": "number" }
+                }
+              },
+              "hints": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "tier", "text"],
+                  "properties": {
+                    "id": { "type": "string" },
+                    "tier": { "type": "integer", "minimum": 1, "maximum": 4 },
+                    "trigger": { "type": "object" },
+                    "text": { "type": "string" },
+                    "penalty": { "type": "number", "default": 0.0 }
+                  }
+                }
+              },
+              "explanation": { "type": "string" }
+            }
+          },
+          "completion": {
+            "type": "object",
+            "properties": {
+              "event": { "type": "string" },
+              "minimum_interactions": { "type": "integer", "default": 1 }
+            }
+          }
+        }
+      }
+    },
+    "player_state_machine": {
+      "type": "object",
+      "required": ["initial", "states", "transitions"]
+    },
+    "telemetry": {
+      "type": "object",
+      "required": ["context", "capture"]
+    },
+    "pass_criteria": {
+      "type": "object",
+      "required": ["tests", "score"]
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VoiceUXTelemetrySchema",
+  "type": "object",
+  "required": [
+    "event_name",
+    "timestamp",
+    "session_id",
+    "lesson_id",
+    "slide_id",
+    "payload"
+  ],
+  "properties": {
+    "event_name": {
+      "type": "string",
+      "enum": [
+        "lesson_started",
+        "slide_viewed",
+        "widget_interacted",
+        "answer_submitted",
+        "hint_requested",
+        "answer_correct",
+        "answer_incorrect",
+        "lesson_completed",
+        "capstone_evaluated"
+      ]
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "session_id": { "type": "string" },
+    "user_id": { "type": "string" },
+    "lesson_id": { "type": "string" },
+    "slide_id": { "type": "string" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "attempt_count": { "type": "integer" },
+        "time_spent_ms": { "type": "integer" },
+        "score": { "type": "number" },
+        "selected_answer": {},
+        "target_answer": {},
+        "hint_tier": { "type": "integer" },
+        "widget_action": { "type": "string" },
+        "widget_value": {}
+      }
+    }
+  }
+}

@@ -1,0 +1,264 @@
+schema_version: "1.0"
+
+lesson:
+  id: m02-l01
+  module_id: m02
+  title: "The Cowan 4-Chunk Memory Ceiling & One Breath Test"
+  track: free
+  estimated_minutes: 10
+  objectives:
+    - id: obj-cowan-chunking
+      verb: identify
+      concept: "Cowan's 4-chunk working memory ceiling in auditory processing"
+    - id: obj-one-breath-test
+      verb: apply
+      concept: "Google Conversation Design One Breath Test (<25 words per agent turn)"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-cowan-chunking]
+    content:
+      headline: "The 7-Digit Phone Number Myth"
+      body: "Miller's 7±2 law works for visual chunking, but in real-time voice, human short-term storage collapses at 4 chunks."
+      takeaway: "Auditory working memory ceiling is strictly 3 to 4 items (Cowan, 2001)."
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        items: ["Tracking #", "Arrival Date", "Courier Name", "Delivery Window", "Signature Requirement", "Gate Code"]
+        capacity: 4
+        overflow_index: 4
+    interaction:
+      type: simulate-utterance
+      required: true
+    completion:
+      event: simulation_completed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-one-breath-test]
+    content:
+      headline: "The One Breath Test (<25 Words)"
+      body: "If a voice designer cannot read the agent's utterance aloud comfortably in a single breath, the prompt is too long."
+      takeaway: "Auditory cognitive fatigue begins at >25 words or >8 seconds of continuous agent monologue."
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        sample_text: "Your order 4920 has shipped via DHL and is scheduled to arrive this Thursday between 2 PM and 4 PM with signature required."
+        word_count: 23
+        breath_gauge_percentage: 88
+        status: "pass"
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 2
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-one-breath-test]
+    content:
+      headline: "Trimming the Monologue"
+      body: "Use the word trimmer slider to edit down a 45-word robotic speech into a punchy 18-word conversational turn."
+      takeaway: "Remove pleasantries, redundant confirmatives, and GUI artifacts: get straight to the core message."
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        original_words: 45
+        target_words: 20
+        interactive_trimmer: true
+    interaction:
+      type: split-chunks
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-cowan-chunking]
+    content:
+      headline: "Chunking Compound Information"
+      body: "Never read raw numbers: '5550192'. Group them into rhythmic phonological chunks: '555... 01... 92'."
+      takeaway: "Prosodic grouping (pitch dips, 150ms pauses) converts 7 digits into 3 manageable chunks."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [agent]
+        chunk_delimiters: [3, 5, 7]
+        rhythmic_pauses_ms: 180
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-cowan-chunking]
+    prompt: "According to Nelson Cowan's empirical working memory research (2001), what is the maximum number of un-rehearsed chunks humans can hold in auditory memory?"
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        options_visual: [2, 4, 7, 10]
+    assessment:
+      type: single_choice
+      answer: "4_chunks"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Miller argued 7 in 1956, but modern cognitive neuroscience disproved this for transient audio."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "The correct answer is 4 (±1)."
+          penalty: 0.25
+      explanation: "Cowan (2001) established that pure working memory capacity is limited to 4 chunks when verbal rehearsal is suppressed."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-one-breath-test]
+    prompt: "An assistant response currently contains 38 words. Adjust the prompt to pass the One Breath Test (<25 words)."
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        word_counter: 38
+        threshold_line: 25
+    assessment:
+      type: single_choice
+      answer: "trim_to_19_words"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Pick the version that conveys the core booking confirmation under 25 words."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "'Doctor Smith is confirmed for tomorrow at 2 PM. A calendar invite was sent to your email.' (17 words)."
+          penalty: 0.25
+      explanation: "The 17-word version passes the One Breath test effortlessly, eliminating cognitive fatigue."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-cowan-chunking]
+    prompt: "In user test recordings, callers repeatedly ask 'Can you repeat that?' after hearing account balances. What is the root cause?"
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        spoken_audio: "Your checking has $1,240, savings has $5,820, investment portfolio has $24,100, and credit card balance is $320 due on Tuesday."
+        chunks_count: 6
+        status: "overloaded"
+    assessment:
+      type: single_choice
+      answer: "exceeded_chunk_capacity"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Count how many distinct financial balances and dates were delivered in one single breath."
+          penalty: 0.1
+      explanation: "Presenting 4 distinct balances plus a payment due date creates 5+ cognitive chunks, inducing cognitive overload and forced repeats."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-cowan-chunking, obj-one-breath-test]
+    prompt: "A banking voice assistant must read back a 16-digit debit card number for verification. What is the production design decision?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        card_digits_count: 16
+        security_and_memory_tradeoff: true
+    assessment:
+      type: single_choice
+      answer: "chunk_by_fours_with_micro_confirmations"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Reading 16 digits without pausing will cause 100% user error."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Deliver in 4-digit groups (e.g. 4111, 2222...) with subtle pitch cadence or 2-stage verification."
+          penalty: 0.25
+      explanation: "Chunking in 4 groups of 4 with prosodic cadence conforms to the Cowan 4-chunk limit, maximizing verification accuracy."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m02-l01
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

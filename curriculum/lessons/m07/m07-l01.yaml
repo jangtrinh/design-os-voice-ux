@@ -1,0 +1,256 @@
+schema_version: "1.0"
+
+lesson:
+  id: m07-l01
+  module_id: m07
+  title: "Wizard of Oz Testing & Audio Telemetry"
+  track: pro
+  estimated_minutes: 10
+  objectives:
+    - id: obj-woz-protocol
+      verb: explain
+      concept: "The Wizard of Oz (WoZ) experimental protocol for rapid conversational hypothesis testing"
+    - id: obj-telemetry-metrics
+      verb: identify
+      concept: "Core VUI telemetry metrics: Task Completion Rate (TCR), Barge-in Success Rate, and Fallback Ratio"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-woz-protocol]
+    content:
+      headline: "The Cost of Building Without Testing"
+      body: "A startup spent 6 months building a complex neural voice assistant, only to discover users hated vocalizing calendar entries."
+      takeaway: "Validate conversation flows in 3 days using a hidden human operator (Wizard of Oz) before writing a single line of backend code."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        mode: "woz_setup"
+        subject_terminal: true
+        wizard_console: true
+        tts_synthesizer: true
+    interaction:
+      type: scrub
+      required: true
+    completion:
+      event: timeline_scrubbed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-woz-protocol]
+    content:
+      headline: "The WoZ Triad: Subject, Wizard, Audio Engine"
+      body: "The caller speaks into a real mic. The hidden 'Wizard' presses soundboard buttons or types responses through real TTS."
+      takeaway: "The caller believes they are speaking to advanced AI. You capture authentic conversational edge cases and hesitations."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        nodes: [caller_microphone, wizard_interface, tts_soundboard, caller_earpiece]
+        active_connection: true
+    interaction:
+      type: inspect-state
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 2
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-telemetry-metrics]
+    content:
+      headline: "Evaluating Telemetry Dashboards"
+      body: "Inspect the 4 core health indicators: Task Completion Rate (TCR), Word Error Rate (WER), Barge-in Latency, and Fallback Ratio."
+      takeaway: "Production benchmark: TCR > 85%, Fallback Ratio < 8%, Barge-in Latency < 100ms."
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        kpis:
+          - { name: "Task Completion Rate (TCR)", value: "88%", benchmark: ">85%", status: "pass" }
+          - { name: "Word Error Rate (WER)", value: "6.2%", benchmark: "<8%", status: "pass" }
+          - { name: "Barge-in Latency", value: "75ms", benchmark: "<100ms", status: "pass" }
+          - { name: "Fallback Escalation Ratio", value: "6.1%", benchmark: "<8%", status: "pass" }
+    interaction:
+      type: inspect-stage
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-telemetry-metrics]
+    content:
+      headline: "Automated CI/CD Audio Regression"
+      body: "Don't test voice manually before every release. Play recorded wav files into WebRTC test runners on every PR."
+      takeaway: "Audio CI tests check transcript accuracy, barge-in compliance, and latency regression automatically."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        ci_cd_active: true
+        test_suites: [Auto_T1_Acoustics, Auto_T2_Stress, Auto_T3_Latency]
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-woz-protocol]
+    prompt: "What is the primary objective of running a Wizard of Oz (WoZ) usability study?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        woz_quiz: true
+    assessment:
+      type: single_choice
+      answer: "discover_unscripted_user_phrasing_and_failure_modes"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "WoZ uncovers how real humans speak when they expect an AI."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "It exposes unscripted phrasings, pauses, and friction points before coding."
+          penalty: 0.25
+      explanation: "WoZ studies uncover authentic user mental models, phrasing variations, and unexpected questions at near-zero cost."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-telemetry-metrics]
+    prompt: "Your production voice bot has 1,000 calls. 820 completed successfully, 110 triggered human handoff, and 70 dropped abruptly. Calculate the Task Completion Rate (TCR)."
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        total_calls: 1000
+        completed_calls: 820
+    assessment:
+      type: single_choice
+      answer: "82_percent"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "TCR = Completed Tasks / Total Attempts."
+          penalty: 0.1
+      explanation: "820 / 1000 = 82% TCR (which is slightly below the 85% production readiness threshold)."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-telemetry-metrics]
+    prompt: "Telemetry shows Word Error Rate (WER) suddenly doubled from 5% to 12% at 5:00 PM every weekday. What environmental factor explains this?"
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        ambient_traffic_surge: true
+    assessment:
+      type: single_choice
+      answer: "commuter_traffic_and_subway_background_noise"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "What happens at 5 PM on weekdays? Commute rush hour."
+          penalty: 0.1
+      explanation: "Commuter transit noise degrades acoustic signal-to-noise ratio, spiking WER during rush hours."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-woz-protocol, obj-telemetry-metrics]
+    prompt: "Before deploying a major voice prompt refactor to 500,000 users, what is the deployment verification strategy?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        canary_deployment_model: true
+    assessment:
+      type: single_choice
+      answer: "5_percent_canary_with_tcr_circuit_breaker"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Never cut over 100% of telephony traffic at once."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Route 5% canary traffic; auto-rollback if TCR dips below 85% or latency exceeds 900ms."
+          penalty: 0.25
+      explanation: "Canary routing with an automated circuit breaker prevents catastrophic voice outages from reaching the entire user base."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m07-l01
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

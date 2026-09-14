@@ -1,0 +1,261 @@
+schema_version: "1.0"
+
+lesson:
+  id: m03-l03
+  module_id: m03
+  title: "Conversational Repair & Progressive Recovery"
+  track: free
+  estimated_minutes: 10
+  objectives:
+    - id: obj-non-blaming-repair
+      verb: identify
+      concept: "No-blame error psychology: internalizing system failure instead of blaming user input"
+    - id: obj-progressive-reprompt
+      verb: apply
+      concept: "Amazon Alexa 3-tier progressive reprompting ladder (Gentle -> Structured -> Human Handoff)"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-non-blaming-repair]
+    content:
+      headline: "The Blame Game in VUI"
+      body: "Listen to this error prompt: 'Invalid input. You must speak clearly.' Notice how instantly defensive it makes you feel."
+      takeaway: "Never blame the caller. In voice interfaces, all errors are the system's fault."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        blaming_prompt: "Error: You didn't provide a valid account number."
+        empathy_score: 12
+        status: "hostile"
+    interaction:
+      type: scrub
+      required: true
+    completion:
+      event: timeline_scrubbed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-progressive-reprompt]
+    content:
+      headline: "The 3-Tier Progressive Reprompt Ladder"
+      body: "Tier 1: Gentle re-ask. Tier 2: Provide specific example formats. Tier 3: Transfer to human agent or offer keypad."
+      takeaway: "Never repeat the exact same error message twice in a row."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        tiers:
+          - { tier: 1, name: "Gentle Re-ask", prompt: "Sorry, which airport was that?" }
+          - { tier: 2, name: "Structured Guidance", prompt: "Say the city name or 3-letter code, like 'Seattle' or 'S-E-A'." }
+          - { tier: 3, name: "Graceful Escape", prompt: "I'm having trouble with audio. Let me transfer you to an agent." }
+    interaction:
+      type: inspect-state
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 3
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-progressive-reprompt]
+    content:
+      headline: "Building the Repair Sequence"
+      body: "Drag the prompt cards into the correct 3-tier progressive escalation order."
+      takeaway: "Escalating guidance keeps the conversation moving forward rather than looping in an infinite retry spiral."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        drag_repair_cards: true
+        target_slots: 3
+    interaction:
+      type: node-repair
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-non-blaming-repair]
+    content:
+      headline: "Silent Timeouts vs Misrecognitions"
+      body: "When the caller is completely silent (no speech detected), don't ask 'What?'. The caller may be searching for information."
+      takeaway: "On silence timeout: 'Take your time. Whenever you're ready, let me know your policy number.'"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        silence_timeout_ms: 6000
+        reassuring_prompt: true
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-non-blaming-repair]
+    prompt: "Which of the following error responses adheres to conversational no-blame principles?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        candidate_prompts: true
+    assessment:
+      type: single_choice
+      answer: "sorry_i_missed_that"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Look for the option that internalizes the acoustic limitation rather than criticizing the user."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "'Sorry, I had trouble hearing that. Could you say that again?'"
+          penalty: 0.25
+      explanation: "'Sorry, I had trouble hearing that' absorbs responsibility, avoiding defensive friction."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-progressive-reprompt]
+    prompt: "The user failed to provide a valid date twice in a row. Formulate the Tier 2 guided reprompt."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        tier_level: 2
+        task: "Date of Birth"
+    assessment:
+      type: single_choice
+      answer: "say_month_day_year_example"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Provide a concrete acoustic example format."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "'Please say the month, day, and 4-digit year, like 'July 14th, 1985'.'"
+          penalty: 0.25
+      explanation: "Tier 2 must constrain cognitive entropy by providing an explicit formatting template with examples."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-progressive-reprompt]
+    prompt: "A voice banking bot was tested with 50 users. 18 callers hung up in frustration at the PIN entry step. What flaw in the repair logic caused this?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        loop_counter: 6
+        same_message_repeated: true
+    assessment:
+      type: single_choice
+      answer: "infinite_retry_loop_without_fallback"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Check if the bot ever offered an alternative entry method or human transfer."
+          penalty: 0.1
+      explanation: "Repeating 'Incorrect PIN, try again' indefinitely without capping at 3 attempts and offering keypad entry causes rage quits."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-non-blaming-repair, obj-progressive-reprompt]
+    prompt: "In a medical voice assistant, a patient's speech is slurred and un-transcribable 3 times in a row. What is the production safety protocol?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        medical_risk_level: "critical"
+        telephony_transfer_active: true
+    assessment:
+      type: single_choice
+      answer: "immediate_warm_transfer_to_clinical_staff"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Slurred speech in healthcare can indicate stroke or acute distress."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Never terminate or loop; initiate an urgent warm handoff to a triage nurse."
+          penalty: 0.25
+      explanation: "In healthcare, 3 consecutive un-intelligible turns triggers an urgent safety handoff to clinical staff to mitigate medical risk."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m03-l03
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

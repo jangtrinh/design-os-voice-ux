@@ -1,0 +1,261 @@
+schema_version: "1.0"
+
+lesson:
+  id: m02-l02
+  module_id: m02
+  title: "Gricean Maxims & The Cooperative Principle"
+  track: free
+  estimated_minutes: 8
+  objectives:
+    - id: obj-grice-maxims
+      verb: identify
+      concept: "Paul Grice's 4 conversational maxims: Quantity, Quality, Relation, and Manner"
+    - id: obj-llm-verbosity-audit
+      verb: diagnose
+      concept: "Detecting and stripping LLM chat verbosity violations in speech interfaces"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-llm-verbosity-audit]
+    content:
+      headline: "The 'Chatbot Accent' in Voice"
+      body: "Listen to this LLM response: 'Certainly! I would be delighted to assist you with that inquiry. Regarding the weather in Tokyo...'"
+      takeaway: "Written LLM politeness feels condescending and unnatural when spoken aloud."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [agent]
+        filler_words: ["Certainly!", "I would be delighted to assist you", "Regarding your inquiry"]
+        time_wasted_ms: 3200
+    interaction:
+      type: scrub
+      required: true
+    completion:
+      event: timeline_scrubbed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-grice-maxims]
+    content:
+      headline: "The 4 Gricean Maxims in Voice AI"
+      body: "1. Quantity (just enough information). 2. Quality (accurate, verified). 3. Relation (strictly relevant). 4. Manner (brief, orderly)."
+      takeaway: "In Voice UX, Maxim of Quantity is violated most frequently by raw LLM completions."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        maxims:
+          - { name: "Quantity", score: 40, status: "violated" }
+          - { name: "Quality", score: 95, status: "passed" }
+          - { name: "Relation", score: 80, status: "passed" }
+          - { name: "Manner", score: 50, status: "violated" }
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 2
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-llm-verbosity-audit]
+    content:
+      headline: "Scrubbing Sycophancy & Meta-Talk"
+      body: "Click to redact sycophantic pleasantries ('Great question!', 'Sure thing!'). See conversational latency drop by 2.4 seconds."
+      takeaway: "Direct answers convey competence. Excessive conversational lubricant conveys weakness."
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        original_text: "Great question! I would be glad to help. The pharmacy closes at 9 PM tonight."
+        redacted_text: "The pharmacy closes at 9 PM tonight."
+        words_saved: 11
+        time_saved_ms: 2400
+    interaction:
+      type: split-chunks
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-grice-maxims]
+    content:
+      headline: "Maxim of Relation in Multi-Turn Dialog"
+      body: "User: 'Is it raining?' Agent: 'No, but high temperatures will be 74 with winds from the west at 12 mph.' This over-answers."
+      takeaway: "Answer the direct question first. Offer related context only if requested."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [user, agent]
+        over_answering_detected: true
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-grice-maxims]
+    prompt: "A user asks: 'Do you take Apple Pay?' The assistant replies: 'Apple Pay is a contactless payment service developed by Apple Inc. Yes, our store supports it.' Which Gricean Maxim was violated?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        maxim_test: true
+    assessment:
+      type: single_choice
+      answer: "maxim_of_quantity"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "The assistant gave encyclopedic background info the user never asked for."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Giving more information than is required directly violates the Maxim of Quantity."
+          penalty: 0.25
+      explanation: "The Maxim of Quantity requires that an utterance be as informative as needed, but NOT more informative than needed."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-llm-verbosity-audit]
+    prompt: "Select the most Grice-compliant voice response for: 'What time is my flight?'"
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        response_comparison: true
+    assessment:
+      type: single_choice
+      answer: "flight_120_departs_at_315"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Look for the answer that provides flight # and departure time without chat fillers."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "'Flight 120 departs at 3:15 PM from Gate B4.' (10 words)."
+          penalty: 0.25
+      explanation: "Directly answering with Flight number, time, and gate delivers perfect informational density (Quantity & Manner)."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-llm-verbosity-audit]
+    prompt: "Review the system prompt instruction snippet below. Why does it cause the voice agent to sound robotic and pedantic?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        prompt_snippet: "Always apologize politely, thank the user for contacting us, and state your role as a virtual AI assistant before answering."
+    assessment:
+      type: single_choice
+      answer: "forces_unnecessary_preambles"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Mandating apology + gratitude + identity statements burns 5+ seconds before answering."
+          penalty: 0.1
+      explanation: "Forcing polite preamble disclaimers wastes user attention and violates Grice's Maxim of Manner."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-grice-maxims, obj-llm-verbosity-audit]
+    prompt: "You are setting the system prompt for an LLM generating speech tokens via WebRTC. What formatting instruction is mandatory to protect speech prosody?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        llm_formatting_rules: true
+    assessment:
+      type: single_choice
+      answer: "ban_markdown_bullets_and_urls"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "TTS engines stumble when trying to pronounce asterisks, bullet points, and http links."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Instruction: 'Output plain spoken conversational prose only. Never use markdown, bullets, asterisks, or URLs.'"
+          penalty: 0.25
+      explanation: "TTS synthesizers attempt to verbalize markdown tags or stumble over URLs, producing horrific acoustic artifacts."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m02-l02
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

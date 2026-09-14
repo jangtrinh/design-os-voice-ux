@@ -1,0 +1,266 @@
+schema_version: "1.0"
+
+lesson:
+  id: m01-l02
+  module_id: m01
+  title: "Voice vs GUI: The Asymmetry of Affordance"
+  track: free
+  estimated_minutes: 8
+  objectives:
+    - id: obj-temporal-evanescence
+      verb: explain
+      concept: "Auditory evanescence: voice is transient in time, while GUI is persistent in space"
+    - id: obj-progressive-disclosure
+      verb: apply
+      concept: "Voice progressive disclosure: chunking choices into maximum 2-3 audible options"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-temporal-evanescence]
+    content:
+      headline: "The Invisible Interface Problem"
+      body: "In a GUI, a user can see 20 menu items at once. In voice, by the time the assistant finishes reading item 6, item 1 is forgotten."
+      takeaway: "Sound exists only in time. Once spoken, it disappears from sensory memory within 2-4 seconds."
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        items_spoken: ["Chicago 8:00 AM", "Dallas 9:15 AM", "Denver 10:30 AM", "Atlanta 11:45 AM", "Seattle 1:15 PM", "Miami 2:30 PM", "Boston 4:00 PM"]
+        fade_time_ms: 3000
+    interaction:
+      type: simulate-utterance
+      required: true
+    completion:
+      event: simulation_completed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-temporal-evanescence]
+    content:
+      headline: "Spatial Persistence vs Temporal Linearity"
+      body: "GUIs rely on spatial recognition (cheap cognitive load). Voice relies on serial recall (expensive working memory load)."
+      takeaway: "Never design a voice interface by reading GUI screens aloud. Transform menus into intent-driven questions."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        mode: "gui_vs_vui"
+        gui_persistence: "infinite"
+        vui_duration_sec: 14.5
+        cognitive_load_score: 85
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 2
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-progressive-disclosure]
+    content:
+      headline: "Compressing Choices into Progressive Disclosure"
+      body: "Drag the option limiter to reduce an 8-item voice list down to the optimal 2-option anchor with an escape hatch."
+      takeaway: "Pattern: 'I found 5 flights. The top two are at 8 AM and 10 AM. Want one of these, or more times?'"
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        total_options: 8
+        active_options: 2
+        escape_hatch: "more options"
+        memory_load_percentage: 45
+    interaction:
+      type: split-chunks
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-progressive-disclosure]
+    content:
+      headline: "Transfer to Multimodal: Smart Displays"
+      body: "When a screen is present, voice announces the recommendation while the display shows the full list."
+      takeaway: "Audio provides narrative focus; visual display provides spatial reference."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        multimodal_mode: true
+        screen_items: 5
+        spoken_items: 1
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-temporal-evanescence]
+    prompt: "Why is reading a 7-item list aloud to a voice caller considered a critical usability failure?"
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        items_count: 7
+        memory_overflow: true
+    assessment:
+      type: single_choice
+      answer: "working_memory_overload"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Think about how many pieces of information human short-term memory can hold simultaneously."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Human acoustic working memory is strictly limited to 3-4 chunks (Cowan 2001)."
+          penalty: 0.25
+      explanation: "Acoustic working memory has a 4-chunk limit. Presenting 7 serial options causes recency and primacy distortion."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-progressive-disclosure]
+    prompt: "Refactor this prompt: 'You have 5 invoices: invoice 101, invoice 102, invoice 103, invoice 104, invoice 105. Which one do you want to pay?'"
+    visual:
+      widget: working-memory-meter
+      version: 1
+      props:
+        original_prompt_words: 23
+        target_max_options: 2
+    assessment:
+      type: single_choice
+      answer: "recommend_latest_plus_more"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Anchor on the most urgent item and offer an escape hatch."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Example: 'You have 5 invoices. The newest is $150 due tomorrow. Pay this one, or list the others?'"
+          penalty: 0.25
+      explanation: "Anchoring on the most relevant invoice and offering an explicit branch keeps working memory load within limits."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-temporal-evanescence]
+    prompt: "Review the funnel drop-off analytics. At which utterance did 64% of callers abandon the call?"
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        stages:
+          - { name: "Step 1: Greeting", duration_ms: 1200, dropoff_rate: "4%" }
+          - { name: "Step 2: Read 6 Account Numbers", duration_ms: 9200, dropoff_rate: "64%" }
+          - { name: "Step 3: Transfer to Specialist", duration_ms: 2100, dropoff_rate: "8%" }
+    assessment:
+      type: single_choice
+      answer: "step_2_account_numbers"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Look at the utterance taking 9.2 seconds with 6 spoken numbers."
+          penalty: 0.1
+      explanation: "Reading 6 sequential account numbers violates auditory memory capacity, causing cognitive frustration and immediate abandonment."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-progressive-disclosure, obj-temporal-evanescence]
+    prompt: "You are architecting an in-car infotainment system. The user asks 'Find Italian restaurants nearby'. 14 results match. What is the production architecture decision?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        driving_context: true
+        high_cognitive_distraction: true
+    assessment:
+      type: single_choice
+      answer: "announce_top_pick_plus_display_list"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Safety while driving requires minimal eyes-off-road and zero audio overload."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Read the #1 best match (highest rating + nearest), display the top 3 on screen, and offer one quick action."
+          penalty: 0.25
+      explanation: "In driving contexts, vocalizing 14 results causes hazardous cognitive distraction. Announcing the single top choice with brief screen backup is the safe standard."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m01-l02
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

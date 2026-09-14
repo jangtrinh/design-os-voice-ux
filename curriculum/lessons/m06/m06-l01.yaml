@@ -1,0 +1,260 @@
+schema_version: "1.0"
+
+lesson:
+  id: m06-l01
+  module_id: m06
+  title: "AI Disclosure, Privacy & Calibrated Uncertainty"
+  track: pro
+  estimated_minutes: 10
+  objectives:
+    - id: obj-ai-disclosure
+      verb: identify
+      concept: "Legal and ethical mandate for upfront AI disclosure (EU AI Act Article 50 & FTC guidelines)"
+    - id: obj-calibrated-uncertainty
+      verb: apply
+      concept: "Calibrated uncertainty gating: routing queries with <0.75 confidence to clarification or human handoff"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-ai-disclosure]
+    content:
+      headline: "The Uncanny Deception"
+      body: "An AI voice agent pretends to be a real human nurse, even simulating breathing and throat clearing to deceive the patient."
+      takeaway: "Deceiving users into believing an AI is human destroys trust and violates international law (EU AI Act Art 50)."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [agent]
+        fake_breathing_detected: true
+        legal_violation: true
+        fine_risk_eur: "35M"
+    interaction:
+      type: scrub
+      required: true
+    completion:
+      event: timeline_scrubbed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-ai-disclosure]
+    content:
+      headline: "Upfront Identity Transparency"
+      body: "Within the first turn, the system must clearly establish its AI nature: 'Hi, I'm the automated clinic assistant...'"
+      takeaway: "Transparency sets realistic mental expectations: users speak more clearly and forgive minor misrecognitions."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        first_turn_greeting: "Hi, I'm Dr. Vance's automated voice assistant. How can I help you today?"
+        disclosure_present: true
+        compliance_status: "compliant"
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 2
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-calibrated-uncertainty]
+    content:
+      headline: "Setting the Uncertainty Threshold Gate"
+      body: "Drag the confidence threshold line. Queries with confidence <0.75 must trigger explicit confirmation rather than blind execution."
+      takeaway: "Confidence >0.85 = Implicit action. 0.70-0.85 = Explicit confirmation. <0.70 = Progressive reprompt or human transfer."
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        confidence_score: 0.72
+        threshold_slider: true
+        current_threshold: 0.75
+    interaction:
+      type: drag-threshold
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-calibrated-uncertainty]
+    content:
+      headline: "Audio Data Retention & GDPR / HIPAA"
+      body: "Raw audio recordings contain biometric voiceprints. Never store raw audio streams in plain text log sinks."
+      takeaway: "Redact PII (credit cards, names, SSNs) at the speech-to-text token level before persisting audit logs."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        pii_redaction_pipeline: true
+        redacted_tokens: ["[CARD_NUM]", "[SSN]", "[PATIENT_NAME]"]
+    interaction:
+      type: inspect-state
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-ai-disclosure]
+    prompt: "Under the European Union Artificial Intelligence Act (Article 50), what is the mandatory requirement for conversational voice systems?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        compliance_quiz: true
+    assessment:
+      type: single_choice
+      answer: "must_inform_user_they_are_interacting_with_ai"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Deceptive mimicry of humans is strictly prohibited."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Article 50 mandates clear and upfront disclosure of AI identity."
+          penalty: 0.25
+      explanation: "Article 50 explicitly states providers must ensure AI systems interacting with natural persons inform them that they are interacting with an AI."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-calibrated-uncertainty]
+    prompt: "ASR confidence for user intent 'Cancel Subscription' is 0.72 (uncertain). Formulate the appropriate calibrated response."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        confidence_level: 0.72
+    assessment:
+      type: single_choice
+      answer: "explicit_confirmation_did_you_mean_cancel"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Do not cancel immediately on low confidence; verify explicitly."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "'Did you want to cancel your monthly subscription? Please say Yes or No.'"
+          penalty: 0.25
+      explanation: "High-impact actions with <0.75 confidence require explicit confirmation before execution to prevent irreversible errors."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-calibrated-uncertainty]
+    prompt: "A caller asked 'Can I take aspirin with warfarin?' The bot replied: 'Yes, both are common medications' with 0.62 confidence. What critical failure happened here?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        medical_contraindication: true
+        fatal_risk: true
+    assessment:
+      type: single_choice
+      answer: "hallucination_on_low_confidence_contraindication"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Aspirin + Warfarin is a lethal blood-thinning drug interaction."
+          penalty: 0.1
+      explanation: "Failing to gate low-confidence clinical queries caused a lethal medical contraindication hallucination."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-ai-disclosure, obj-calibrated-uncertainty]
+    prompt: "A customer explicitly asks: 'Are you a real human or a robot?' What is the production design rule for the voice agent's response?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        identity_challenge: true
+    assessment:
+      type: single_choice
+      answer: "immediate_direct_honest_admission"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Never deflect, joke, or evade the question."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "'I'm an AI assistant, but I can connect you to a human team member if you prefer.'"
+          penalty: 0.25
+      explanation: "Direct honesty with an immediate human handoff option builds trust and fulfills legal compliance."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m06-l01
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

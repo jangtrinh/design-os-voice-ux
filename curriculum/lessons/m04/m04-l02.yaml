@@ -1,0 +1,254 @@
+schema_version: "1.0"
+
+lesson:
+  id: m04-l02
+  module_id: m04
+  title: "The Voice-Screen Multimodal Handshake"
+  track: pro
+  estimated_minutes: 10
+  objectives:
+    - id: obj-modality-division
+      verb: explain
+      concept: "Division of labor: Voice drives intent & narration, Screen handles dense spatial data & tactile confirmation"
+    - id: obj-temporal-spatial-sync
+      verb: apply
+      concept: "Synchronizing spoken word streaming timestamps with visual element highlighting (karaoke highlight pattern)"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-modality-division]
+    content:
+      headline: "The Double-Read Annoyance"
+      body: "Look at the screen showing 5 flight cards while the voice assistant reads every single card aloud word-for-word."
+      takeaway: "Voice should never read what the eye can scan in 500ms."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [screen_display, voice_readout]
+        redundancy_score: 95
+        wasted_time_sec: 18.2
+    interaction:
+      type: scrub
+      required: true
+    completion:
+      event: timeline_scrubbed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-modality-division]
+    content:
+      headline: "The Multimodal Matrix"
+      body: "Spoken Voice = Synthesis, recommendation, prompt. Visual Screen = Evidence, comparisons, details, primary CTA."
+      takeaway: "Complementary modalities: Voice tells 'Why', Display shows 'What'."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        matrix:
+          - { channel: "Voice", role: "Recommendation & Question", example: "'I found 3 cardiologists in network. Dr. Vance has tomorrow open.'" }
+          - { channel: "Screen", role: "Dense Comparison Card", example: "Cards with ratings, addresses, map pins, and 'Book' button." }
+    interaction:
+      type: inspect-state
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 2
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-temporal-spatial-sync]
+    content:
+      headline: "Synchronizing Spoken Timing with Screen Focus"
+      body: "Drag the audio timestamp cursor to highlight Card 2 on screen precisely when the TTS voice speaks 'Dr. Elena Vance'."
+      takeaway: "Synchronized visual focus reduces cognitive search time to zero."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        sync_items:
+          - { time_ms: 800, target: "card_1" }
+          - { time_ms: 2200, target: "card_2" }
+          - { time_ms: 3600, target: "card_3" }
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-modality-division]
+    content:
+      headline: "Graceful Fallback: Voice-Only Mode"
+      body: "When the screen is locked or the user is driving (CarPlay), the system must dynamically switch from Complementary to Narrative mode."
+      takeaway: "Adaptive modality: condense visual cards into a single audible recommendation when screen affordance is 0."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        display_connected: false
+        narrative_mode: true
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-modality-division]
+    prompt: "When a smart display (e.g., Echo Show or iPad) is active, what is the anti-pattern in assistant response design?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        antipattern_quiz: true
+    assessment:
+      type: single_choice
+      answer: "reading_verbatim_screen_content"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Users read 3-4x faster visually than speaking rate."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Reading the full text aloud while it is already on screen is redundant and irritating."
+          penalty: 0.25
+      explanation: "Reading on-screen text verbatim causes cognitive dissonance and wastes caller time."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-temporal-spatial-sync]
+    prompt: "You receive WebSocket phoneme markers `{ word: 'Tuesday', offset_ms: 1240 }`. What client UI event must fire at 1240ms?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        timestamp_event_binding: true
+    assessment:
+      type: single_choice
+      answer: "animate_focus_ring_on_tuesday_slot"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Highlight the specific visual slot being vocalized."
+          penalty: 0.1
+      explanation: "Triggering a focus ring or highlight on the visual slot matches eye gaze with ear perception."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-modality-division]
+    prompt: "On an in-clinic check-in kiosk, patients frequently press 'Cancel' halfway through the assistant's voice prompt. Why?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        kiosk_test_results: true
+    assessment:
+      type: single_choice
+      answer: "touch_buttons_disabled_during_speech"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Were touch taps allowed while the assistant was vocalizing?"
+          penalty: 0.1
+      explanation: "Locking the touch screen while TTS is playing forces unnecessary waiting. Tapping should instantly interrupt voice."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-modality-division, obj-temporal-spatial-sync]
+    prompt: "You are designing an e-commerce checkout flow on a smart TV. The user says 'Buy the blue shoes'. Sensitive PIN entry is required. What is the production architecture decision?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        sensitive_data_entry: true
+    assessment:
+      type: single_choice
+      answer: "push_pin_auth_to_personal_phone_app"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Speaking a banking PIN aloud in a living room violates audio privacy."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Handoff the credential challenge to the user's paired personal device via push notification."
+          penalty: 0.25
+      explanation: "Vocalizing credentials in shared spaces is a critical security violation. Route the authentication challenge out-of-band to a phone."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m04-l02
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

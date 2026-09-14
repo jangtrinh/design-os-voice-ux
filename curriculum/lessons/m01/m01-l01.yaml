@@ -1,0 +1,293 @@
+schema_version: "1.0"
+
+lesson:
+  id: m01-l01
+  module_id: m01
+  title: "Anatomy of a Voice Turn"
+  track: free
+  estimated_minutes: 8
+  objectives:
+    - id: obj-turn-phases
+      verb: identify
+      concept: "Phases of conversational floor exchange (Listening -> VAD Endpoint -> Processing -> Playout)"
+    - id: obj-turn-timing
+      verb: diagnose
+      concept: "Acoustic silence gap and floor collision detection"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-turn-phases]
+    content:
+      headline: "Why does this conversation feel jarring?"
+      body: "Listen to the two assistant exchanges below. One holds a natural conversational cadence; the other interrupts prematurely."
+      takeaway: "Human turn-taking operates on a 200ms acoustic cadence. Violating this creates conversational collisions."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [user, agent, acoustic_silence]
+        time_domain_ms: 4000
+        highlight_region: [1200, 1400]
+        label: "Abrupt Turn Collision (120ms gap)"
+    interaction:
+      type: scrub
+      required: true
+    completion:
+      event: timeline_scrubbed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-turn-phases]
+    content:
+      headline: "The 4-Phase Turn State Machine"
+      body: "A voice turn is not a simple request-response loop; it is a bidirectional state machine governing floor custody."
+      takeaway: "Floor custody shifts only after the VAD silence hangtime confirms speech termination."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [user, vad, agent]
+        time_domain_ms: 5000
+        states:
+          - { name: "User Speaking", start: 0, end: 1800, color: "blue" }
+          - { name: "Silence Hangtime (VAD)", start: 1800, end: 2300, color: "amber" }
+          - { name: "Agent Processing", start: 2300, end: 2700, color: "purple" }
+          - { name: "Agent Speaking", start: 2700, end: 4500, color: "emerald" }
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 3
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-turn-timing]
+    content:
+      headline: "Tune the Silence Hangtime"
+      body: "Adjust the VAD silence hangtime slider to balance between premature cutoffs (<300ms) and sluggish latency (>800ms)."
+      takeaway: "Optimal natural endpointing balances between 400ms and 600ms for non-interrupted utterances."
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        sample_rate_hz: 16000
+        energy_envelope: true
+        vad_threshold_db: -42
+        hangtime_ms: 500
+        min_hangtime: 150
+        max_hangtime: 1000
+    interaction:
+      type: drag-threshold
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-turn-timing]
+    content:
+      headline: "Edge Case: Mid-Sentence Cognitive Pauses"
+      body: "When users say 'I want to book... um... a flight', a naive VAD triggers during 'um'. Adaptive semantic VAD prevents this premature cutoff."
+      takeaway: "Acoustic fillers (um, uh) sustain floor custody even during acoustic pitch dips."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [user, vad, agent]
+        time_domain_ms: 6000
+        filler_detected: true
+        pause_duration_ms: 650
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-turn-phases]
+    prompt: "Which region in the timeline represents the VAD silence hangtime window before the agent acquires floor custody?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [user, vad, agent]
+        selectable_regions: true
+        regions:
+          - id: region-a
+            range: [0, 1500]
+            label: "Region A"
+          - id: region-b
+            range: [1500, 2050]
+            label: "Region B"
+          - id: region-c
+            range: [2050, 2500]
+            label: "Region C"
+    assessment:
+      type: region_select
+      answer: "region-b"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Look immediately after user speech ends, before agent audio playout begins."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "The silence hangtime is the acoustic buffer used to confirm the speaker is not just pausing."
+          penalty: 0.25
+      explanation: "Region B (1500ms-2050ms) is the 550ms silence hangtime window where VAD confirms utterance completion."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-turn-timing]
+    prompt: "The caller frequently gets cut off mid-sentence while hesitating. Adjust the VAD hangtime slider to the industry standard range (500ms - 700ms)."
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        current_hangtime_ms: 220
+        target_range: [500, 700]
+        interactive_slider: true
+    assessment:
+      type: slider_tune
+      answer: { min: 500, max: 700 }
+      scoring:
+        max_points: 1
+        tolerance: 50
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "220ms is too short for natural hesitation pauses."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Set the slider between 500ms and 700ms to allow natural mid-sentence pauses."
+          penalty: 0.25
+      explanation: "A silence hangtime of 500ms-700ms accommodates natural human hesitations without feeling unresponsive."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-turn-timing]
+    prompt: "Review this latency waterfall. Why is the user complaining that the assistant feels robotic and sluggish?"
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        stages:
+          - { name: "VAD Endpoint", duration_ms: 1200, status: "error" }
+          - { name: "ASR Transcription", duration_ms: 250, status: "ok" }
+          - { name: "LLM TTFT", duration_ms: 300, status: "ok" }
+          - { name: "TTS Audio TTFB", duration_ms: 180, status: "ok" }
+    assessment:
+      type: single_choice
+      answer: "vad_excessive"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Check which single stage consumes more than 60% of the entire latency budget."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "VAD Endpoint is 1200ms—far exceeding the 500ms standard."
+          penalty: 0.25
+      explanation: "The VAD endpoint hangtime is set to 1200ms, creating a dead air gap that ruins conversational rhythm."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-turn-timing, obj-turn-phases]
+    prompt: "You are deploying a voice assistant for drive-thru ordering with high ambient vehicle engine noise. Which VAD architecture decision is correct?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        ambient_noise_db: 65
+        snr_ratio_db: 6
+        challenge_mode: true
+    assessment:
+      type: single_choice
+      answer: "semantic_neural_vad"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Energy-based thresholding fails under fluctuating background noise."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "A neural or semantic VAD classifies human phonemes versus engine acoustic rumble."
+          penalty: 0.25
+      explanation: "In noisy environments, energy thresholding causes false triggers. A neural VAD (e.g., Silero) combined with semantic endpointing is required."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m01-l01
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

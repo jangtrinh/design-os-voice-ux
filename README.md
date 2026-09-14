@@ -24,7 +24,6 @@ graph TD
     A --> E["04. Benchmarks & Tooling"]
     A --> F["05. 5-Persona Debate"]
     A --> G["06. Checklists & Testing"]
-    A --> H["07. Interactive Pedagogy"]
 
     B --> B1["Mental Models & Affordance"]
     B --> B2["Conversational Psychology"]
@@ -46,17 +45,13 @@ graph TD
 
     G --> G1["Design Review Checklist"]
     G --> G2["Wizard of Oz Usability Protocol"]
-
-    H --> H1["10 Core Specifications"]
-    H --> H2["7 Canonical Sources"]
-    H --> H3["Interactive Academy Demo"]
 ```
 
 ---
 
 ## 📋 Audit Pack & Governance Documents
 
-- **[`01-MANIFEST.md`](./01-MANIFEST.md)**: Inventory of all 28 core specifications with Purpose, Audience, Lifecycle Status, and Empirical Evidence.
+- **[`01-MANIFEST.md`](./01-MANIFEST.md)**: Inventory of all 17 core specifications with Purpose, Audience, Lifecycle Status, and Empirical Evidence.
 - **[`02-AUDIT-BRIEF.md`](./02-AUDIT-BRIEF.md)**: Operational context, reference voice architectures (WebRTC / Native S2S), and 5 fatal failure modes.
 - **[`03-AUDIT-RUBRIC.md`](./03-AUDIT-RUBRIC.md)**: 100-Point scoring rubric across 4 pillars and 6 non-negotiable Hard-Fail Gates.
 - **[`04-AUDIT-REPORT.md`](./04-AUDIT-REPORT.md)**: Official verification report (92/100 Points, Tier 1 Production Ready certification).
@@ -105,28 +100,11 @@ graph TD
 
 ---
 
-### [07. Interactive Pedagogy (Academy & Evidence-Based Learning)](./07-interactive-pedagogy/)
-Operationalizing Voice UX knowledge into interactive, slide-by-slide learning curricula (Learn Mode vs. Test Mode). Backed by 7 canonical industry sources.
-- **[`README.md`](./07-interactive-pedagogy/README.md)**: Master index, interactive pedagogy framework, and cross-source evidence matrix.
-- **[`01-learning-principles.md`](./07-interactive-pedagogy/01-learning-principles.md)**: Mayer's Multimedia Learning Theory, Active Learning (Freeman et al. PNAS), and the 6-stage pedagogy loop.
-- **[`02-conversation-design-rules.md`](./07-interactive-pedagogy/02-conversation-design-rules.md)**: Cognitive load, Cowan's 4-chunk working memory ceiling, The One Breath Test (<25 words), and Gricean Maxims.
-- **[`03-turn-taking-latency-repair.md`](./07-interactive-pedagogy/03-turn-taking-latency-repair.md)**: 200ms conversational cadence, Sub-100ms barge-in with Audible Boundary Truncation, acoustic fillers, and non-blaming repair.
-- **[`04-feedback-scaffolding.md`](./07-interactive-pedagogy/04-feedback-scaffolding.md)**: 4-tier progressive hint ladder (Nudge → Principle → Next Step → Solution) and Alexa 3-tier progressive reprompting.
-- **[`05-exercises-simulations.md`](./07-interactive-pedagogy/05-exercises-simulations.md)**: 5 pedagogical primitives: Locate, Tune, Repair, Predict, and Adversarial Sandbox.
-- **[`06-assessment-mastery.md`](./07-interactive-pedagogy/06-assessment-mastery.md)**: Free vs. Pro tiering and 5 quantitative certification rubrics with telemetry benchmarks.
-- **[`07-accessibility-inclusive-voice.md`](./07-interactive-pedagogy/07-accessibility-inclusive-voice.md)**: Earcon + Haptic + Visual trio feedback and Apple HIG audio session management (Audio Ducking).
-- **[`08-ai-voice-safety-trust.md`](./07-interactive-pedagogy/08-ai-voice-safety-trust.md)**: Mandatory AI disclosure (EU AI Act), calibrated uncertainty (<0.75 confidence routing), and audio privacy.
-- **[`09-source-comparison-matrix.md`](./07-interactive-pedagogy/09-source-comparison-matrix.md)**: Cross-vendor comparison matrix (Apple, Google, Alexa, OpenAI, LiveKit, Brilliant, Uxcel).
-- **[`10-evidence-cards.md`](./07-interactive-pedagogy/10-evidence-cards.md)**: Official empirical evidence ledger (EVID-PD01 to EVID-PD10).
-- **[`sources/`](./07-interactive-pedagogy/sources/)**: Canonical extracts from Apple HIG, Google CxD, Amazon Alexa, OpenAI Realtime, LiveKit, Brilliant, and Uxcel.
+## 🎮 Interactive Academy Demo Player & Curriculum
 
----
+An executable interactive prototype is available at [`demo/index.html`](./demo/index.html), running interactive micro-lessons specified in [`curriculum/`](./curriculum/).
 
-## 🎮 Interactive Academy Demo Player
-
-An executable interactive prototype is available at [`demo/index.html`](./demo/index.html).
-
-The player implements the Interactive Pedagogy specifications through an Uxcel/Brilliant-inspired micro-learning architecture featuring two distinct modes:
+The academy implements the pedagogical specifications through an Uxcel/Brilliant-inspired micro-learning architecture featuring two distinct modes:
 
 | Mode | Pedagogical Focus | Interaction Model |
 |---|---|---|

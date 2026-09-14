@@ -1,0 +1,61 @@
+schema_version: "1.0"
+registry_id: voice-ux-widget-registry
+
+widgets:
+  - id: floor-timeline
+    title: "Conversational Floor & Turn Timeline"
+    description: "Visualizes bidirectional conversational floor custody, speaker transitions, and silence gaps."
+    supported_interactions: ["scrub", "inspect-region", "spot-error", "set-boundary"]
+    props:
+      tracks: [user, agent, acoustic_silence]
+      time_domain_ms: 5000
+      allow_drag_boundary: true
+
+  - id: waveform-endpointing
+    title: "Acoustic Waveform & VAD Endpointing"
+    description: "Renders audio energy envelope with adaptive noise floors, speech onset, and hangtime buffers."
+    supported_interactions: ["drag-threshold", "scrub", "split-utterance"]
+    props:
+      sample_rate_hz: 16000
+      energy_envelope: true
+      vad_threshold_db: -42
+      hangtime_ms: 250
+
+  - id: latency-waterfall
+    title: "End-to-End Latency Waterfall"
+    description: "Displays cascading stages of voice processing: VAD -> ASR -> LLM TTFT -> TTS TTFB -> Audio Buffer."
+    supported_interactions: ["inspect-stage", "tune-budget", "spot-bottleneck"]
+    props:
+      stages: [vad_endpoint, asr_transcribe, llm_ttft, tts_first_chunk, webrtc_playout]
+      target_ceiling_ms: 800
+
+  - id: barge-in-simulator
+    title: "Sub-100ms Barge-In State Machine"
+    description: "Simulates user speech interruption during agent playback, acoustic ducking, and boundary truncation."
+    supported_interactions: ["trigger-interruption", "inspect-state", "tune-decay"]
+    props:
+      truncation_modes: [immediate_cut, audible_word_boundary, tail_fade]
+      ducking_depth_db: -18
+
+  - id: pipeline-repair-board
+    title: "Conversational Pipeline Node Repair"
+    description: "Interactive node graph connecting VAD, STT, LLM, TTS, and Tool Calling nodes to diagnose and reconnect broken links."
+    supported_interactions: ["node-repair", "rewire", "toggle-bypass"]
+    props:
+      nodes: [microphone, vad, asr, orchestrator, tools, tts, speaker]
+
+  - id: earcon-synthesizer
+    title: "Earcon & Acoustic State Synthesizer"
+    description: "Interactive audio sandbox generating earcon auditory icons for listening, processing, success, and error states."
+    supported_interactions: ["play-sample", "tune-frequency", "compare-triad"]
+    props:
+      states: [listening_start, listening_stop, processing_loop, success_chime, error_thud]
+      web_audio_synth: true
+
+  - id: working-memory-meter
+    title: "Cowan 4-Chunk Working Memory & Breath Meter"
+    description: "Visualizes cognitive load in real-time as words stream, highlighting chunk overload and breath-exceeded penalties."
+    supported_interactions: ["simulate-utterance", "split-chunks", "spot-overload"]
+    props:
+      max_chunks: 4
+      word_limit: 25

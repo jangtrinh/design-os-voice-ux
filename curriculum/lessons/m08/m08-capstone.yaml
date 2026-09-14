@@ -1,0 +1,265 @@
+schema_version: "1.0"
+
+lesson:
+  id: m08-capstone
+  module_id: m08
+  title: "Healthcare Voice Agent: Clinical Triage & Appointment Booking"
+  track: pro
+  estimated_minutes: 30
+  objectives:
+    - id: obj-capstone-architecture
+      verb: architect
+      concept: "End-to-end production architecture for a HIPAA-compliant medical triage voice agent"
+    - id: obj-hard-fail-gates
+      verb: decide
+      concept: "Passing all 6 non-negotiable Hard-Fail Gates (Disclosure, Latency, Barge-in, Memory, Repair, Emergency Escalate)"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-capstone-architecture]
+    content:
+      headline: "The Capstone Challenge"
+      body: "You are the Lead Voice Architect deploying 'Aria Health', an automated voice agent handling 20,000 inbound clinic triage calls daily."
+      takeaway: "In healthcare VUI, UX flaws don't just cause frustration—they risk clinical harm and regulatory penalties."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        system_overview: true
+        active_nodes: [telephony_sip, neural_vad, webrtc_orchestrator, ehr_fhir_tools, clinical_safety_guardrails]
+    interaction:
+      type: inspect-state
+      required: true
+    completion:
+      event: system_overview_viewed
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-capstone-architecture]
+    content:
+      headline: "The 6 Hard-Fail Production Gates"
+      body: "Gate 1: AI Disclosure. Gate 2: Latency <800ms. Gate 3: Sub-100ms Barge-in. Gate 4: Cowan 4-chunk limit. Gate 5: 3-tier repair. Gate 6: Clinical emergency trigger."
+      takeaway: "Violating any single gate results in immediate production certification rejection."
+    visual:
+      widget: latency-waterfall
+      version: 1
+      props:
+        gates:
+          - { name: "Gate 1: Upfront Disclosure", rule: "Turn 1 identity statement", status: "required" }
+          - { name: "Gate 2: Latency Waterfall", rule: "E2E TTFT/TTFB < 800ms", status: "required" }
+          - { name: "Gate 3: Sub-100ms Barge-in", rule: "Cosine fade audio halt", status: "required" }
+          - { name: "Gate 4: Working Memory", rule: "<25 words, <=4 chunks", status: "required" }
+          - { name: "Gate 5: Repair Ladder", rule: "3-tier progressive escalation", status: "required" }
+          - { name: "Gate 6: Emergency Escape", rule: "Instant 911/ER warm transfer", status: "required" }
+    interaction:
+      type: inspect-stage
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 6
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-capstone-architecture]
+    content:
+      headline: "Interactive Pipeline Stress Test"
+      body: "Simulate an inbound patient call with noisy background and an appointment conflict. Verify how your system adapts in real time."
+      takeaway: "Observe how contextual acoustic fillers mask the EHR FHIR query latency."
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        simulation_active: true
+        caller_scenario: "Reschedule cardiology follow-up with Dr. Elena Vance"
+    interaction:
+      type: node-repair
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-hard-fail-gates]
+    content:
+      headline: "The Red-Flag Emergency Escape Hatch"
+      body: "When the patient mentions 'chest tightness', 'shortness of breath', or 'left arm pain', all booking logic is aborted instantly."
+      takeaway: "Clinical keywords trigger immediate warm telephony handoff to a triage nurse or 911 dispatch."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tracks: [patient, triage_detector, emergency_dispatch]
+        trigger_keyword: "crushing chest pressure"
+        handoff_time_ms: 120
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-hard-fail-gates]
+    prompt: "Review the initial greeting utterance: 'Good morning! This is Dr. Vance's clinic. Please state your full name and date of birth.' Why does this fail Hard-Fail Gate 1?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        greeting_audit: true
+    assessment:
+      type: single_choice
+      answer: "fails_to_disclose_automated_ai_identity"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Did the greeting clearly announce that the caller is speaking with an AI assistant?"
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "EU AI Act & FTC rules require upfront AI transparency on turn 1."
+          penalty: 0.25
+      explanation: "Failing to disclose that the agent is an automated AI system violates Gate 1 (Identity Transparency & EU AI Act Art 50)."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-capstone-architecture]
+    prompt: "The EHR slot query takes 2.1 seconds. Configure the assistant's speech stream to maintain floor custody without exceeding Cowan's memory limits."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        tool_query_time_ms: 2100
+        slot_picker: true
+    assessment:
+      type: single_choice
+      answer: "emit_filler_then_present_two_slots_with_branch"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Use a quick filler under 300ms, then present only 2 time options."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "'Checking Dr. Vance's schedule...' -> 'I found two openings this Friday: 10 AM and 2 PM. Which works best?'"
+          penalty: 0.25
+      explanation: "Emitting a 250ms filler masks EHR latency, and presenting 2 slots conforms to the Cowan 4-chunk working memory ceiling."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-capstone-architecture]
+    prompt: "A patient starts coughing violently during the assistant's slot explanation. The assistant abruptly cancels the appointment and says 'Goodbye'. What flaw caused this?"
+    visual:
+      widget: barge-in-simulator
+      version: 1
+      props:
+        cough_event: true
+        false_abort: true
+    assessment:
+      type: single_choice
+      answer: "aggressive_energy_vad_without_phoneme_classifier"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Energy thresholding treated non-speech coughing as an intentional cancellation utterance."
+          penalty: 0.1
+      explanation: "A naive energy VAD treated an acoustic cough as a user voice command, misclassifying noise as an abort trigger."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-hard-fail-gates, obj-capstone-architecture]
+    prompt: "The patient whispers: 'My chest feels heavy and I'm dizzy.' The assistant's next turn must be decided. What is the mandatory production action?"
+    visual:
+      widget: pipeline-repair-board
+      version: 1
+      props:
+        emergency_trigger: true
+        clinical_severity: "life_threatening"
+    assessment:
+      type: single_choice
+      answer: "abort_flow_state_emergency_advisory_initiate_warm_nurse_transfer"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Do NOT attempt to schedule an appointment."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Advise 911 and execute an immediate warm transfer to clinical triage."
+          penalty: 0.25
+      explanation: "Life-threatening cardiac symptoms trigger immediate bypass of booking flows, advising emergency care and warm-transferring to human staff."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m08-capstone
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+    - capstone_evaluated
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1

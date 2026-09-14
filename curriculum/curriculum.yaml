@@ -1,0 +1,216 @@
+schema_version: "1.0"
+
+academy:
+  id: voice-ux-academy
+  title: "Voice UX Academy: Interactive Engineering & Conversational Design"
+  locale: en
+  default_track: free
+  version: "1.0.0"
+
+tracks:
+  - id: free
+    title: "Voice UX Fundamentals (Free Tier)"
+    description: "Core mental models, conversational psychology, acoustic turn mechanics, and boundary repair."
+    access: public
+    modules: [m01, m02, m03]
+
+  - id: pro
+    title: "Production Voice Architect (Pro Tier)"
+    description: "Earcon engineering, sub-100ms barge-in, streaming latency budgets, agentic tool-calling, safety guardrails, and production capstone."
+    access: subscription
+    modules: [m04, m05, m06, m07, m08]
+
+modules:
+  - id: m01
+    order: 1
+    title: "Foundations of Voice UX"
+    track: free
+    prerequisites: []
+    outcomes:
+      - explain_voice_vs_gui_asymmetry
+      - identify_voice_turn_state_machine
+    lessons:
+      - id: m01-l01
+        order: 1
+        title: "Anatomy of a Voice Turn"
+        source: lessons/m01/m01-l01.yaml
+        duration_minutes: 8
+        xp: 100
+        prerequisites: []
+      - id: m01-l02
+        order: 2
+        title: "Voice vs GUI: The Asymmetry of Affordance"
+        source: lessons/m01/m01-l02.yaml
+        duration_minutes: 8
+        xp: 100
+        prerequisites: [m01-l01]
+
+  - id: m02
+    order: 2
+    title: "Conversational Psychology & Memory"
+    track: free
+    prerequisites: [m01]
+    outcomes:
+      - enforce_cowan_4_chunk_working_memory
+      - pass_the_one_breath_test
+      - apply_gricean_maxims_to_voice
+    lessons:
+      - id: m02-l01
+        order: 1
+        title: "The Cowan 4-Chunk Memory Ceiling & One Breath Test"
+        source: lessons/m02/m02-l01.yaml
+        duration_minutes: 10
+        xp: 120
+        prerequisites: [m01-l02]
+      - id: m02-l02
+        order: 2
+        title: "Gricean Maxims & The Cooperative Principle"
+        source: lessons/m02/m02-l02.yaml
+        duration_minutes: 8
+        xp: 100
+        prerequisites: [m02-l01]
+
+  - id: m03
+    order: 3
+    title: "Turn-Taking & Endpointing Mechanics"
+    track: free
+    prerequisites: [m02]
+    outcomes:
+      - tune_vad_silence_thresholds
+      - manage_conversational_floor
+      - execute_no_blame_conversational_repair
+    lessons:
+      - id: m03-l01
+        order: 1
+        title: "The 200ms Cadence & VAD Endpointing"
+        source: lessons/m03/m03-l01.yaml
+        duration_minutes: 10
+        xp: 120
+        prerequisites: [m02-l02]
+      - id: m03-l02
+        order: 2
+        title: "Sub-100ms Barge-In & Boundary Truncation"
+        source: lessons/m03/m03-l02.yaml
+        duration_minutes: 12
+        xp: 150
+        prerequisites: [m03-l01]
+      - id: m03-l03
+        order: 3
+        title: "Conversational Repair & Progressive Recovery"
+        source: lessons/m03/m03-l03.yaml
+        duration_minutes: 10
+        xp: 120
+        prerequisites: [m03-l02]
+
+  - id: m04
+    order: 4
+    title: "Audio Feedback & Multimodal Systems"
+    track: pro
+    prerequisites: [m03]
+    outcomes:
+      - synthesize_earcon_haptic_visual_triad
+      - implement_audio_session_ducking
+      - choreograph_multimodal_screen_handshake
+    lessons:
+      - id: m04-l01
+        order: 1
+        title: "Earcons, Haptics & Acoustic States"
+        source: lessons/m04/m04-l01.yaml
+        duration_minutes: 10
+        xp: 140
+        prerequisites: [m03-l03]
+      - id: m04-l02
+        order: 2
+        title: "The Voice-Screen Multimodal Handshake"
+        source: lessons/m04/m04-l02.yaml
+        duration_minutes: 10
+        xp: 140
+        prerequisites: [m04-l01]
+
+  - id: m05
+    order: 5
+    title: "Agentic Voice AI & Streaming Latency"
+    track: pro
+    prerequisites: [m04]
+    outcomes:
+      - audit_e2e_latency_waterfall
+      - choreograph_acoustic_fillers_during_tool_calls
+      - optimize_first_chunk_streaming_ttfb
+    lessons:
+      - id: m05-l01
+        order: 1
+        title: "Streaming Latency Budgets & Waterfall Economics"
+        source: lessons/m05/m05-l01.yaml
+        duration_minutes: 12
+        xp: 160
+        prerequisites: [m04-l02]
+      - id: m05-l02
+        order: 2
+        title: "Tool Calling, Fillers & Speculative Execution"
+        source: lessons/m05/m05-l02.yaml
+        duration_minutes: 12
+        xp: 160
+        prerequisites: [m05-l01]
+
+  - id: m06
+    order: 6
+    title: "Voice Safety, Ethics & Calibrated Trust"
+    track: pro
+    prerequisites: [m05]
+    outcomes:
+      - implement_mandatory_ai_disclosure
+      - design_calibrated_uncertainty_escalation
+    lessons:
+      - id: m06-l01
+        order: 1
+        title: "AI Disclosure, Privacy & Calibrated Uncertainty"
+        source: lessons/m06/m06-l01.yaml
+        duration_minutes: 10
+        xp: 140
+        prerequisites: [m05-l02]
+
+  - id: m07
+    order: 7
+    title: "Usability Testing & Audio Benchmarks"
+    track: pro
+    prerequisites: [m06]
+    outcomes:
+      - conduct_wizard_of_oz_audio_protocols
+      - configure_ci_cd_audio_regression_suites
+    lessons:
+      - id: m07-l01
+        order: 1
+        title: "Wizard of Oz Testing & Audio Telemetry"
+        source: lessons/m07/m07-l01.yaml
+        duration_minutes: 10
+        xp: 150
+        prerequisites: [m06-l01]
+
+  - id: m08
+    order: 8
+    title: "Production Capstone Studio"
+    track: pro
+    prerequisites: [m07]
+    outcomes:
+      - architect_production_grade_voice_assistant
+      - pass_all_6_non_negotiable_hard_fail_gates
+    lessons:
+      - id: m08-capstone
+        order: 1
+        title: "Healthcare Voice Agent: Clinical Triage & Appointment Booking"
+        source: lessons/m08/m08-capstone.yaml
+        duration_minutes: 30
+        xp: 500
+        prerequisites: [m07-l01]
+
+progression:
+  unlock_strategy: sequential
+  lesson_pass_score: 0.80
+  module_completion:
+    require_all_lessons: true
+    require_capstone: true
+
+runtime:
+  lesson_schema: schemas/lesson.schema.json
+  widget_registry: widgets/widget-registry.yaml
+  telemetry_schema: schemas/telemetry.schema.json

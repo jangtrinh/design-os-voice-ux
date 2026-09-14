@@ -1,0 +1,265 @@
+schema_version: "1.0"
+
+lesson:
+  id: m03-l02
+  module_id: m03
+  title: "Sub-100ms Barge-In & Boundary Truncation"
+  track: free
+  estimated_minutes: 12
+  objectives:
+    - id: obj-barge-in-budget
+      verb: explain
+      concept: "The sub-100ms barge-in budget: halting agent audio playout immediately upon user speech onset"
+    - id: obj-boundary-truncation
+      verb: apply
+      concept: "Audible boundary truncation and 20ms cosine fade to prevent speaker pops and context divergence"
+
+slides:
+  # L1 — Hook
+  - id: l1
+    phase: learn
+    stage: hook
+    objective_ids: [obj-barge-in-budget]
+    content:
+      headline: "The Annoyance of Being Talked Over"
+      body: "Experience what happens when you say 'Stop!' but the agent rambles on for another 800ms before halting."
+      takeaway: "Barge-in latency >200ms destroys the illusion of listening and feels rude."
+    visual:
+      widget: barge-in-simulator
+      version: 1
+      props:
+        agent_speaking: true
+        interruption_time_ms: 1200
+        stop_time_ms: 2100
+        lag_ms: 900
+        status: "unacceptable"
+    interaction:
+      type: trigger-interruption
+      required: true
+    completion:
+      event: interruption_triggered
+      minimum_interactions: 1
+
+  # L2 — Model
+  - id: l2
+    phase: learn
+    stage: model
+    objective_ids: [obj-barge-in-budget]
+    content:
+      headline: "Sub-100ms Interruption Loop"
+      body: "Client mic detects speech onset -> WebRTC sends data channel 'interrupt' packet -> Client immediately ducks speaker volume in <100ms."
+      takeaway: "Do not wait for server-side speech recognition to halt local audio output."
+    visual:
+      widget: barge-in-simulator
+      version: 1
+      props:
+        tracks: [client_vad, audio_output, server_event]
+        client_duck_latency_ms: 45
+        server_ack_latency_ms: 220
+        status: "optimized"
+    interaction:
+      type: inspect-state
+      required: true
+    completion:
+      event: all_states_inspected
+      minimum_interactions: 2
+
+  # L3 — Practice
+  - id: l3
+    phase: learn
+    stage: practice
+    objective_ids: [obj-boundary-truncation]
+    content:
+      headline: "Eliminating the Speaker 'Click' Pop"
+      body: "Compare Hard Mute (cutting audio mid-cycle) with Cosine Fade-out (20ms ramp down). Listen for the acoustic pop."
+      takeaway: "Hard audio buffer truncation creates a high-frequency acoustic pop. Apply a 15-25ms cosine fade."
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        hard_cut_waveform: true
+        cosine_fade_waveform: true
+        fade_duration_ms: 20
+        pop_detected: false
+    interaction:
+      type: drag-threshold
+      required: true
+    completion:
+      event: parameter_tuned
+      minimum_interactions: 1
+
+  # L4 — Transfer
+  - id: l4
+    phase: learn
+    stage: transfer
+    objective_ids: [obj-boundary-truncation]
+    content:
+      headline: "Server Context Truncation (OpenAI / LiveKit)"
+      body: "When the user interrupts at word 4 of a 20-word response, the server's context memory must be truncated to word 4."
+      takeaway: "Failing to truncate context makes the LLM believe the user heard words 5-20, causing hallucinated dialog loops."
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        llm_context_original: "Your flight is confirmed for Tuesday leaving at 8 AM from Terminal 2."
+        spoken_portion: "Your flight is confirmed..."
+        truncated_context: "Your flight is confirmed"
+        audio_offset_ms: 1450
+    interaction:
+      type: inspect-region
+      required: true
+    completion:
+      event: edge_case_explored
+      minimum_interactions: 1
+
+  # T1 — Recognize
+  - id: t1
+    phase: test
+    stage: recognize
+    objective_ids: [obj-barge-in-budget]
+    prompt: "What is the industry standard latency budget for halting agent audio output once user barge-in is detected?"
+    visual:
+      widget: barge-in-simulator
+      version: 1
+      props:
+        latency_budget_gauge: true
+    assessment:
+      type: single_choice
+      answer: "sub_100ms"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Human acoustic reflex threshold is under 100 milliseconds."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Target is <100ms."
+          penalty: 0.25
+      explanation: "Sub-100ms is the non-negotiable target for audio halting to make the conversational agent feel truly attentive."
+
+  # T2 — Apply
+  - id: t2
+    phase: test
+    stage: apply
+    objective_ids: [obj-boundary-truncation]
+    prompt: "A developer implemented barge-in by calling `audioContext.suspend()` abruptly, causing an annoying click/pop sound. What is the required audio fix?"
+    visual:
+      widget: waveform-endpointing
+      version: 1
+      props:
+        audio_pop_fix_options: true
+    assessment:
+      type: single_choice
+      answer: "apply_gain_linear_ramp_fade"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Ramp gain down to zero over 15-25ms before stopping."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Use `gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.02)`."
+          penalty: 0.25
+      explanation: "A 20ms gain ramp prevents the sharp DC-offset discontinuity that causes acoustic click pops."
+
+  # T3 — Diagnose
+  - id: t3
+    phase: test
+    stage: diagnose
+    objective_ids: [obj-boundary-truncation]
+    prompt: "A user interrupted the agent halfway through. On the next turn, the agent said: 'As I just mentioned, the password is admin123', but the user never heard that part! Why?"
+    visual:
+      widget: floor-timeline
+      version: 1
+      props:
+        context_divergence_bug: true
+    assessment:
+      type: single_choice
+      answer: "server_context_not_truncated"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Did the backend update its conversation history to reflect what was actually played out?"
+          penalty: 0.1
+      explanation: "The client halted audio, but failed to emit `conversation.item.truncate` to the backend, leaving phantom text in LLM memory."
+
+  # T4 — Production Decision
+  - id: t4
+    phase: test
+    stage: production_decision
+    objective_ids: [obj-barge-in-budget, obj-boundary-truncation]
+    prompt: "During agent playback, the user clears their throat (cough/hum). How should an enterprise voice agent handle this?"
+    visual:
+      widget: barge-in-simulator
+      version: 1
+      props:
+        acoustic_event: "cough"
+        challenge_mode: true
+    assessment:
+      type: single_choice
+      answer: "duck_audio_tentatively_resume_if_no_speech"
+      scoring:
+        max_points: 1
+      hints:
+        - id: h1
+          tier: 1
+          trigger: { after_attempts: 1 }
+          text: "Completely aborting the response on a brief cough frustrates callers."
+          penalty: 0.1
+        - id: h2
+          tier: 2
+          trigger: { after_attempts: 2 }
+          text: "Briefly duck volume by -12dB for 200ms; if no phonemes follow, ramp back to 0dB without resetting."
+          penalty: 0.25
+      explanation: "Tentative ducking with 200ms speech classification prevents false-positive aborts caused by coughs, throat-clearing, or clicks."
+
+player_state_machine:
+  initial: idle
+  states:
+    idle: {}
+    active: {}
+    evaluating: {}
+    feedback_correct: {}
+    feedback_incorrect: {}
+    completed: {}
+  transitions:
+    - { from: idle, event: START, to: active }
+    - { from: active, event: SUBMIT, to: evaluating }
+    - { from: evaluating, event: PASS, to: feedback_correct }
+    - { from: evaluating, event: FAIL, to: feedback_incorrect }
+    - { from: feedback_correct, event: CONTINUE, to: completed }
+
+telemetry:
+  context:
+    lesson_id: m03-l02
+    schema_version: 1
+  capture:
+    - lesson_started
+    - slide_viewed
+    - widget_interacted
+    - answer_submitted
+    - hint_requested
+    - answer_correct
+    - answer_incorrect
+    - lesson_completed
+
+pass_criteria:
+  tests:
+    required: [t1, t2, t3, t4]
+  score:
+    minimum_ratio: 0.8
+  production_decision:
+    slide: t4
+    required: true
+    minimum_score: 1
