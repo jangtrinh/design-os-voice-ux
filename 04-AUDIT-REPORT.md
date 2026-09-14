@@ -29,11 +29,11 @@
 | Mã Gate | Tiêu Chí Kiểm Tra | Kết Quả | Bằng Chứng / Tài Liệu Đối Soát |
 |---|---|---|---|
 | **G1** | **Measurable Timing**: Định nghĩa định lượng về độ trễ nhận thức | **PASS** | `latency-budgets.md`: Định nghĩa 3 vực thẳm (0-300ms, 300-500ms, >800ms) và bảng phân bổ ngân sách 350ms. |
-| **G2** | **Endpointing Rigor**: Phân biệt Silence timeout với Semantic VAD | **PASS** | `turn-taking-and-barge-in.md`: Mô hình 3 lớp (Acoustic VAD -> Prosody -> Semantic Completion). |
-| **G3** | **Barge-in Reality**: Barge-in là một State Machine, không phải toggle on/off | **PASS** | `turn-taking-and-barge-in.md`: Sequence diagram phân tách rõ AEC, phát hiện người nói, dừng phát loa <80ms. |
+| **G2** | **Endpointing Rigor**: Phân biệt Silence timeout với Semantic VAD | **PASS** | `turn-taking-and-barge-in.md`: Mô hình 3 lớp (Acoustic VAD -> Prosody -> Semantic Completion) và phân biệt rõ với Interruption-Onset. |
+| **G3** | **Barge-in Reality**: Barge-in là một State Machine, không phải toggle on/off | **PASS** | `turn-taking-and-barge-in.md`: Mô hình máy trạng thái 4 tầng (Listening, Thinking, Speaking, Tool Execution) với luồng hủy AbortController và Onset <80ms. |
 | **G4** | **Audible Context**: Cắt tỉa bộ nhớ câu chưa nghe khi bị ngắt (Audible Truncation) | **PASS** | `turn-taking-and-barge-in.md`: Quy trình State Rollback loại bỏ phần câu sau điểm ngắt khỏi conversation memory. |
-| **G5** | **Structured Repair**: Chiến lược sửa sai đàm thoại lũy tiến | **PASS** | `error-recovery-and-repair.md`: Kỹ thuật 3-tier progressive prompting kèm nguyên tắc không đổ lỗi. |
-| **G6** | **Test Traceability**: Checklist thiết kế truy vết được sang kịch bản test | **PASS** | `vui-design-checklist.md` map trực tiếp sang chỉ số và kịch bản WoZ trong `usability-testing-protocol.md`. |
+| **G5** | **Structured Repair**: Chiến lược sửa sai đàm thoại lũy tiến | **PASS** | `error-recovery-and-repair.md`: Kỹ thuật 3-tier progressive prompting kèm nguyên tắc không đổ lỗi và grounding. |
+| **G6** | **Test Traceability**: Checklist thiết kế truy vết được sang kịch bản test | **PASS** | `usability-testing-protocol.md`: Kịch bản WoZ kết hợp Bộ kiểm thử tự động CI/CD (Auto-T1 Latency, Auto-T2 Max AEC Loopback, Auto-T3 Context Truncation Assert). |
 
 ---
 

@@ -37,12 +37,11 @@
 ### Lập Trường Các Bên:
 * **🎨 UX Designer**: *"Người dùng PHẢI có quyền ngắt lời bất kỳ lúc nào. Nếu máy nói dông dài mà không cho ngắt, đó là một trải nghiệm tra tấn thính giác."*
 * **⚡ Performance**: *"Cho phép ngắt lời liên tục nghĩa là micro phải streaming 2 chiều 24/7 qua WebRTC. Băng thông máy chủ và chi phí tính toán VAD sẽ tăng vọt 300%. Ngoài ra, nếu người dùng ở quán cà phê, tiếng người bên cạnh nói xen vào sẽ khiến máy liên tục bị ngắt lời nhầm!"*
-* **🛡️ Security**: *"Nếu hệ thống ngắt lời quá nhạy, kẻ tấn công có thể liên tục phát âm thanh ngắt quãng để từ chối dịch vụ (Audio DoS), khiến trợ lý ảo không bao giờ hoàn thành được một câu trả lời an toàn."*
-* **🏛️ Architect**: *"Giải pháp là Semantic End-of-Turn. Chúng ta không chỉ đo mức âm lượng mà phải kết hợp mô hình phân tích ngữ điệu và ngữ pháp cục bộ trên thiết bị trước khi quyết định cắt loa."*
+* **🏛️ Architect**: *"Cần tách biệt hai tầng phát hiện rõ ràng: **Interruption-Onset Detection** (nhận diện thời điểm người dùng bắt đầu cất tiếng để cắt loa ngay lập tức dưới 80ms) và **Semantic End-of-Turn** (nhận diện thời điểm người dùng kết thúc câu nói mới để bắt đầu lượt trả lời). Nếu chờ End-of-Turn mới cắt loa, máy sẽ tiếp tục nói đè lên người dùng nhiều giây!"*
 * **🔥 Devil's Advocate**: *"Tại sao không trang bị một nút vật lý hoặc cử chỉ tay để ngắt? Con người trong đời thực cũng có cử chỉ giơ tay khi muốn xin ngắt lời. Đừng bắt AI làm điều mà ngay cả con người đôi khi còn làm hỏng!"*
 
 ### 🏆 Nghị Quyết Đồng Thuận:
-- Kích hoạt **Semantic Barge-in có độ trễ xác nhận 80ms**.
+- Kích hoạt **Interruption-Onset Detection cắt loa tức thì (<80ms)** độc lập hoàn toàn với **Semantic End-of-Turn (endpointing để chuyển lượt lời)**.
 - Kết hợp nhận thức ngữ cảnh: Tự động tăng ngưỡng nhạy cảm của VAD lên cao khi phát hiện môi trường có tiếng ồn nền (quán cà phê, ngoài đường).
 
 ---
@@ -90,8 +89,8 @@
 
 | Vấn Đề Rủi Ro | Mức Độ | Trách Nhiệm Chính | Biện Pháp Giảm Thiểu Bắt Buộc |
 |----------------|--------|-------------------|--------------------------------|
-| **Va chạm âm thanh khi ngắt lời** | Cao | Architect + Performance | Tích hợp AEC phần cứng + Semantic VAD < 80ms |
-| **Ảo giác thông tin giọng nói** | Nghiêm trọng | Architect + UX | Buộc xác nhận ngầm các số liệu giao dịch quan trọng |
+| **Va chạm âm thanh khi ngắt lời** | Cao | Architect + Performance | Tích hợp AEC phần cứng + Interruption-Onset Detection < 80ms |
+| **Ảo giác thông tin giọng nói** | Nghiêm trọng | Architect + UX | Buộc xác nhận tường minh (Explicit Affirmative Confirmation) đối với số liệu giao dịch quan trọng |
 | **Rò rỉ âm thanh đời tư** | Cực kỳ nghiêm trọng | Security | Đèn LED báo hiệu vật lý khi micro mở; không lưu trữ file âm thanh thô |
 | **Quá tải nhận thức người nghe** | Cao | UX Designer | Giới hạn tối đa 3 lựa chọn; câu trả lời dưới 30 từ |
 | **Lãng phí chi phí vận hành** | Trung bình | Devil's Advocate | Điều hướng các lệnh đơn giản sang xử lý quy tắc/nút bấm |

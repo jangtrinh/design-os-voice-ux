@@ -75,3 +75,28 @@ Sau khi kiểm thử, người tham gia đánh giá 5 câu hỏi theo thang đi�
 5. *"Tôi cảm thấy thoải mái và tự nhiên khi giao tiếp bằng giọng nói với hệ thống này."*
 
 👉 **Điểm trung bình mục tiêu**: **≥ 4.2 / 5.0**.
+
+---
+
+## 5. Quy Trình Kiểm Thử Kỹ Thuật Tự Động (Automated Technical Benchmark Testing)
+
+Bên cạnh phương pháp Wizard of Oz tập trung vào cảm nhận con người, hệ thống **bắt buộc phải có kịch bản kiểm thử tự động bằng máy (Automated CI/CD Test Suite)** để xác thực 3 thuộc tính kỹ thuật mà con người không thể đo bằng mắt thường:
+
+```mermaid
+graph TD
+    CI[Automated Test Runner] --> T1[Test 1: Barge-In Latency Benchmark]
+    CI --> T2[Test 2: Maximum-Volume AEC Loopback]
+    CI --> T3[Test 3: Audible Context Truncation]
+
+    T1 --> R1["Đo timestamp: User Audio Injection -> Loa Silence (<100ms)"]
+    T2 --> R2["Phát âm lượng 100% loa; bơm tín hiệu giả; đo rò rỉ âm sang micro (< -40dB)"]
+    T3 --> R3["Chèn ngắt lời tại giây thứ 2; kiểm tra conversation memory không chứa giây 3-5"]
+```
+
+### Chi Tiết 3 Bài Test Kỹ Thuật Bắt Buộc:
+
+| Bài Test | Phương Pháp Kiểm Tra | Tiêu Chuẩn Vượt Qua (Pass Criteria) |
+|---|---|---|
+| **Auto-T1: Barge-in Stop Latency** | Bơm file âm thanh ngắt lời giả lập vào luồng WebRTC khi bot đang nói câu 10 giây. Đo chênh lệch thời gian giữa packet âm thanh đầu tiên của user và packet cuối cùng của bot. | `p50 < 80ms`, `p95 < 100ms` |
+| **Auto-T2: Max-Volume AEC Loopback** | Cho loa phát nhạc và phát giọng nói TTS ở mức 100% volume trong phòng kín. Micro thu âm liên tục và kiểm tra qua bộ lọc AEC. | Tín hiệu tự lọt vào micro phải `< -40dBFS`; không kích hoạt false-positive VAD. |
+| **Auto-T3: Context Truncation Assert** | Bot đang đọc danh sách: *"1, 2, 3, 4, 5"*. Giả lập ngắt lời ngay khi từ *"2"* vừa phát xong. Kiểm tra object session state trong database. | Lịch sử đàm thoại `context.messages` chỉ chứa *"1, 2"*; hoàn toàn vắng mặt *"3, 4, 5"*. |

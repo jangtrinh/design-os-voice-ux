@@ -15,21 +15,40 @@ Trong kỷ nguyên Voice AI hiện đại (Speech-to-Speech như OpenAI Realtime
 - Micro luôn lắng nghe liên tục trong khi loa vẫn đang phát.
 - Hệ thống có khả năng triệt tiêu tiếng vọng âm thanh (**Acoustic Echo Cancellation - AEC**) để không tự nghe lại giọng của chính mình.
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as Người dùng
-    participant AEC as Bộ Lọc Tiếng Vọng (AEC)
-    participant Agent as Trợ Lý Voice Agent
+- Micro luôn lắng nghe liên tục trong khi loa vẫn đang phát.
+- Hệ thống có khả năng triệt tiêu tiếng vọng âm thanh (**Acoustic Echo Cancellation - AEC**) để không tự nghe lại giọng của chính mình.
 
-    Agent->>User: "Dự báo thời tiết hôm nay tại Hà Nội có mưa rào rải rác..."
-    Note over User, Agent: Người dùng sốt ruột và cất tiếng ngắt lời
-    User->>AEC: "Thế còn nhiệt độ chiều nay thì sao?"
-    AEC->>AEC: Khử âm thanh do loa của Agent phát ra
-    AEC->>Agent: Phát hiện giọng nói thực của Người dùng (Barge-in Triggered)
-    Agent--xUser: Dừng phát loa ngay lập tức (<80ms)
-    Agent->>Agent: Rollback trạng thái ngữ cảnh câu trước
-    Agent->>User: "Chiều nay nhiệt độ dao động quanh mức 26 độ bạn nhé."
+### Mô Hình Máy Trạng Thái Ngắt Lời 4 Tầng (4-State Interruption Matrix)
+
+Barge-in không chỉ xảy ra khi bot đang nói (Speaking). Hệ thống phải xử lý ngắt lời trên toàn bộ 4 trạng thái vòng đời tương tác:
+
+| Trạng Thái Hệ Thống | Hành Vi Ngắt Lời Của Người Dùng | Phản Ứng Kỹ Thuật & UX Của Voice Agent |
+|---|---|---|
+| **1. Listening (Đang nghe)** | Người dùng tự sửa câu nói dở (*"Đặt vé đi Huế... à không, đi Đà Nẵng"*). | Reset bộ đệm ASR cục bộ, bóc tách thực thể mới nhất, gia hạn silence timeout thêm 600ms. |
+| **2. Thinking (Đang suy luận)** | Người dùng đổi ý hoặc nói thêm (*"Thôi không cần tìm nữa đâu"*). | Hủy lập tức luồng inference LLM (AbortController signal), chuyển sang xử lý lệnh mới, tiết kiệm chi phí token. |
+| **3. Speaking (Đang phát loa)** | Người dùng cất tiếng ngắt lời thông tin bot đang đọc. | Kích hoạt Interruption-Onset (<80ms), ngắt luồng audio ra loa, thực hiện Audible Boundary Truncation. |
+| **4. Tool/API Execution** | Người dùng hô *"Dừng lại"* khi bot đang gọi API thanh toán/đặt vé. | Gửi lệnh `CANCEL` tới transaction worker, rollback trạng thái cơ sở dữ liệu, phát âm báo xác nhận đã hủy an toàn. |
+
+```mermaid
+stateDiagram-v2
+    [*] --> Listening: User cất tiếng
+    Listening --> Listening: Self-Repair (Reset ASR buffer)
+    Listening --> Thinking: Endpointing (User dứt câu)
+    
+    Thinking --> ThinkingCancelled: Barge-in during Thinking (AbortController)
+    ThinkingCancelled --> Listening: Xử lý ý định mới
+    
+    Thinking --> Speaking: Bắt đầu phát âm thanh (Audio stream)
+    Speaking --> SpeakingInterrupted: Barge-in (<80ms Onset)
+    SpeakingInterrupted --> AudibleTruncation: Cắt tỉa memory theo ranh giới âm
+    AudibleTruncation --> Listening: Xử lý ý định mới
+    
+    Thinking --> ToolExecution: Tác vụ gọi API ngoại vi
+    ToolExecution --> ToolCancelled: Barge-in "Hủy/Dừng" (API Abort & Rollback)
+    ToolCancelled --> Listening: Xác nhận đã hủy an toàn
+    
+    Speaking --> Idle: Phát hết câu trọn vẹn
+    ToolExecution --> Speaking: Trả kết quả API
 ```
 
 ---
@@ -91,12 +110,14 @@ Khi người dùng ngắt lời, điều gì sẽ xảy ra với bộ nhớ và 
 Mặc dù Barge-in là quyền năng tối cao của người dùng trong 95% tình huống, có **3 trường hợp bắt buộc phải KHÓA ngắt lời** để bảo đảm an toàn sinh mạng và pháp lý:
 
 1. **Cảnh báo an toàn khẩn cấp (Emergency Alerts)**:
-   - *Ví dụ*: Cảnh báo xe sắp va chạm (*"Chú ý phanh gấp!"*), cảnh báo cháy nổ hoặc hướng dẫn sơ cứu khẩn cấp.
+   - *Ví dụ*: Cảnh báo xe sắp va chạm (*"Chú ý phanh gấp!"*), cảnh báo cháy nổ hoặc sơ cứu khẩn cấp.
 2. **Xác nhận giao dịch tài chính giá trị lớn (Irreversible High-Value Transactions)**:
-   - *Ví dụ*: *"Bạn đang chuyển năm mươi triệu đồng cho tài khoản abc. Sau ba tiếng bíp, giao dịch sẽ được gửi đi."* -> Khóa ngắt lời trong 2 giây đầu để người dùng nghe rõ số tiền và đối tượng thụ hưởng.
+   - *Quy tắc*: **BẮT BUỘC xác nhận tường minh (Explicit Confirmation)**. Không bao giờ tự động thực thi sau tiếng bíp đếm ngược.
+   - *Ví dụ*: *"Bạn đang chuyển năm mươi triệu đồng cho tài khoản Nguyễn Văn A. Bạn có đồng ý thực hiện giao dịch này không?"*
 3. **Tuyên bố miễn trừ trách nhiệm y tế & pháp lý (Legal Disclaimers)**:
-   - *Ví dụ*: Thông điệp cảnh báo tác dụng phụ nguy hiểm của thuốc theo quy định của cơ quan y tế.
+   - *Ví dụ*: Thông điệp cảnh báo tác dụng phụ nguy hiểm của thuốc theo luật định.
 
 ### Quy Trình Kỹ Thuật Khi Gặp Câu Thoại Non-Bargeable:
-- Micro tạm thời hạ độ nhạy hoặc khóa thu âm trong khoảng thời gian thông điệp phát ra (tối đa không quá 3 giây).
-- Bắt buộc kích hoạt tín hiệu thị giác (đèn viền nhấp nháy đỏ) hoặc rung cảnh báo haptic song song để người dùng hiểu lý do hệ thống không nhường lời trong giây phút đó.
+- **Nguyên tắc cốt lõi**: Khóa ngắt lời thông thường (không để bot chuyển đề tài dở dang), **NHƯNG LUÔN DUY TRÌ MICRO Ở TRẠNG THÁI LẮNG NGHE LỆNH HỦY (Cancellation Listener)**.
+- Nếu người dùng hô to: *"HỦY", "DỪNG LẠI", "KHÔNG PHẢI"*, hệ thống **ngay lập tức hủy bỏ giao dịch/tác vụ** và dừng phát thông báo. Tuyệt đối không tắt micro làm mất quyền kiểm soát của người dùng.
+- Kích hoạt song song đèn viền màn hình (Visual Alert) và rung phản hồi (Haptic) để đồng bộ đa giác quan.
