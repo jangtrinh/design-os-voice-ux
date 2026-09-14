@@ -1,6 +1,7 @@
-# Voice UX & Conversational Design Knowledge Base
+# DESIGN:OS Voice UX
 
-> Một bộ cẩm nang toàn diện về thiết kế giao diện giọng nói (Voice User Interface - VUI), tương tác đàm thoại tự nhiên (Conversational AI), và các nguyên lý tâm lý học âm thanh phục vụ UX Designer, Product Designer và Voice Agent Engineers.
+> Production-ready Voice & Conversational AI Knowledge Base, State Machines, Latency Budgets, and Audited Usability Protocols.
+> Thuộc hệ sinh thái mã nguồn mở **DESIGN:OS**.
 
 ---
 
