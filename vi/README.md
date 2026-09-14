@@ -19,6 +19,11 @@ graph TD
     A --> E[04. Benchmarks & Repos]
     A --> F[05. 5-Persona Debate]
     A --> G[06. Checklists & Testing]
+    A --> H[07. Interactive Pedagogy]
+
+    H --> H1[10 Bản Đặc Tả Sư Phạm]
+    H --> H2[7 Nguồn Tham Chiếu Gốc]
+    H --> H3[Web Demo Học & Test]
 
     B --> B1[Mental Models & Affordance]
     B --> B2[Conversational Psychology]
@@ -43,7 +48,7 @@ graph TD
 ```
 
 ## 📋 Bộ Công Cụ Kiểm Định & Quản Trị (Audit Pack & Governance)
-- **[01-MANIFEST.md](./01-MANIFEST.md)**: Bảng kiểm kê 17 tài liệu, phân định Mục đích, Đối tượng, Trạng thái & Cơ sở chứng cứ.
+- **[01-MANIFEST.md](./01-MANIFEST.md)**: Bảng kiểm kê 28 tài liệu, phân định Mục đích, Đối tượng, Trạng thái & Cơ sở chứng cứ.
 - **[02-AUDIT-BRIEF.md](./02-AUDIT-BRIEF.md)**: Bản tóm tắt bối cảnh sản phẩm thực tế, voice stack & 5 điểm thất bại cần soi lỗi.
 - **[03-AUDIT-RUBRIC.md](./03-AUDIT-RUBRIC.md)**: Bộ tiêu chí đánh giá 100 điểm & 6 cửa chặn sinh tử (Hard-Fail Gates).
 - **[04-AUDIT-REPORT.md](./04-AUDIT-REPORT.md)**: Báo cáo kiểm định toàn diện chất lượng Voice UX Knowledge Base (Đạt 92/100 Điểm - Tier 1 Production Ready).
@@ -96,6 +101,41 @@ graph TD
 ### [06. Checklists & Usability Testing (Bộ Công Cụ Thực Chiến)](./06-checklists-and-heuristics/)
 - **[vui-design-checklist.md](./06-checklists-and-heuristics/vui-design-checklist.md)**: Checklist 25 tiêu chuẩn nghiệm thu trước khi đưa Voice Agent ra thị trường.
 - **[usability-testing-protocol.md](./06-checklists-and-heuristics/usability-testing-protocol.md)**: Quy trình kiểm thử người dùng bằng phương pháp "Phù thủy xứ Oz" (*Wizard of Oz Testing*), kịch bản test và các chỉ số đo lường hiệu quả đàm thoại.
+
+---
+
+### [07. Interactive Pedagogy (Sư Phạm Tương Tác & Học Tập Thực Chứng)](../07-interactive-pedagogy/)
+Chuyển hóa tri thức tĩnh thành các bài học tương tác slide-by-slide phân tầng Free/Pro (Learn Mode vs. Test Mode), dựa trên 7 nguồn tham chiếu chính thức hàng đầu.
+- **[`README.md`](../07-interactive-pedagogy/README.md)**: Bản mục lục chủ đạo, khung sư phạm tương tác và ma trận bằng chứng đa nguồn.
+- **[`01-learning-principles.md`](../07-interactive-pedagogy/01-learning-principles.md)**: Thuyết nhận thức đa phương tiện Mayer, Active Learning (Freeman et al. PNAS) và chu trình học 6 bước.
+- **[`02-conversation-design-rules.md`](../07-interactive-pedagogy/02-conversation-design-rules.md)**: Tải nhận thức thính giác, giới hạn 4 khối nhớ Cowan, The One Breath Test (<25 từ), và Gricean Maxims.
+- **[`03-turn-taking-latency-repair.md`](../07-interactive-pedagogy/03-turn-taking-latency-repair.md)**: Nhịp chuyển lượt 200ms, Barge-in sub-100ms với Audible Boundary Truncation, acoustic fillers và sửa lỗi không đổ người dùng.
+- **[`04-feedback-scaffolding.md`](../07-interactive-pedagogy/04-feedback-scaffolding.md)**: Thang gợi ý 4 bậc tiến tiến (Nudge → Principle → Next Step → Solution) và Alexa 3-tier progressive reprompting.
+- **[`05-exercises-simulations.md`](../07-interactive-pedagogy/05-exercises-simulations.md)**: 5 primitive tương tác: Locate, Tune, Repair, Predict, và Adversarial Sandbox.
+- **[`06-assessment-mastery.md`](../07-interactive-pedagogy/06-assessment-mastery.md)**: Phân tầng Free vs. Pro và rubric 5 tiêu chí định lượng cấp chứng chỉ với telemetry thật.
+- **[`07-accessibility-inclusive-voice.md`](../07-interactive-pedagogy/07-accessibility-inclusive-voice.md)**: Bộ ba phản hồi Earcon + Haptics + Visual Cue và Apple HIG Audio Session Management (Audio Ducking).
+- **[`08-ai-voice-safety-trust.md`](../07-interactive-pedagogy/08-ai-voice-safety-trust.md)**: Minh bạch danh tính AI bắt buộc (EU AI Act), Calibrated Confidence (<0.75 routing) và bảo mật dữ liệu âm thanh.
+- **[`09-source-comparison-matrix.md`](../07-interactive-pedagogy/09-source-comparison-matrix.md)**: Bảng đối chiếu chéo 7 nguồn (Apple, Google, Alexa, OpenAI, LiveKit, Brilliant, Uxcel).
+- **[`10-evidence-cards.md`](../07-interactive-pedagogy/10-evidence-cards.md)**: Kho thẻ bằng chứng thực nghiệm chính thức từ `EVID-PD01` đến `EVID-PD10`.
+- **[`sources/`](../07-interactive-pedagogy/sources/)**: Trích xuất chi tiết từ Apple HIG, Google CxD, Amazon Alexa, OpenAI Realtime, LiveKit, Brilliant, và Uxcel.
+
+---
+
+## 🎮 Trình Giả Lập Bài Học Tương Tác (Interactive Demo Player)
+
+Bản prototype tương tác hoàn chỉnh sẵn sàng chạy tại [`demo/index.html`](../demo/index.html).
+
+Ứng dụng hiện thực hóa trọn vẹn đặc tả Interactive Pedagogy theo cấu trúc micro-learning phong cách Uxcel & Brilliant với 2 chế độ:
+
+| Chế độ | Trọng tâm Sư phạm | Mô hình Tương tác |
+|---|---|---|
+| **📖 Phần Học (Learn Mode)** | Khám phá mô hình tâm trí âm học có hướng dẫn. | Graphic UI Visuals động (Floor Timeline, Waveform Endpointing, Latency Waterfall, Barge-in States). |
+| **🎯 Phần Test (Test Mode)** | Đánh giá năng lực thực chiến không dùng lý thuyết thụ động. | Thử thách xúc giác trực tiếp (Timeline Error Spotter, Waveform Boundary Setter, Pipeline Node Repair, Debounce Filter Tuning). |
+
+Mở trình giả lập trên trình duyệt máy tính:
+```bash
+open demo/index.html
+```
 
 ---
 
