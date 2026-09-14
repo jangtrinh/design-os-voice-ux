@@ -55,6 +55,8 @@ graph TD
 
 ## 3. Conversational Fillers & Bridging Strategies
 
+![Acoustic Bridging and Latency Filler Architecture](../assets/images/acoustic-bridging-filler.jpg)
+
 When executing latency-intensive background operations (e.g., banking transactions or heavy vector search/RAG requiring 1.5s–3s), Voice UX Designers deploy **Audio Bridging** `[RECOMMENDATION]`:
 
 ### 1. Instant Acoustic Acknowledgment (Micro-Acks)

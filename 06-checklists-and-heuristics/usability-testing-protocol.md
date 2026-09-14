@@ -6,6 +6,8 @@
 
 ## 1. Wizard of Oz Architecture & Setup
 
+![Wizard of Oz Testing Architecture Setup](../assets/images/wizard-of-oz-testing.jpg)
+
 ```mermaid
 sequenceDiagram
     autonumber

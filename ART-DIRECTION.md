@@ -75,5 +75,10 @@ Avoid: Dark backgrounds, black sci-fi, cyberpunk neon clutter, avatars, human fi
 | `03-conversational-design/persona-and-tone` | Persona & Acoustic Brand | Dynamic acoustic resonance & vocal pitch profile | ✅ Ready (`persona-tone-luminous.jpg`) |
 | `04-benchmarks-and-case-studies/industry-benchmarks` | Industry Benchmarks | Multi-architecture performance & latency comparator | ✅ Ready (`industry-benchmarks-luminous.jpg`) |
 | `06-checklists-and-heuristics/vui-design-checklist` | Production Checklist | 5x5 Verification grid with optical laser inspection lens | ✅ Ready (`vui-checklist-luminous.jpg`) |
+| `02-interaction-patterns/audio-feedback` | ADSR Sound Envelope | Tactile acoustic glass wafer with 4-point ADSR inflection curve | ✅ Ready (`adsr-sound-envelope.jpg`) |
+| `03-conversational-design/latency-budgets` | Acoustic Bridging | Levitating pulsing glass bead bridging latency dead-air gap | ✅ Ready (`acoustic-bridging-filler.jpg`) |
+| `02-interaction-patterns/turn-taking` | EoU Dual Detection | Parallel acoustic silence gauge & semantic completion latch | ✅ Ready (`vad-semantic-detection.jpg`) |
+| `05-debate-and-tradeoffs/5-persona-debate` | Pipeline vs S2S | 3-hop seamed glass blocks vs unified crystal light pipe | ✅ Ready (`cascaded-vs-speech-to-speech.jpg`) |
+| `06-checklists-and-heuristics/usability-testing` | Wizard of Oz Testing Lab | Dual-station testing console with acoustic glass partition | ✅ Ready (`wizard-of-oz-testing.jpg`) |
 
 

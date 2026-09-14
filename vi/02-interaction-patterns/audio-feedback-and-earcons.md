@@ -50,6 +50,8 @@ Một thiết kế VUI tiêu chuẩn phải định nghĩa bộ âm thanh độc
 
 ## 4. Bảng Tra Cứu Tần Số & Âm Lượng Cho Voice Designer
 
+![Cấu trúc bao âm ADSR và bảng tần số âm thanh](../../assets/images/adsr-sound-envelope.jpg)
+
 ```
 0 dBFS   ───────────────────────────────────────────── [Ngưỡng vỡ tiếng - Cấm chạm tới]
 -6 dBFS  ═════════════════════════════════════════════ [Âm thanh khẩn cấp / Cảnh báo nguy hiểm]

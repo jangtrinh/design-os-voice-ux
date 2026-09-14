@@ -73,6 +73,8 @@ stateDiagram-v2
 
 ## 3. Nhận Diện Điểm Dừng Ngữ Nghĩa (Semantic End-of-Turn Detection)
 
+![Kiến trúc phát hiện điểm dừng hội thoại VAD và phân tích ngữ nghĩa](../../assets/images/vad-semantic-detection.jpg)
+
 Để giải quyết tình trạng "nhạy cảm quá đà", hệ thống Voice UX hiện đại không chỉ dựa vào khoảng lặng vật lý (Silence Duration) mà kết hợp **3 lớp phân tích tín hiệu**:
 
 ```mermaid

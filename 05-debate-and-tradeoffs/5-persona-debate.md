@@ -18,6 +18,8 @@
 
 ## 🥊 Debate Session 1: Cascaded Pipeline (STT-LLM-TTS) vs. Native Speech-to-Speech
 
+![Cascaded Voice Architecture versus Native Speech-to-Speech Pipeline](../assets/images/cascaded-vs-speech-to-speech.jpg)
+
 ### Persona Arguments:
 * **🏛️ Architect**: *"I advocate for the Cascaded Pipeline. It provides 100% control over content moderation via text-based Guardrails, allows modular vendor interchangeability (swapping Whisper for Deepgram, or GPT for Claude), and makes debugging transcription errors transparent."*
 * **⚡ Performance**: *"With all due respect to the Architect, the Cascaded Pipeline decimates the latency budget! STT takes 200ms, the LLM needs 500ms to Time-to-First-Token (TTFT), and neural TTS adds another 300ms. That totals over 1000ms—a dead air abyss. Humans cannot sustain natural conversation with full-second lag. Native Speech-to-Speech compresses total turn latency down to 250ms."*

@@ -70,6 +70,8 @@ stateDiagram-v2
 
 ## 3. Semantic End-of-Turn Detection
 
+![Acoustic VAD vs Semantic End-of-Turn Detection Architecture](../assets/images/vad-semantic-detection.jpg)
+
 To prevent hyper-sensitive cutoffs and sluggish response latencies, production Voice UX discards static silence timers in favor of a **3-tier signal analysis pipeline**:
 
 ```mermaid

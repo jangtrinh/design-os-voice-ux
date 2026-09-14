@@ -50,6 +50,8 @@ A standard VUI design system must define a cohesive acoustic vocabulary across 4
 
 ## 4. Audio Level & Frequency Reference for Voice Designers
 
+![Acoustic Sound Envelope (ADSR) Architecture](../assets/images/adsr-sound-envelope.jpg)
+
 ```
  0 dBFS   ───────────────────────────────────────────── [Clipping Ceiling — Strictly Forbidden]
 -6 dBFS  ═════════════════════════════════════════════ [Emergency Alerts / Safety-Critical]

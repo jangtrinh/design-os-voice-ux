@@ -55,6 +55,8 @@ graph TD
 
 ## 3. Chiến Lược Lấp Khoảng Trống (Conversational Fillers & Bridging Strategies)
 
+![Kiến trúc bắc cầu âm thanh và xử lý độ trễ đàm thoại](../../assets/images/acoustic-bridging-filler.jpg)
+
 Khi hệ thống bắt buộc phải thực hiện các tác vụ tốn thời gian (như gọi API ngân hàng, tra cứu cơ sở dữ liệu lớn - RAG mất 1.5s - 3s), Voice UX Designer phải áp dụng chiến lược **Bắc Cầu Âm Thanh (Audio Bridging)**:
 
 ### 1. Phản Ứng Đệm Tức Thì (Instant Acoustic Acknowledgment)

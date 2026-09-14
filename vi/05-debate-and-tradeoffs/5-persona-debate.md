@@ -18,6 +18,8 @@
 
 ## 🥊 Phiên Tranh Biện 1: Pipeline Tách Rời (STT-LLM-TTS) vs Gốc Âm Thanh (Speech-to-Speech)
 
+![So sánh kiến trúc Pipeline tách rời và Speech-to-Speech](../../assets/images/cascaded-vs-speech-to-speech.jpg)
+
 ### Lập Trường Các Bên:
 * **🏛️ Architect**: *"Tôi ủng hộ Pipeline tách rời (Cascaded). Nó cho phép kiểm soát 100% nội dung qua lớp Guardrails text, dễ dàng thay thế nhà cung cấp (đổi Whisper lấy Deepgram, đổi GPT lấy Claude), và debug lỗi chính tả rất dễ."*
 * **⚡ Performance**: *"Nhưng thưa Architect, Pipeline tách rời giết chết độ trễ! STT mất 200ms, LLM mất 500ms để sinh token đầu tiên, TTS mất thêm 300ms. Tổng cộng hơn 1 giây. Người dùng không thể trò chuyện tự nhiên với độ trễ đó! Speech-to-Speech nén độ trễ xuống 250ms."*

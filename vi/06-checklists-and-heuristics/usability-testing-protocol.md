@@ -6,6 +6,8 @@
 
 ## 1. Thiết Lập Mô Hình Phù Thủy Xứ Oz (WoZ Setup Architecture)
 
+![Mô hình thử nghiệm Wizard of Oz trong phòng lab âm thanh](../../assets/images/wizard-of-oz-testing.jpg)
+
 ```mermaid
 sequenceDiagram
     autonumber
