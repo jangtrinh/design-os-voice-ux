@@ -26,6 +26,9 @@ graph TD
     Tier2 -->|Persistent Failure / Error 3| Tier3[Tier 3: Bounded Fallback or Channel Switch]
 ```
 
+![3-Tier Progressive Error Recovery Architecture](../assets/images/progressive-recovery-luminous.jpg)
+
+
 ### Exemplar Dialogue: Hotel Reservation Flow
 
 - **Error 1 (Tier 1 — Gentle Nudge)**:

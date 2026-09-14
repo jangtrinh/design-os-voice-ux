@@ -26,6 +26,9 @@ graph TD
     Tier2 -->|Vẫn lỗi lần 3| Tier3[Tầng 3: Giới hạn lựa chọn hoặc Chuyển kênh]
 ```
 
+![Kiến trúc 3 tầng phục hồi lỗi hội thoại](../../assets/images/progressive-recovery-luminous.jpg)
+
+
 ### Ví Dụ Kịch Bản Đặt Phòng Khách Sạn:
 
 - **Lần lỗi 1 (Tầng 1 - Gentle Nudge)**:
