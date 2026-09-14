@@ -2,6 +2,8 @@
 
 > Phân tích chuyên sâu trải nghiệm UX, kiến trúc đàm thoại, ưu điểm vượt trội và điểm hạn chế của 5 hệ thống Voice Interface mang tính biểu tượng nhất hiện nay: OpenAI Advanced Voice, Google Gemini Live, Apple Intelligence Siri, Hume AI EVI, và Automotive VUI (Tesla/CarPlay).
 
+![Bảng ma trận so sánh hiệu năng kiến trúc Voice AI](../../assets/images/industry-benchmarks-luminous.jpg)
+
 ---
 
 ## 1. Bảng So Sánh Tổng Quan 5 Hệ Thống

@@ -66,6 +66,9 @@ sequenceDiagram
     Driver->>Phone: Xuống xe, mở điện thoại -> Thấy ngay thẻ vé đặt chỗ & mã QR tại cửa quán.
 ```
 
+![Kiến trúc giao tiếp đa kênh Voice và Màn hình](../../assets/images/multimodal-handshake-luminous.jpg)
+
+
 ### Tiêu Chuẩn Thiết Kế Giao Tiếp Đa Kênh:
 - **Đồng bộ trạng thái tức thì (State Continuity)**: Nếu người dùng đang nói dở trên đồng hồ thông minh, họ có thể hoàn tất thanh toán trên điện thoại mà không cần bắt đầu lại từ đầu.
 - **Dấu hiệu định hướng trực quan (Visual Anchors)**: Khi loa thông minh cất tiếng nói về một món hàng, màn hình phải ngay lập tức làm nổi bật (highlight border) món hàng đó để ánh mắt người dùng bắt kịp nhịp nói của máy.

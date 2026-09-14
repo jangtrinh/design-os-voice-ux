@@ -2,6 +2,8 @@
 
 > "Một sản phẩm bằng giọng nói không bao giờ có thể 'vô cảm'. Ngay từ giây đầu tiên loa cất tiếng, người dùng đã tự động vẽ nên một hình ảnh nhân vật trong đầu: độ tuổi, giới tính, học thức, tính cách và thái độ của người đang nói." — Erika Hall, *Conversational Design*.
 
+![Bản đồ ma trận nhân cách và cân chỉnh sắc thái giọng nói](../../assets/images/persona-tone-luminous.jpg)
+
 ---
 
 ## 1. Bản Đồ 4 Trục Nhân Cách (The Persona Attribute Matrix)

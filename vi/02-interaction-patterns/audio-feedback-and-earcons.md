@@ -16,6 +16,9 @@ graph LR
     FeedbackChoice -->|Bằng Earcon| Sound["Mất 150ms: [Hai nốt Đồ - Đố trong trẻo]"]
 ```
 
+![Kiến trúc âm hiệu Earcons và phản hồi âm thanh](../../assets/images/earcons-luminous.jpg)
+
+
 ---
 
 ## 2. 4 Tín Hiệu Trạng Thái Bắt Buộc Trong VUI (The Core Acoustic States)

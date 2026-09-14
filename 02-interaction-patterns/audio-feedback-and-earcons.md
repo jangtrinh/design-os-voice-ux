@@ -16,6 +16,9 @@ graph LR
     FeedbackChoice -->|Structured Earcon| Sound["150ms: [Crisp Ascending Major Dyad]"]
 ```
 
+![Earcons & Sonic Feedback Architecture](../assets/images/earcons-luminous.jpg)
+
+
 ---
 
 ## 2. The 4 Core Acoustic States in VUI

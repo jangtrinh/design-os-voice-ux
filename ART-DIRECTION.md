@@ -1,66 +1,79 @@
-# DESIGN:OS Voice UX — Art Direction Specification
+# DESIGN:OS Voice UX — Art Direction & Meta-Prompt Specification
 
-> **Style System**: Luminous Layered Precision  
-> **Philosophy**: Clean, high-tech conversational product visualization translated into a calm, premium, precise interface.
+> **Style System**: Luminous Layered Precision (Isometric 3D)  
+> **Philosophy**: Architectural exploded-view product visualization translating conversational voice AI mechanics into tactile, frosted-glass hardware layers with strict 35° isometric perspective, minimal typography, and studio illumination.
 
 ---
 
-## 🎨 Visual Identity & Mood
+## 📐 The 4 Core Visual Laws
 
-| Attribute | Specification | Anti-Pattern to Avoid |
+| Law | Specification | Anti-Pattern to Avoid |
 |---|---|---|
-| **Tone** | Sophisticated, studio-lit, calm | Flashy, loud, gamified |
-| **Era** | Near-future industrial design | Sci-fi tropes, dystopian hacker aesthetic |
-| **Dimensionality** | Structured depth & tactile layers | Flat minimalism OR chaotic floating elements |
-| **Aesthetic** | Studio hardware & precision typography | Neon cyberpunk, heavy bloom, illegible glow |
-| **Space** | Generous, airy breathing room | Crowded dashboards, tiny decorative labels |
+| **1. Strict 35° Isometric Grid** | Every UI element (pill buttons, waveforms, gauges, sliders, chips) must be mapped flush onto the 3D surface plane of its glass wafer. | 2D flat text overlays, misaligned skew, floating billboards disconnected from plane |
+| **2. Radical Text Minimization** | Max 1–2 words per chip/button (e.g., `Confirm`, `Latency`, `0.58`). Never put explanatory paragraphs, headers, or bullet points on the canvas. | Text-heavy infographics, poster title blocks, illegible miniature text |
+| **3. Tactile Glass & Material Physics** | Thick borosilicate glass wafers with rounded corners, 1px bright specular chamfers, soft caustic refractions, hovering over a brushed frosted aluminum base. | Flat opacity boxes, dirty smudge textures, harsh plastic reflections |
+| **4. Studio Atmospheric Lighting** | Clean seamless soft lilac studio gradient (`#F5F4FC` → `#ECE7FF`). Diffused violet-cyan subsurface glow radiating from underneath the glass wafers. | Pitch black sci-fi, cyberpunk neon bloom, dark gamer/hacker aesthetics |
 
 ---
 
-## 💎 Materials & Physics
+## 🎨 Design Tokens & Palette
 
-- **Surfaces**: Pearl-white (`#FFFFFF`), satin-finished matte polymer, softly tinted surfaces (`#F8F7FD`).
-- **Translucency**: Selective frosted glass (Gaussian blur 20–30px, 85–92% opacity) on secondary overlay cards.
-- **Metal & Edges**: Thin, micro-chamfered satin-aluminum borders (`#E3DFF0`), soft 1px edge highlights.
-- **Lighting**: Broad overhead studio softbox illumination, dual-bounce ambient occlusion, soft neutral-violet contact shadows (`rgba(105, 80, 216, 0.08)`).
-- **Glow & Accents**: Strictly reserved for active states, acoustic focal ripples, and immediate confirmation feedback. Never applied to static body text or borders.
+```yaml
+Atmosphere:
+  canvas_base: "#F5F4FC"      # Clean soft atmospheric lilac
+  ambient_lavender: "#ECE7FF" # Subtle secondary depth glow
+  fill_daylight: "#DFEDFF"    # Subtle daylight fill
 
----
+Materials:
+  wafer_glass: "Translucent borosilicate glass (90% transmission, refractive index 1.52)"
+  edge_bevel: "1px crisp white specular chamfer (#FFFFFF)"
+  chassis_base: "Anodized pearl-white & satin-brushed aluminum (#F0EEF8)"
+  caustic_shadow: "Soft neutral-violet contact shadows rgba(105, 80, 216, 0.08)"
 
-## 🌈 Design Tokens & Color Palette
-
-```
-Canvas & Atmosphere:
-├── background_base        : #F5F4FC (Atmospheric Off-White)
-├── background_lavender    : #ECE7FF (Soft Ambient Glow)
-└── background_blue        : #DFEDFF (Secondary Daylight Fill)
-
-Surfaces & Structures:
-├── surface_primary        : #FFFFFF (Pearl-White Enclosure)
-├── surface_secondary      : #F8F7FD (Secondary Layer)
-├── border_subtle          : #E3DFF0 (Precision Aluminum Bezel)
-└── shadow_ambient         : rgba(105, 80, 216, 0.08)
-
-Text & Semantic Hierarchy:
-├── text_primary           : #1D1B32 (Deep Obsidian Violet)
-├── text_secondary         : #615D78 (Muted Slate)
-├── text_tertiary          : #9A95B2 (Subtle Metadata)
-
-Luminous Accents:
-├── accent_primary         : #6950D8 (Royal Violet — Focus & Active State)
-├── accent_acoustic_cyan   : #66CFF5 (Voice Waveform & Microphone Onset)
-└── accent_amber_alert     : #F5A623 (Audible Truncation & State Rollback)
+Luminous Acoustic Accents:
+  royal_violet: "#6950D8"     # Active focus, intent selection, confirmation
+  electric_cyan: "#66CFF5"    # Speech intake, live audio waveforms, microphone onset
+  amber_alert: "#F5A623"      # Audible boundary truncation, rollback, warning
 ```
 
 ---
 
-## 📐 Dimensional Voice Metaphors
+## 🧬 Reusable Meta-Prompt Schema
 
-1. **The Exploded State Stack**:
-   - Represents the 4 tiers of conversational processing (Listening → Thinking → Speaking → Tool Execution) as physical, precision-milled translucent wafers floating in register with soft contact shadows.
-2. **The Acoustic Focal Core**:
-   - The microphone and speech intake rendered as a physical satin-metal aperture with concentric acoustic sound rings, radiating soft violet and cyan pulses.
-3. **Earcon Physicality**:
-   - Tactile auditory signifiers visualized as tactile sculpted capsules with micro-relief icons and physical depth rather than flat software icons.
-4. **Waveform Architecture**:
-   - Speech audio streams visualized as elegant, high-definition vector oscillations rather than jagged, pixelated waveforms.
+When generating illustrations for any section, use this parameterized template:
+
+```text
+High-end 3D architectural exploded isometric product visualization demonstrating {TOPIC_NAME} in a Next-Gen Voice AI Operating System.
+Style: Luminous Layered Precision.
+Color palette: Clean soft lilac studio background (#F5F4FC, #ECE7FF), royal violet (#6950D8) and electric cyan (#66CFF5) glowing acoustic elements, white translucent frosted borosilicate glass wafers with sharp 1px specular edges.
+Composition: 35-degree isometric exploded view with 3 vertically floating translucent glass interface slabs hovering over a solid frosted satin-aluminum chassis slab:
+- Base slab ({TIER_1_NAME}): {TIER_1_ELEMENTS_EMBOSSED_ON_PLANE}.
+- Middle slab ({TIER_2_NAME}): {TIER_2_ELEMENTS_EMBOSSED_ON_PLANE}.
+- Top slab ({TIER_3_NAME}): {TIER_3_ELEMENTS_EMBOSSED_ON_PLANE}.
+Perspective & Affordance: Strict 35-degree isometric alignment. All buttons, gauges, tactile chips, and waveforms are surface-mapped directly onto the glass planes with realistic depth, specular highlights, and contact shadows.
+Typography: Ultra-minimal. No long sentences, no paragraphs, no canvas titles. Pure tactile iconography, numbers, and short functional chips.
+Lighting: Soft studio softbox lighting with delicate caustic reflections, diffused violet-cyan subsurface glow beneath each layer, 8k crisp raytraced industrial product design render.
+Avoid: Dark backgrounds, black sci-fi, cyberpunk neon clutter, avatars, human figures, floating 2D billboard text.
+```
+
+---
+
+## 🗺️ Master Visual Roadmap for Documentation
+
+| Section | Topic | Visual Metaphor | Status |
+|---|---|---|---|
+| `README.md` | Hero Overview | 4-Tier Voice AI Stack (Listen, Think, Speak, Tool) | ✅ Ready (`design-os-voice-ux-hero-luminous.jpg`) |
+| `01-foundations/mental-models` | Gulf of Execution | Auditory signifiers bridging GUI vs VUI void | ✅ Ready (`gulf-of-execution-vui.jpg`) |
+| `01-foundations/conversational-psychology` | Conversational Psychology | Cognitive load timing & Gricean Maxims balance | ✅ Ready (`conversational-psychology-luminous.jpg`) |
+| `01-foundations/vui-heuristics` | 7 VUI Heuristics | 7-part radial modular wafer gauge | ✅ Ready (`vui-heuristics-luminous.jpg`) |
+| `02-interaction-patterns/turn-taking` | Turn-Taking & Barge-In | Truncated speech waveform & sub-80ms onset | ✅ Ready (`barge-in-luminous.jpg`) |
+| `02-interaction-patterns/error-recovery` | Progressive Recovery | 3-Tier Glass Stack (Nudge, Disambiguation, Handshake) | ✅ Ready (`progressive-recovery-luminous.jpg`) |
+| `02-interaction-patterns/audio-feedback` | Earcons & Audio Signifiers | Tactile earcon capsules & spectral frequency chips | ✅ Ready (`earcons-luminous.jpg`) |
+| `02-interaction-patterns/multimodal-handshake` | Multimodal Handshake | Cross-device glass handoff (Voice to Watch & Screen) | ✅ Ready (`multimodal-handshake-luminous.jpg`) |
+| `03-conversational-design/latency-budgets` | Latency Budget Stack | Stacked millisecond timing wafers (VAD, STT, LLM, TTS) | ✅ Ready (`latency-budgets-luminous.jpg`) |
+| `03-conversational-design/prompt-and-dialog` | Dialog Engineering | Slot-filling wafer stack with prompt token meters | ✅ Ready (`dialog-engineering-luminous.jpg`) |
+| `03-conversational-design/persona-and-tone` | Persona & Acoustic Brand | Dynamic acoustic resonance & vocal pitch profile | ✅ Ready (`persona-tone-luminous.jpg`) |
+| `04-benchmarks-and-case-studies/industry-benchmarks` | Industry Benchmarks | Multi-architecture performance & latency comparator | ✅ Ready (`industry-benchmarks-luminous.jpg`) |
+| `06-checklists-and-heuristics/vui-design-checklist` | Production Checklist | 5x5 Verification grid with optical laser inspection lens | ✅ Ready (`vui-checklist-luminous.jpg`) |
+
+

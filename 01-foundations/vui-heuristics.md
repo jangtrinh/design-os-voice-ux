@@ -2,6 +2,8 @@
 
 > Jakob Nielsen's classic 10 Usability Heuristics were originally created for graphical user interfaces. When applied to Voice User Interfaces (VUIs), they must be reinterpreted through the lens of auditory processing and non-visual interaction.
 
+![Nielsen Norman Usability Heuristics Applied to Voice AI Architecture](../assets/images/vui-heuristics-luminous.jpg)
+
 ---
 
 ## 1. Visibility of System Status -> Acoustic Status Awareness

@@ -2,6 +2,8 @@
 
 > In-depth analysis of user experience (UX), conversational architecture, core breakthroughs, and residual constraints across five landmark Voice User Interfaces: OpenAI Advanced Voice, Google Gemini Live, Apple Intelligence Siri, Hume AI EVI, and Automotive VUI (Tesla/CarPlay).
 
+![Industry Voice AI Architectural & Performance Matrix Comparator](../assets/images/industry-benchmarks-luminous.jpg)
+
 ---
 
 ## 1. Architectural & Performance Comparison Matrix

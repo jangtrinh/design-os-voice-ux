@@ -2,6 +2,8 @@
 
 > Spoken dialogue is not merely text read aloud from a screen. It is a two-way psychological dance governed by cultural conventions, cooperative principles, and the strict limits of human working memory.
 
+![Conversational Psychology and Working Memory Chunking Architecture](../assets/images/conversational-psychology-luminous.jpg)
+
 ---
 
 ## 1. Gricean Maxims of Conversation

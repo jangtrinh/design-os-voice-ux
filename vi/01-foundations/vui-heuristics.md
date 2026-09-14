@@ -2,6 +2,8 @@
 
 > 10 Nguyên lý khả dụng kinh điển của Jakob Nielsen ban đầu được xây dựng cho giao diện đồ họa. Khi chuyển sang môi trường giọng nói (VUI), chúng phải được diễn giải lại dưới lăng kính âm thanh và tương tác phi thị giác.
 
+![10 Nguyên lý khả dụng kinh điển ứng dụng cho Voice AI](../../assets/images/vui-heuristics-luminous.jpg)
+
 ---
 
 ## 1. Khả Năng Nhận Biết Trạng Thái Hệ Thống (Visibility of System Status -> Acoustic Status Awareness)

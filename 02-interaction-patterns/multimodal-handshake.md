@@ -68,6 +68,9 @@ sequenceDiagram
     Driver->>Phone: Exits vehicle, unlocks phone -> Lockscreen displays reservation card & entry QR code.
 ```
 
+![Cross-Device Multimodal Handshake Architecture](../assets/images/multimodal-handshake-luminous.jpg)
+
+
 ### Cross-Device Design Standards
 
 - **State Continuity**: If a user initiates a workflow on a smartwatch, they can finalize authorization or payment on their phone without restarting the session.

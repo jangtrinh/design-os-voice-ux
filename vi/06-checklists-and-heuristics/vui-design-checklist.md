@@ -2,6 +2,8 @@
 
 > Bộ checklist 25 tiêu chuẩn vàng giúp UX Designer, Product Manager và Tech Lead rà soát toàn diện trải nghiệm giọng nói trước khi phát hành tính năng ra người dùng thực tế.
 
+![Bảng kiểm định chất lượng phát hành Voice UX](../../assets/images/vui-checklist-luminous.jpg)
+
 ---
 
 ## 🎯 1. Ngôn Ngữ & Soạn Thảo Cho Đôi Tai (Writing for the Ear)

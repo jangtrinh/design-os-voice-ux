@@ -2,6 +2,8 @@
 
 > "A voice product can never be neutral. From the very first syllable emitted by a speaker, listeners automatically construct a mental archetype: the speaker's perceived age, gender, education, competence, personality, and emotional posture." — Erika Hall, *Conversational Design*.
 
+![Voice Persona and Empathy Calibration Matrix](../assets/images/persona-tone-luminous.jpg)
+
 ---
 
 ## 1. The Persona Attribute Matrix

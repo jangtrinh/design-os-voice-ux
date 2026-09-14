@@ -2,6 +2,8 @@
 
 > Giao tiếp qua giọng nói không phải là việc đọc to văn bản trên màn hình. Đó là một vũ điệu tâm lý học hai chiều tuân theo các quy ước văn hóa, phương châm hợp tác và dung lượng ghi nhớ nghiêm ngặt của não bộ.
 
+![Kiến trúc tâm lý học hội thoại và giới hạn phân đoạn bộ nhớ đệm](../../assets/images/conversational-psychology-luminous.jpg)
+
 ---
 
 ## 1. Bốn Phương Châm Hội Thoại Của Grice (Gricean Maxims)

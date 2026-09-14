@@ -20,7 +20,10 @@
 
 ## 2. Cấu Trúc System Prompt Chuẩn Cho Voice LLM
 
+![Kiến trúc kỹ thuật Prompt và Thiết kế hội thoại](../../assets/images/dialog-engineering-luminous.jpg)
+
 Dưới đây là khung kiến trúc System Prompt tối ưu cho các mô hình Voice AI (như OpenAI Realtime, Gemini Live, Claude + ElevenLabs pipeline):
+
 
 ```markdown
 # IDENTITY & OBJECTIVE

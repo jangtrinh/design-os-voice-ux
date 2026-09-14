@@ -2,6 +2,8 @@
 
 > A comprehensive 25-point gold standard checklist empowering UX Designers, Product Managers, and Tech Leads to rigorously evaluate voice interfaces before deploying features to production users.
 
+![Voice UX Production Quality Verification Console](../assets/images/vui-checklist-luminous.jpg)
+
 ---
 
 ## 🎯 1. Writing for the Ear (Language & Scripting)

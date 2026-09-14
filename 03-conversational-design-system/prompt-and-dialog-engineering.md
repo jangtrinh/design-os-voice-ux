@@ -20,7 +20,10 @@
 
 ## 2. Canonical Voice LLM System Prompt Architecture
 
+![Prompt and Dialog Engineering Architecture](../assets/images/dialog-engineering-luminous.jpg)
+
 The following prompt structure provides a battle-tested blueprint for real-time Voice AI models (OpenAI Realtime API, Gemini Live, Claude + ElevenLabs pipeline):
+
 
 ```markdown
 # IDENTITY & OBJECTIVE

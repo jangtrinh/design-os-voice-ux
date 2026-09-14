@@ -48,6 +48,9 @@ graph TD
     end
 ```
 
+![Voice Latency Budget Stack Architecture](../assets/images/latency-budgets-luminous.jpg)
+
+
 ---
 
 ## 3. Conversational Fillers & Bridging Strategies

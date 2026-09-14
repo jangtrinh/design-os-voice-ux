@@ -48,6 +48,9 @@ graph TD
     end
 ```
 
+![Kiến trúc ngăn xếp kiểm soát độ trễ âm thanh](../../assets/images/latency-budgets-luminous.jpg)
+
+
 ---
 
 ## 3. Chiến Lược Lấp Khoảng Trống (Conversational Fillers & Bridging Strategies)
