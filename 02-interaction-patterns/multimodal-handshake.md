@@ -23,8 +23,7 @@ BUSY      │ (Keyboard Input, Holding Infant)       │ (Surgery, Heavy Equipme
           └────────────────────────────────────────┴────────────────────────────────────────┘
 ```
 
-![In-Cabin Automotive Multimodal Interface](../assets/images/realcase-automotive-carplay.jpg)
-*Real-world case: In-cabin automotive voice & visual dashboard (Volkswagen ID.4 running wireless Apple CarPlay). Visual cards offload navigation, media metadata, and turn-by-turn routing while voice coordinates hands-busy/eyes-busy driving.*
+![In-Cabin Automotive Multimodal Interface Architecture](../assets/images/attention-handoff-driving.jpg)
 
 ---
 

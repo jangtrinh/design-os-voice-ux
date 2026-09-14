@@ -6,6 +6,8 @@
 
 ## 1. Open-Source Voice UX Ecosystem Architecture
 
+![Open-Source Modular Voice UX Toolchain Stack](../assets/images/opensource-toolchain-stack.jpg)
+
 ```mermaid
 graph TD
     A[Open-Source Voice AI Ecosystem] --> B[Transport & Realtime: LiveKit, Pipecat]

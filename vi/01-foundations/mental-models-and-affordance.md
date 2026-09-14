@@ -28,6 +28,8 @@ graph LR
 
 ## 2. Vực Thẳm Thực Thi Trong VUI (The Gulf of Execution)
 
+![Vực thẳm thực thi trong giao diện giọng nói Gulf of Execution](../../assets/images/gulf-of-execution-vui.jpg)
+
 Khái niệm *Gulf of Execution* của Don Norman mô tả khoảng cách giữa **ý định của người dùng** và **hành động thực tế cần làm** trên hệ thống:
 
 * **Trong GUI**: Nhìn thấy icon kính lúp -> biết chỗ gõ tìm kiếm -> khoảng cách hẹp.
@@ -42,6 +44,8 @@ Khái niệm *Gulf of Execution* của Don Norman mô tả khoảng cách giữa
 ---
 
 ## 3. Dấu Hiệu Âm Thanh (Acoustic Signifiers)
+
+![Kiến trúc vòng đèn báo hiệu âm thanh Acoustic Signifier](../../assets/images/acoustic-signifier-ring.jpg)
 
 Nếu GUI dựa vào biểu tượng và màu sắc để báo hiệu trạng thái tương tác thì VUI sử dụng **Acoustic Signifiers** để gửi tín hiệu đến đôi tai người dùng:
 
@@ -58,6 +62,8 @@ Nếu GUI dựa vào biểu tượng và màu sắc để báo hiệu trạng th
 ---
 
 ## 4. Mô Hình Tâm Lý: Con Người vs Công Cụ (Tool vs Human Partner)
+
+![So sánh văn bản dài Chatbot và câu thoại ngắn Voice-First](../../assets/images/chatbot-vs-voice-first.jpg)
 
 Khi giao tiếp bằng giọng nói, con người vô thức kích hoạt **Mô hình giao tiếp xã hội (Social Actor Theory - Reeves & Nass)**:
 - Con người tự động gán phẩm chất xã hội, sự tôn trọng và cảm xúc cho một thực thể nói năng lưu loát.

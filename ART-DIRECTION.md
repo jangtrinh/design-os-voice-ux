@@ -62,23 +62,41 @@ Avoid: Dark backgrounds, black sci-fi, cyberpunk neon clutter, avatars, human fi
 
 | Section | Topic | Visual Metaphor | Status |
 |---|---|---|---|
-| `README.md` | Hero Overview | 4-Tier Voice AI Stack (Listen, Think, Speak, Tool) | ✅ Ready (`design-os-voice-ux-hero-luminous.jpg`) |
+| `README.md` | Hero Overview | Master Voice AI Console with 4 glass tiers | ✅ Ready (`voice-ux-hero.jpg`) |
 | `01-foundations/mental-models` | Gulf of Execution | Auditory signifiers bridging GUI vs VUI void | ✅ Ready (`gulf-of-execution-vui.jpg`) |
+| `01-foundations/mental-models` | Acoustic Signifiers | Smart speaker puck with 360° cyan LED ring & beamforming pointer | ✅ Ready (`acoustic-signifier-ring.jpg`) |
+| `01-foundations/mental-models` | Verbosity vs Brevity | Dense 10-slat text wall vs single cyan acoustic capsule | ✅ Ready (`chatbot-vs-voice-first.jpg`) |
 | `01-foundations/conversational-psychology` | Conversational Psychology | Cognitive load timing & Gricean Maxims balance | ✅ Ready (`conversational-psychology-luminous.jpg`) |
+| `01-foundations/conversational-psychology` | Working Memory Limits | 3 glowing cyan slots with amber overflow barrier blade | ✅ Ready (`cowans-memory-slots.jpg`) |
+| `01-foundations/conversational-psychology` | Auditory Fatigue Filter | Sharp violet spikes smoothed into gentle cyan waves through glass baffle | ✅ Ready (`auditory-fatigue-filter.jpg`) |
 | `01-foundations/vui-heuristics` | 7 VUI Heuristics | 7-part radial modular wafer gauge | ✅ Ready (`vui-heuristics-luminous.jpg`) |
+| `01-foundations/vui-heuristics` | System Status Indicators | 4 linear bays (Mic, Pulse Ring, Wave, Idle Dot) | ✅ Ready (`acoustic-status-indicator.jpg`) |
+| `01-foundations/vui-heuristics` | Emergency Exit Switch | Recessed octagonal ruby stop button with return-arrow glass lens | ✅ Ready (`emergency-exit-switch.jpg`) |
 | `02-interaction-patterns/turn-taking` | Turn-Taking & Barge-In | Truncated speech waveform & sub-80ms onset | ✅ Ready (`barge-in-luminous.jpg`) |
-| `02-interaction-patterns/error-recovery` | Progressive Recovery | 3-Tier Glass Stack (Nudge, Disambiguation, Handshake) | ✅ Ready (`progressive-recovery-luminous.jpg`) |
-| `02-interaction-patterns/audio-feedback` | Earcons & Audio Signifiers | Tactile earcon capsules & spectral frequency chips | ✅ Ready (`earcons-luminous.jpg`) |
-| `02-interaction-patterns/multimodal-handshake` | Multimodal Handshake | Cross-device glass handoff (Voice to Watch & Screen) | ✅ Ready (`multimodal-handshake-luminous.jpg`) |
-| `03-conversational-design/latency-budgets` | Latency Budget Stack | Stacked millisecond timing wafers (VAD, STT, LLM, TTS) | ✅ Ready (`latency-budgets-luminous.jpg`) |
-| `03-conversational-design/prompt-and-dialog` | Dialog Engineering | Slot-filling wafer stack with prompt token meters | ✅ Ready (`dialog-engineering-luminous.jpg`) |
-| `03-conversational-design/persona-and-tone` | Persona & Acoustic Brand | Dynamic acoustic resonance & vocal pitch profile | ✅ Ready (`persona-tone-luminous.jpg`) |
-| `04-benchmarks-and-case-studies/industry-benchmarks` | Industry Benchmarks | Multi-architecture performance & latency comparator | ✅ Ready (`industry-benchmarks-luminous.jpg`) |
-| `06-checklists-and-heuristics/vui-design-checklist` | Production Checklist | 5x5 Verification grid with optical laser inspection lens | ✅ Ready (`vui-checklist-luminous.jpg`) |
-| `02-interaction-patterns/audio-feedback` | ADSR Sound Envelope | Tactile acoustic glass wafer with 4-point ADSR inflection curve | ✅ Ready (`adsr-sound-envelope.jpg`) |
-| `03-conversational-design/latency-budgets` | Acoustic Bridging | Levitating pulsing glass bead bridging latency dead-air gap | ✅ Ready (`acoustic-bridging-filler.jpg`) |
+| `02-interaction-patterns/turn-taking` | Full-Duplex WebRTC Flow | Dual parallel bidirectional glass light pipes with AEC prism | ✅ Ready (`duplex-webrtc-flow.jpg`) |
 | `02-interaction-patterns/turn-taking` | EoU Dual Detection | Parallel acoustic silence gauge & semantic completion latch | ✅ Ready (`vad-semantic-detection.jpg`) |
+| `02-interaction-patterns/turn-taking` | Audible Boundary Rollback | Glass razor cutting timeline track & pruning downstream buffer | ✅ Ready (`audible-boundary-rollback.jpg`) |
+| `02-interaction-patterns/error-recovery` | Progressive Recovery | 3-Tier Glass Stack (Nudge, Disambiguation, Handshake) | ✅ Ready (`progressive-recovery-luminous.jpg`) |
+| `02-interaction-patterns/error-recovery` | Reprompting Escalation | 3-tier staircase (open dish, bifurcated wells, keyhole socket) | ✅ Ready (`reprompting-levels.jpg`) |
+| `02-interaction-patterns/audio-feedback` | Earcons & Audio Signifiers | Tactile earcon capsules & spectral frequency chips | ✅ Ready (`earcons-luminous.jpg`) |
+| `02-interaction-patterns/audio-feedback` | ADSR Sound Envelope | Tactile acoustic glass wafer with 4-point ADSR inflection curve | ✅ Ready (`adsr-sound-envelope.jpg`) |
+| `02-interaction-patterns/audio-feedback` | Decibel Level Ladder | Stepped glass ladder gauge with 5 tactile tiers | ✅ Ready (`decibel-ladder-levels.jpg`) |
+| `02-interaction-patterns/multimodal-handshake` | Multimodal Handshake | Cross-device glass handoff (Voice to Watch & Screen) | ✅ Ready (`multimodal-handshake-luminous.jpg`) |
+| `02-interaction-patterns/multimodal-handshake` | In-Cabin Automotive Handoff | Steering wheel puck, panoramic glass HUD, and docked tablet | ✅ Ready (`attention-handoff-driving.jpg`) |
+| `03-conversational-design/latency-budgets` | Latency Budget Stack | Stacked millisecond timing wafers (VAD, STT, LLM, TTS) | ✅ Ready (`latency-budgets-luminous.jpg`) |
+| `03-conversational-design/latency-budgets` | Acoustic Bridging | Levitating pulsing glass bead bridging latency dead-air gap | ✅ Ready (`acoustic-bridging-filler.jpg`) |
+| `03-conversational-design/latency-budgets` | Adaptive Jitter Buffer | Linear glass channel reconstructing dropped packets with light | ✅ Ready (`jitter-buffer-adaptive.jpg`) |
+| `03-conversational-design/persona-and-tone` | Persona & Acoustic Brand | Dynamic acoustic resonance & vocal pitch profile | ✅ Ready (`persona-tone-luminous.jpg`) |
+| `03-conversational-design/persona-and-tone` | Prosodic Emotional Adaptation | Knurled rotary dials with 3 undulating pitch ribbons | ✅ Ready (`speech-synthesis-prosody.jpg`) |
+| `03-conversational-design/prompt-and-dialog` | Dialog Engineering | Slot-filling wafer stack with prompt token meters | ✅ Ready (`dialog-engineering-luminous.jpg`) |
+| `03-conversational-design/prompt-and-dialog` | Safety Gate & Guardrails | Glass security shield admitting valid tokens, deflecting amber shards | ✅ Ready (`prompt-guardrails-gate.jpg`) |
+| `03-conversational-design/prompt-and-dialog` | Entity Slot Filling | Geometric glass puzzle tokens magnetically snapping into cutouts | ✅ Ready (`entity-slot-filling.jpg`) |
+| `04-benchmarks-and-case-studies/industry-benchmarks` | Industry Benchmarks | Multi-architecture performance & latency comparator | ✅ Ready (`industry-benchmarks-luminous.jpg`) |
+| `04-benchmarks-and-case-studies/open-source-repos` | Toolchain Ecosystem Stack | 4 slide-in modular server cartridges on glowing rack | ✅ Ready (`opensource-toolchain-stack.jpg`) |
 | `05-debate-and-tradeoffs/5-persona-debate` | Pipeline vs S2S | 3-hop seamed glass blocks vs unified crystal light pipe | ✅ Ready (`cascaded-vs-speech-to-speech.jpg`) |
+| `05-debate-and-tradeoffs/5-persona-debate` | Collision Arbiter Gate | Rotary crystal prism deflecting conflicting voice stream into amber trap | ✅ Ready (`barge-in-collision-gate.jpg`) |
+| `06-checklists-and-heuristics/vui-design-checklist` | Production Checklist | 5x5 Verification grid with optical laser inspection lens | ✅ Ready (`vui-checklist-luminous.jpg`) |
 | `06-checklists-and-heuristics/usability-testing` | Wizard of Oz Testing Lab | Dual-station testing console with acoustic glass partition | ✅ Ready (`wizard-of-oz-testing.jpg`) |
+
 
 

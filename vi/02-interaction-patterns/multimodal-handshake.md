@@ -24,6 +24,8 @@ TAY BẬN           │ VÙNG TRỢ LỰC GIỌNG NÓI   │ VÙNG CẤM NGUY HI
                   └──────────────────────────┴──────────────────────────┘
 ```
 
+![Kiến trúc phối hợp đa kênh buồng lái ô tô thông minh](../../assets/images/attention-handoff-driving.jpg)
+
 ---
 
 ## 2. Nguyên Tắc Phân Tải Hiển Thị (Visual Offloading Rules)

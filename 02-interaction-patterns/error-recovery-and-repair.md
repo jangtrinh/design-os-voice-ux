@@ -31,6 +31,8 @@ graph TD
 
 ### Exemplar Dialogue: Hotel Reservation Flow
 
+![Progressive Re-prompting 3-Tier Escalation Levels](../assets/images/reprompting-levels.jpg)
+
 - **Error 1 (Tier 1 — Gentle Nudge)**:
   - *Objective*: Signal that the system is actively waiting without imposing cognitive pressure.
   - *Prompt*: `"Which city would you like to book a hotel in?"`

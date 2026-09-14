@@ -93,6 +93,8 @@ Khi hệ thống bắt buộc phải thực hiện các tác vụ tốn thời g
 
 ## 5. Ứng Phó Với Mạng Chập Chờn & Mất Gói Tin (Network Jitter & Packet Loss Concealment)
 
+![Kiến trúc bộ đệm thích ứng và bù đắp gói tin mất mát](../../assets/images/jitter-buffer-adaptive.jpg)
+
 Trong môi trường di động thực tế (4G/5G sóng yếu, người dùng đi vào thang máy hoặc tầng hầm), độ trễ mạng có thể dao động từ 60ms vọt lên 400ms bất ngờ:
 
 ```mermaid

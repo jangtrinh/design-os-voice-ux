@@ -45,8 +45,7 @@ Don Norman's *Gulf of Execution* describes the cognitive gap between a **user's 
 
 ## 3. Acoustic Signifiers
 
-![Amazon Echo Acoustic Signifier Light Ring](../assets/images/realcase-amazon-echo-acoustic-signifier.jpg)
-*Real-world case: Amazon Echo smart speaker flashing cyan/blue light ring as a visual and acoustic status signifier during listening state.*
+![Acoustic Signifier Light Ring Architecture](../assets/images/acoustic-signifier-ring.jpg)
 
 Where GUIs rely on icons and colors to signal interactive states, VUIs utilize **Acoustic Signifiers** to convey system status directly to the listener's ears:
 
@@ -63,6 +62,8 @@ Where GUIs rely on icons and colors to signal interactive states, VUIs utilize *
 ---
 
 ## 4. Mental Models: Tool vs. Human Partner
+
+![Chatbot Verbosity versus Voice-First Brevity](../assets/images/chatbot-vs-voice-first.jpg)
 
 When interacting via speech, humans subconsciously activate **Social Actor Theory (Reeves & Nass)**:
 - Users automatically attribute social presence, respect, and emotional intent to an entity that speaks fluently.

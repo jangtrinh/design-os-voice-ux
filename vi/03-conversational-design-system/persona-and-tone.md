@@ -62,6 +62,8 @@ graph TD
 
 ## 3. Ma Trận Thích Ứng Cảm Xúc (Prosodic Emotional Adaptation)
 
+![Cân chỉnh ngữ điệu và thích ứng cảm xúc theo thời gian thực](../../assets/images/speech-synthesis-prosody.jpg)
+
 Một Voice Agent thông minh (như Hume AI EVI) có khả năng phân tích cảm xúc trong giọng nói của người dùng và điều chỉnh âm sắc tương ứng:
 
 | Trạng Thái Cảm Xúc Người Dùng | Dấu Hiệu Âm Học | Chiến Lược Phản Hồi VUI | Âm Lượng & Tốc Độ Nói Của Agent |

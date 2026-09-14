@@ -36,6 +36,8 @@ graph TD
 
 ## 2. Giới Hạn Bộ Nhớ Đệm Âm Thanh (Echoic Memory & Cowan's 4-Chunk Limit)
 
+![Phân đoạn dung lượng bộ nhớ làm việc theo định luật Cowan](../../assets/images/cowans-memory-slots.jpg)
+
 Trong khi thị giác cho phép con người quét lướt và xem lại nhiều lần thì **Kênh thính giác xử lý tuần tự (Serial Processing)**:
 
 - **Quy luật Miller (7 ± 2)**: Áp dụng cho thông tin tĩnh có hỗ trợ thị giác.
@@ -55,6 +57,8 @@ Trong khi thị giác cho phép con người quét lướt và xem lại nhiều
 ---
 
 ## 3. Tâm Lý Học Luân Phiên Lượt Lời (Turn-Taking Dynamics)
+
+![Bộ lọc làm mượt dải tần ngăn ngừa mỏi màng nhĩ](../../assets/images/auditory-fatigue-filter.jpg)
 
 Theo nghiên cứu kinh điển của Sacks, Schegloff và Jefferson (1974), cuộc trò chuyện tự nhiên của con người diễn ra với khoảng ngắt nghỉ trung bình giữa hai lượt nói chỉ khoảng **200ms**:
 

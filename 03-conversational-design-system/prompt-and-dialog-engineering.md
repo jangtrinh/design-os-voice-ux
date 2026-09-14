@@ -43,6 +43,8 @@ Your core objective is to resolve user inquiries swiftly, accurately, and natura
 - Conversational acknowledgments: Use micro-acknowledgments where appropriate ("Certainly", "Understood", "Checking that now").
 ```
 
+![Voice LLM Safety Gate and Guardrails Architecture](../assets/images/prompt-guardrails-gate.jpg)
+
 ---
 
 ## 3. Prosody Control via SSML & Speech Synthesis Markup
@@ -84,6 +86,8 @@ When interfacing with advanced TTS engines, Voice Designers can fine-tune speech
 ---
 
 ## 4. Multi-Intent Slot Extraction Flow
+
+![Multi-Intent Dynamic Slot Extraction and Entity Assembly](../assets/images/entity-slot-filling.jpg)
 
 ```mermaid
 stateDiagram-v2

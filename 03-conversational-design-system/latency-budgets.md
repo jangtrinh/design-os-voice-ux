@@ -93,6 +93,8 @@ Reference latency distribution designed to maintain an end-to-end target under *
 
 ## 5. Network Jitter & Packet Loss Concealment (PLC)
 
+![Adaptive Jitter Buffer and Packet Loss Concealment Architecture](../assets/images/jitter-buffer-adaptive.jpg)
+
 Real-world mobile environments (fringe cellular reception, elevators, underground transit) induce network jitter spikes from 60ms to 400ms+:
 
 ```mermaid

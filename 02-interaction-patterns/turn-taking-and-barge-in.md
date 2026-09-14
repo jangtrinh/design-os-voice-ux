@@ -6,6 +6,8 @@
 
 ## 1. Full-Duplex vs. Half-Duplex Interaction
 
+![Full-Duplex WebRTC Voice Communication Architecture](../assets/images/duplex-webrtc-flow.jpg)
+
 For decades, legacy VUI systems (such as telephone IVRs and push-to-talk radios) operated in **Half-Duplex** mode:
 - One party speaks while the other is forced into listen-only mode.
 - The user's microphone is muted during audio output playback.
@@ -92,6 +94,8 @@ graph TD
 ---
 
 ## 4. State Rollback Protocol
+
+![Audible Boundary Rollback and Memory Pruning Protocol](../assets/images/audible-boundary-rollback.jpg)
 
 When barge-in occurs, how does the system reconcile memory buffers and conversational state?
 

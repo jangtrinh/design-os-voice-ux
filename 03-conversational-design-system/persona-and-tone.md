@@ -62,6 +62,8 @@ graph TD
 
 ## 3. Prosodic Emotional Adaptation
 
+![Dynamic Prosodic Emotional Adaptation and Pitch Tuning](../assets/images/speech-synthesis-prosody.jpg)
+
 State-of-the-art voice agents (such as Hume AI EVI) detect acoustic affective cues in user vocal streams and modulate synthesis prosody in real time:
 
 | User Emotional State | Acoustic Cues | VUI Response Strategy | Agent Prosody & Speech Rate |

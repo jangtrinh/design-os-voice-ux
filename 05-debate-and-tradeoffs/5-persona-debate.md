@@ -36,6 +36,8 @@
 
 ## 🥊 Debate Session 2: Seamless Barge-In vs. Audio Collision
 
+![Audio Collision Arbiter and Barge-In Gate Architecture](../assets/images/barge-in-collision-gate.jpg)
+
 ### Persona Arguments:
 * **🎨 UX Designer**: *"Users MUST have the inviolable right to interrupt at any millisecond. Forcing a user to endure an un-interruptible synthetic monologue is auditory torture."*
 * **⚡ Performance**: *"Enabling frictionless, continuous barge-in means full-duplex bi-directional WebRTC streaming 24/7. Server egress bandwidth and real-time neural VAD compute jump by 300%. Furthermore, if the user is in a crowded coffee shop, ambient chatter will trigger constant false-positive cutoffs!"*

@@ -60,3 +60,6 @@ A standard VUI design system must define a cohesive acoustic vocabulary across 4
 -24 dBFS ───────────────────────────────────────────── [Background Thinking / Ambient Pulse]
 -∞ dBFS  ───────────────────────────────────────────── [True Acoustic Silence]
 ```
+
+![Tactile Voice Decibel Level Ladder and Acoustic Hierarchy](../assets/images/decibel-ladder-levels.jpg)
+

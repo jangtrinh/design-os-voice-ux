@@ -6,6 +6,8 @@
 
 ## 1. Bản Đồ Hệ Sinh Thái Mã Nguồn Mở Cho Voice UX
 
+![Hệ thống ngăn xếp công cụ mã nguồn mở mô-đun cho Voice AI](../../assets/images/opensource-toolchain-stack.jpg)
+
 ```mermaid
 graph TD
     A[Hệ Sinh Thái Voice Open-Source] --> B[Transport & Realtime: LiveKit, Pipecat]

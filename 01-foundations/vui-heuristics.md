@@ -8,6 +8,8 @@
 
 ## 1. Visibility of System Status -> Acoustic Status Awareness
 
+![Acoustic System Status Indicators](../assets/images/acoustic-status-indicator.jpg)
+
 * **Original Heuristic**: The system should always keep users informed about what is going on, through appropriate feedback within reasonable time.
 * **Applied to VUI**: Lacking visual progress bars, the system must communicate four core states via auditory signifiers or spoken cues:
   1. **Listening**: Visual LED ring illumination or an ascending wake earcon.
@@ -28,6 +30,8 @@
 ---
 
 ## 3. User Control and Freedom
+
+![Voice AI Emergency Exit and Cancellation Affordance](../assets/images/emergency-exit-switch.jpg)
 
 * **Original Heuristic**: Users often make mistakes and need a clearly marked "emergency exit" to leave the unwanted state.
 * **Applied to VUI**:

@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice UX Academy — Learn & Test Modes</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              400: '#e879f9',
+              500: '#d946ef',
+              600: '#c026d3',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Phosphor Icons CDN -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <style>
+    .glow-subtle { box-shadow: 0 0 30px -8px rgba(217, 70, 239, 0.2); }
+    .glow-correct { box-shadow: 0 0 30px -8px rgba(34, 197, 94, 0.25); }
+    .glow-error { box-shadow: 0 0 30px -8px rgba(239, 68, 68, 0.25); }
+  </style>
+</head>
+
+<body class="bg-zinc-950 text-zinc-100 antialiased font-sans flex flex-col h-screen overflow-hidden selection:bg-fuchsia-500 selection:text-white">
+
+  <!-- ============================================================== -->
+  <!-- 1. TOPBAR: MODE SWITCHER (HỌC vs TEST) & PROGRESS BAR          -->
+  <!-- ============================================================== -->
+  <header class="h-16 shrink-0 border-b border-white/10 px-6 flex items-center justify-between bg-zinc-950/90 backdrop-blur-md z-10">
+    <!-- Left: Navigation Info -->
+    <div class="flex items-center gap-3 w-64">
+      <div class="size-9 rounded-xl bg-gradient-to-tr from-fuchsia-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-fuchsia-600/20">
+        <i class="ph-bold ph-waveform text-lg"></i>
+      </div>
+      <div>
+        <div class="text-[10px] font-mono text-fuchsia-400 uppercase tracking-wider font-bold">Voice UX Academy</div>
+        <div class="text-xs font-semibold text-zinc-200">Turn-taking & Barge-in</div>
+      </div>
+    </div>
+
+    <!-- Center: Mode Selector Pills (HỌC vs TEST) & Progress Bar -->
+    <div class="flex-1 max-w-xl mx-4 flex flex-col items-center gap-1.5">
+      <!-- 2 Modes Toggle -->
+      <div class="p-1 rounded-full bg-zinc-900 border border-white/10 flex items-center text-xs font-semibold shadow-inner">
+        <button id="btn-mode-learn" onclick="switchMainMode('learn')" class="px-4 py-1 rounded-full bg-fuchsia-600 text-white shadow-sm flex items-center gap-1.5 transition">
+          <i class="ph-bold ph-book-open-text"></i>
+          <span>1. Phần Học (Learn)</span>
+        </button>
+        <button id="btn-mode-test" onclick="switchMainMode('test')" class="px-4 py-1 rounded-full text-zinc-400 hover:text-zinc-200 flex items-center gap-1.5 transition">
+          <i class="ph-bold ph-crosshair"></i>
+          <span>2. Phần Test (Challenge)</span>
+        </button>
+      </div>
+
+      <!-- Segmented Step Progress Bar -->
+      <div class="w-full flex items-center gap-2">
+        <div id="progress-segments" class="flex-1 grid grid-cols-4 gap-1.5 h-1.5">
+          <!-- Populated by JS -->
+        </div>
+        <span id="slide-step-counter" class="text-[10px] font-mono text-zinc-400 shrink-0">1 / 4</span>
+      </div>
+    </div>
+
+    <!-- Right: Stats / XP Counter -->
+    <div class="flex items-center justify-end gap-3 w-64">
+      <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-mono font-bold">
+        <i class="ph-fill ph-sparkle text-amber-400"></i>
+        <span id="xp-counter">140 XP</span>
+      </div>
+      <button onclick="restartCurrentMode()" title="Bắt đầu lại phần này" class="size-8 rounded-lg border border-white/10 hover:bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white transition">
+        <i class="ph ph-arrow-counter-clockwise text-sm"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 2. MAIN SLIDE CANVAS: GRAPHIC UI VISUAL STAGE                  -->
+  <!-- ============================================================== -->
+  <main class="flex-1 overflow-y-auto flex items-center justify-center p-4 sm:p-6">
+    <div id="slide-card" class="w-full max-w-3xl bg-zinc-900/80 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative transition-all duration-300 glow-subtle">
+      <!-- Dynamic Visual Slide Content Injected by JS -->
+      <div id="slide-content"></div>
+    </div>
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- 3. FIXED BOTTOM BAR: INTERACTION FEEDBACK & CTA                -->
+  <!-- ============================================================== -->
+  <footer id="bottom-bar" class="shrink-0 border-t border-white/10 bg-zinc-950 px-6 py-4 flex items-center justify-between transition-colors duration-200">
+    <div class="max-w-3xl mx-auto w-full flex items-center justify-between gap-4">
+      <!-- Left: Feedback state & prompt explanation -->
+      <div id="feedback-container" class="flex items-center gap-3 min-w-0 flex-1">
+        <div id="feedback-icon" class="size-9 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center shrink-0">
+          <i class="ph-bold ph-info text-base"></i>
+        </div>
+        <div class="min-w-0">
+          <div id="feedback-title" class="text-xs font-bold text-zinc-200">Quan sát Graphic UI và làm theo hướng dẫn</div>
+          <div id="feedback-desc" class="text-[11px] text-zinc-400 truncate">Tương tác trực tiếp trên giao diện để tiếp tục</div>
+        </div>
+      </div>
+
+      <!-- Right: Navigation Action Buttons -->
+      <div class="flex items-center gap-2.5 shrink-0">
+        <button id="btn-back" onclick="prevSlide()" class="px-4 py-2 rounded-xl border border-white/10 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-white/5 transition disabled:opacity-30 disabled:pointer-events-none">
+          Quay lại
+        </button>
+        <button id="btn-action" onclick="handleActionClick()" class="px-6 py-2.5 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold text-xs shadow-lg shadow-fuchsia-600/30 transition disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 flex items-center gap-1.5">
+          <span id="btn-action-text">Tiếp tục</span>
+          <i id="btn-action-icon" class="ph-bold ph-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================== -->
+  <!-- 4. JAVASCRIPT: DATA & INTERACTIVE VISUAL ENGINE                -->
+  <!-- ============================================================== -->
+  <script>
+    // Web Audio Sound Effects
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, type = 'sine', dur = 0.15) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + dur);
+    }
+    function playSuccess() { playTone(523.25, 'sine', 0.08); setTimeout(() => playTone(659.25, 'sine', 0.12), 80); }
+    function playError() { playTone(220, 'sawtooth', 0.2); }
+
+    // ==============================================================
+    // DATA: 2 CHẾ ĐỘ RIÊNG BIỆT (HỌC vs TEST) VỚI GRAPHIC UI VISUAL
+    // ==============================================================
+    
+    // 1. PHẦN HỌC (LEARN MODE) - 4 Guided Visual Slides
+    const learnSlides = [
+      // Slide L1: Floor Ownership Visual Timeline
+      {
+        id: "l1",
+        mode: "learn",
+        badge: "Khái Niệm Cốt Lõi",
+        title: "Quyền Làm Chủ Hội Thoại (Floor Ownership)",
+        desc: "Hội thoại tự nhiên là sự hoán đổi nhịp nhàng quyền kiểm soát lượt nói (Floor). Không có khoảng lặng chết, và không bao giờ hai người nói chồng lên nhau.",
+        visualType: "floor_timeline",
+        actionText: "Đã hiểu, Tiếp tục"
+      },
+      // Slide L2: Waveform & Endpointing Boundary
+      {
+        id: "l2",
+        mode: "learn",
+        badge: "Thao Tác Trực Quan",
+        title: "Cơ Chế Phát Hiện Kết Thúc Lượt (Endpointing)",
+        desc: "Làm sao hệ thống biết bạn đã nói xong? Kéo thử mốc Endpoint (Silence Threshold) trên sóng âm để thấy sự cân bằng giữa 'Cướp lời' và 'Đơ máy'.",
+        visualType: "waveform_endpoint",
+        actionText: "Tiếp tục sang Latency"
+      },
+      // Slide L3: The Latency Waterfall Breakdown
+      {
+        id: "l3",
+        mode: "learn",
+        badge: "Phân Tích Kiến Trúc",
+        title: "Thác Nước Độ Trễ Ẩn (Latency Waterfall)",
+        desc: "Độ trễ tổng không phải một con số đơn lẻ. Nó là tổng hợp của 4 mắt xích liên hoàn: VAD Endpoint + STT Transcription + LLM TTFT + TTS Audio Synthesis.",
+        visualType: "latency_waterfall",
+        actionText: "Tiếp tục sang Barge-in"
+      },
+      // Slide L4: Barge-in Truncation & State Machine
+      {
+        id: "l4",
+        mode: "learn",
+        badge: "Cơ Chế Cắt Lời",
+        title: "Triệt Tiêu Âm Thanh Khi Cướp Lời (Sub-100ms Barge-in)",
+        desc: "Khi người dùng cướp lời lúc Agent đang nói, client phải lập tức hủy luồng audio trong vòng dưới 100ms để tránh hiệu ứng hai người cãi nhau.",
+        visualType: "bargein_states",
+        actionText: "Hoàn tất Phần Học!"
+      }
+    ];
+
+    // 2. PHẦN TEST (TEST MODE) - 4 Graphic UI Visual Challenges
+    const testSlides = [
+      // Challenge T1: Timeline Error Spotter
+      {
+        id: "t1",
+        mode: "test",
+        badge: "Thử Thách 1 / 4",
+        title: "Tìm Lượt Đối Thoại Bị Lỗi Endpointing",
+        prompt: "Quan sát 3 dòng timeline bên dưới. Bấm trực tiếp vào lượt đối thoại có khoảng lặng chết (Dead Air) quá lớn gây đứt gãy trải nghiệm:",
+        visualType: "test_timeline_spotter",
+        correctId: "track-b",
+        explanation: "Chính xác! Lượt B có khoảng trống im lặng lên tới 1.4s khiến người dùng tưởng hệ thống đã mất kết nối.",
+        actionText: "Kiểm tra"
+      },
+      // Challenge T2: Interactive Waveform Boundary Setter
+      {
+        id: "t2",
+        mode: "test",
+        badge: "Thử Thách 2 / 4",
+        title: "Đặt Mốc Ranh Giới Endpointing Chuẩn Xác",
+        prompt: "Người dùng nói: 'Tôi muốn đặt vé đi... [ngập ngừng 300ms]... Đà Nẵng'. Kéo mốc vạch đỏ tới đúng vị trí kết thúc thực sự của câu:",
+        visualType: "test_waveform_slider",
+        targetMin: 70,
+        targetMax: 90,
+        explanation: "Chính xác! Nếu đặt mốc ở đoạn ngập ngừng (30%), máy sẽ cướp lời khi user chưa nói xong địa điểm.",
+        actionText: "Xác nhận vị trí mốc"
+      },
+      // Challenge T3: Pipeline Node Repair
+      {
+        id: "t3",
+        mode: "test",
+        badge: "Thử Thách 3 / 4",
+        title: "Khắc Phục Nút Lỗi Trong Luồng Triệt Tiêu Âm",
+        prompt: "Khi phát hiện người dùng ngắt lời (Barge-in), luồng tín hiệu nào cần được kích hoạt NGAY LẬP TỨC để triệt tiêu âm loa? Bấm chọn node đúng:",
+        visualType: "test_node_repair",
+        correctNode: "node-stop-tts",
+        explanation: "Chính xác! Client phải gửi tín hiệu `Stop Playback Buffer` ngay lập tức để ngắt âm thanh phát ra loa trong <100ms.",
+        actionText: "Kiểm tra kết nối"
+      },
+      // Challenge T4: Sensitivity Balance Tuning
+      {
+        id: "t4",
+        mode: "test",
+        badge: "Thử Thách 4 / 4",
+        title: "Cân Bằng Bộ Lọc Ngắt Lời (False Interruption)",
+        prompt: "Có tạp âm ho (80ms) và tiếng nói ngắt lời thật (400ms). Kéo thanh trượt Debounce Filter để chặn tiếng ho mà không bỏ sót lệnh ngắt lời:",
+        visualType: "test_filter_balance",
+        targetMin: 200,
+        targetMax: 350,
+        explanation: "Xuất sắc! Mức lọc 250ms - 300ms loại bỏ hoàn toàn tiếng ho (80ms) nhưng vẫn bắt trọn câu nói thật của người dùng.",
+        actionText: "Kiểm tra bộ lọc"
+      }
+    ];
+
+    // State management
+    let activeMode = 'learn'; // 'learn' or 'test'
+    let currentSlideIdx = 0;
+    let selectedAnswer = null;
+    let isSlideAnswered = false;
+    let totalXp = 140;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProgress();
+      renderSlide();
+    });
+
+    // Switch main mode
+    function switchMainMode(mode) {
+      activeMode = mode;
+      currentSlideIdx = 0;
+      selectedAnswer = null;
+      isSlideAnswered = false;
+
+      const btnLearn = document.getElementById('btn-mode-learn');
+      const btnTest = document.getElementById('btn-mode-test');
+
+      if (mode === 'learn') {
+        btnLearn.className = "px-4 py-1 rounded-full bg-fuchsia-600 text-white shadow-sm flex items-center gap-1.5 transition";
+        btnTest.className = "px-4 py-1 rounded-full text-zinc-400 hover:text-zinc-200 flex items-center gap-1.5 transition";
+      } else {
+        btnTest.className = "px-4 py-1 rounded-full bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition";
+        btnLearn.className = "px-4 py-1 rounded-full text-zinc-400 hover:text-zinc-200 flex items-center gap-1.5 transition";
+      }
+
+      renderProgress();
+      renderSlide();
+    }
+
+    function restartCurrentMode() {
+      currentSlideIdx = 0;
+      selectedAnswer = null;
+      isSlideAnswered = false;
+      renderProgress();
+      renderSlide();
+    }
+
+    // Progress Bar rendering
+    function renderProgress() {
+      const slides = activeMode === 'learn' ? learnSlides : testSlides;
+      const container = document.getElementById('progress-segments');
+      container.innerHTML = '';
+      slides.forEach((_, idx) => {
+        const seg = document.createElement('div');
+        const isComplete = idx < currentSlideIdx;
+        const isCurrent = idx === currentSlideIdx;
+        seg.className = `h-1.5 rounded-full transition-all duration-300 ${
+          isComplete 
+            ? 'bg-emerald-400' 
+            : isCurrent 
+              ? (activeMode === 'learn' ? 'bg-fuchsia-500 shadow-sm shadow-fuchsia-500/50' : 'bg-indigo-500 shadow-sm shadow-indigo-500/50') 
+              : 'bg-zinc-800'
+        }`;
+        container.appendChild(seg);
+      });
+      document.getElementById('slide-step-counter').textContent = `${currentSlideIdx + 1} / ${slides.length}`;
+    }
+
+    // Main Render Function
+    function renderSlide() {
+      const slides = activeMode === 'learn' ? learnSlides : testSlides;
+      const slide = slides[currentSlideIdx];
+      const container = document.getElementById('slide-content');
+      const card = document.getElementById('slide-card');
+      card.className = "w-full max-w-3xl bg-zinc-900/80 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative transition-all duration-300 glow-subtle";
+
+      resetBottomBar(slide);
+
+      let html = `
+        <div class="space-y-5">
+          <!-- Slide Badge & Meta -->
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold tracking-wider uppercase font-mono px-2.5 py-1 rounded-lg ${
+              activeMode === 'learn' ? 'bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/20' : 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/20'
+            }">
+              ${slide.badge}
+            </span>
+            <span class="text-xs text-zinc-400 font-mono">${activeMode === 'learn' ? '📖 Learn Mode' : '🎯 Interactive Test'}</span>
+          </div>
+
+          <!-- Header Titles -->
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">${slide.title}</h2>
+            <p class="text-xs sm:text-sm text-zinc-300 mt-1 leading-relaxed">${slide.desc || slide.prompt}</p>
+          </div>
+
+          <!-- GRAPHIC UI VISUAL CONTAINER -->
+          <div class="rounded-2xl border border-white/10 bg-zinc-950 p-5 overflow-hidden">
+            ${renderGraphicVisual(slide)}
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+      initSlideVisualInteraction(slide);
+    }
+
+    // ==============================================================
+    // RENDER GRAPHIC UI VISUALS CHO CẢ 2 PHẦN
+    // ==============================================================
+    function renderGraphicVisual(slide) {
+      switch (slide.visualType) {
+        // --- LEARN VISUAL 1: Floor Ownership ---
+        case 'floor_timeline':
+          return `
+            <div class="space-y-4">
+              <div class="flex items-center justify-between text-xs text-zinc-400 font-mono">
+                <span>0.0s (Bắt đầu)</span>
+                <span class="text-emerald-400 font-semibold">Khoảng chuyển lượt: 220ms</span>
+                <span>4.0s (Kết thúc)</span>
+              </div>
+              
+              <!-- Timeline Tracks -->
+              <div class="space-y-3 relative py-2">
+                <!-- User Track -->
+                <div class="flex items-center gap-3">
+                  <span class="w-16 text-xs font-mono font-bold text-cyan-400">USER</span>
+                  <div class="flex-1 bg-zinc-900 h-10 rounded-xl relative overflow-hidden border border-white/5">
+                    <div id="visual-user-floor" class="absolute left-0 top-0 bottom-0 w-1/2 bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-lg flex items-center px-3 text-xs font-bold text-zinc-950">
+                      "Cho tôi đặt lịch hẹn ngày mai"
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Handover Indicator -->
+                <div class="flex items-center pl-20 gap-2">
+                  <div class="h-4 border-l-2 border-dashed border-emerald-400"></div>
+                  <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Turn-gap (~200ms)</span>
+                </div>
+
+                <!-- Agent Track -->
+                <div class="flex items-center gap-3">
+                  <span class="w-16 text-xs font-mono font-bold text-fuchsia-400">AGENT</span>
+                  <div class="flex-1 bg-zinc-900 h-10 rounded-xl relative overflow-hidden border border-white/5">
+                    <div id="visual-agent-floor" class="absolute left-[54%] top-0 bottom-0 w-[42%] bg-gradient-to-r from-fuchsia-600 to-fuchsia-500 rounded-lg flex items-center px-3 text-xs font-bold text-white">
+                      "Vâng, 9h sáng mai phòng khám mở cửa"
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interactive Replay Button -->
+              <div class="flex justify-end pt-2">
+                <button onclick="playFloorAnimation()" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold text-white flex items-center gap-2 transition">
+                  <i class="ph-fill ph-play text-fuchsia-400"></i>
+                  <span>Mô phỏng nhịp chuyển lượt</span>
+                </button>
+              </div>
+            </div>
+          `;
+
+        // --- LEARN VISUAL 2: Waveform & Endpointing Boundary ---
+        case 'waveform_endpoint':
+          return `
+            <div class="space-y-4">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-zinc-400">Điều chỉnh Silence Threshold (VAD):</span>
+                <span id="learn-endpoint-val" class="text-sm font-mono font-bold text-fuchsia-400">450 ms</span>
+              </div>
+
+              <!-- Waveform graphic with movable vertical marker -->
+              <div class="h-28 bg-zinc-900 rounded-xl border border-white/5 relative flex items-center px-4 overflow-hidden">
+                <!-- User Speech Wave bars -->
+                <div class="w-1/2 flex items-center gap-1 h-full py-4">
+                  <div class="w-1.5 h-12 bg-cyan-400 rounded-full"></div>
+                  <div class="w-1.5 h-20 bg-cyan-400 rounded-full animate-pulse"></div>
+                  <div class="w-1.5 h-16 bg-cyan-400 rounded-full"></div>
+                  <div class="w-1.5 h-8 bg-cyan-400 rounded-full"></div>
+                  <div class="w-1.5 h-14 bg-cyan-400 rounded-full"></div>
+                  <span class="text-[10px] font-mono text-cyan-400 ml-2 font-semibold">User Speech</span>
+                </div>
+
+                <!-- Silence gap zone -->
+                <div id="silence-zone" class="w-1/4 h-full bg-zinc-800/40 border-l border-zinc-700 flex items-center justify-center text-[10px] font-mono text-zinc-500">
+                  Silence Gap
+                </div>
+
+                <!-- Draggable Red Endpoint Marker -->
+                <div id="learn-endpoint-line" class="absolute top-0 bottom-0 left-[72%] w-1 bg-red-500 shadow-lg shadow-red-500/50 flex flex-col justify-between items-center">
+                  <span class="text-[9px] font-mono bg-red-600 text-white px-1.5 py-0.5 rounded-b font-bold">VAD ENDPOINT</span>
+                  <i class="ph-fill ph-caret-down text-red-500"></i>
+                </div>
+              </div>
+
+              <!-- Slider control -->
+              <div class="space-y-1">
+                <input type="range" min="150" max="1200" step="50" value="450" oninput="updateLearnEndpoint(this.value)" class="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-fuchsia-500">
+                <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+                  <span class="text-amber-400">150ms (Cướp lời người nói)</span>
+                  <span class="text-emerald-400 font-bold">Vùng tối ưu: 400 - 500ms</span>
+                  <span class="text-red-400">1200ms (Đơ, trễ quá lâu)</span>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // --- LEARN VISUAL 3: Latency Waterfall ---
+        case 'latency_waterfall':
+          return `
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-xs mb-1">
+                <span class="text-zinc-400">Tổng độ trễ người dùng nghe thấy (End-of-Turn):</span>
+                <span class="text-base font-mono font-bold text-fuchsia-400">1,210 ms (1.21s)</span>
+              </div>
+
+              <!-- Waterfall Bars -->
+              <div class="space-y-2 text-xs font-mono">
+                <!-- Block 1: Endpointing -->
+                <div class="flex items-center gap-3">
+                  <span class="w-28 text-zinc-400">1. VAD Silence:</span>
+                  <div class="flex-1 bg-zinc-900 h-7 rounded-lg relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-[35%] bg-amber-500/30 border-r border-amber-400 flex items-center px-2 text-amber-300 font-bold text-[11px]">
+                      420 ms
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Block 2: STT -->
+                <div class="flex items-center gap-3">
+                  <span class="w-28 text-zinc-400">2. ASR Transcribe:</span>
+                  <div class="flex-1 bg-zinc-900 h-7 rounded-lg relative overflow-hidden">
+                    <div class="absolute left-[35%] top-0 bottom-0 w-[15%] bg-cyan-500/30 border-r border-cyan-400 flex items-center px-2 text-cyan-300 font-bold text-[11px]">
+                      180 ms
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Block 3: LLM TTFT -->
+                <div class="flex items-center gap-3">
+                  <span class="w-28 text-zinc-400">3. LLM TTFT:</span>
+                  <div class="flex-1 bg-zinc-900 h-7 rounded-lg relative overflow-hidden">
+                    <div class="absolute left-[50%] top-0 bottom-0 w-[38%] bg-fuchsia-500/30 border-r border-fuchsia-400 flex items-center px-2 text-fuchsia-300 font-bold text-[11px]">
+                      460 ms
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Block 4: TTS Playback -->
+                <div class="flex items-center gap-3">
+                  <span class="w-28 text-zinc-400">4. TTS Buffer:</span>
+                  <div class="flex-1 bg-zinc-900 h-7 rounded-lg relative overflow-hidden">
+                    <div class="absolute left-[88%] top-0 bottom-0 w-[12%] bg-emerald-500/30 border-r border-emerald-400 flex items-center px-2 text-emerald-300 font-bold text-[11px]">
+                      150 ms
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-zinc-900 border border-white/5 text-xs text-zinc-400 flex items-center gap-2">
+                <i class="ph-bold ph-shield-check text-emerald-400 text-sm"></i>
+                <span>Giải pháp chuẩn DESIGN:OS: Phát Earcon ngay tại mốc 420ms để che giấu 790ms xử lý còn lại!</span>
+              </div>
+            </div>
+          `;
+
+        // --- LEARN VISUAL 4: Barge-in States ---
+        case 'bargein_states':
+          return `
+            <div class="space-y-4">
+              <!-- Before / After Visual Cards -->
+              <div class="grid sm:grid-cols-2 gap-3">
+                <!-- Bad: No barge-in -->
+                <div class="p-4 rounded-2xl bg-zinc-900 border border-red-500/20 space-y-2">
+                  <div class="flex items-center justify-between text-xs font-bold text-red-400">
+                    <span>❌ Không có Barge-in</span>
+                    <span class="text-[10px] font-mono">Va chạm âm</span>
+                  </div>
+                  <div class="h-14 bg-zinc-950 rounded-xl p-2 relative overflow-hidden flex items-center">
+                    <div class="w-full h-4 bg-fuchsia-500/50 rounded flex items-center px-2 text-[10px]">Agent vẫn đọc tiếp...</div>
+                    <div class="absolute left-6 w-3/4 h-6 bg-red-600/80 rounded border border-red-400 flex items-center px-2 text-[10px] font-bold text-white shadow-lg">
+                      User cướp lời (Cãi nhau!)
+                    </div>
+                  </div>
+                  <p class="text-[11px] text-zinc-400">Người dùng phát nản vì bot không lắng nghe.</p>
+                </div>
+
+                <!-- Good: Sub-100ms Barge-in -->
+                <div class="p-4 rounded-2xl bg-zinc-900 border border-emerald-500/20 space-y-2">
+                  <div class="flex items-center justify-between text-xs font-bold text-emerald-400">
+                    <span>✅ Sub-100ms Barge-in</span>
+                    <span class="text-[10px] font-mono">&lt;80ms ngắt âm</span>
+                  </div>
+                  <div class="h-14 bg-zinc-950 rounded-xl p-2 relative overflow-hidden flex items-center">
+                    <div class="w-1/4 h-4 bg-zinc-700 line-through rounded text-[9px] px-1 text-zinc-500">Agent dứt...</div>
+                    <div class="absolute left-1/4 w-3/4 h-6 bg-emerald-600 rounded border border-emerald-400 flex items-center px-2 text-[10px] font-bold text-white shadow-lg">
+                      Agent im lặng ngay → User nói!
+                    </div>
+                  </div>
+                  <p class="text-[11px] text-zinc-400">Âm thanh hủy tức thì tại client buffer.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-end">
+                <button onclick="playSuccess()" class="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition flex items-center gap-1.5">
+                  <i class="ph ph-speaker-high text-fuchsia-400"></i>
+                  <span>Nghe thử âm báo ngắt lượt</span>
+                </button>
+              </div>
+            </div>
+          `;
+
+        // --- TEST VISUAL 1: Timeline Spotter ---
+        case 'test_timeline_spotter':
+          return `
+            <div class="space-y-3">
+              <p class="text-xs text-zinc-400">Bấm chọn 1 trong 3 timeline đối thoại dưới đây:</p>
+              
+              <!-- Track A -->
+              <div id="track-a" onclick="selectTestTrack('track-a')" class="p-3.5 rounded-2xl bg-zinc-900 border border-white/10 hover:border-white/30 cursor-pointer transition flex items-center gap-3 group">
+                <span class="font-mono text-xs font-bold text-zinc-400 w-6">A</span>
+                <div class="flex-1 flex items-center gap-2">
+                  <span class="px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 text-xs font-mono font-bold">User: "Alo"</span>
+                  <div class="w-12 h-1 bg-zinc-700 rounded"></div>
+                  <span class="px-2 py-1 rounded bg-fuchsia-500/20 text-fuchsia-400 text-xs font-mono font-bold">Bot: "Dạ có tôi"</span>
+                </div>
+                <span class="text-[10px] font-mono text-zinc-400">Gap 300ms</span>
+              </div>
+
+              <!-- Track B (The Bad One) -->
+              <div id="track-b" onclick="selectTestTrack('track-b')" class="p-3.5 rounded-2xl bg-zinc-900 border border-white/10 hover:border-white/30 cursor-pointer transition flex items-center gap-3 group">
+                <span class="font-mono text-xs font-bold text-zinc-400 w-6">B</span>
+                <div class="flex-1 flex items-center gap-2">
+                  <span class="px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 text-xs font-mono font-bold">User: "Hôm nay ngày mấy?"</span>
+                  <div class="w-32 h-2 bg-red-500/40 rounded border border-red-500/50 flex items-center justify-center text-[9px] text-red-300 font-mono">1.4s Dead Air</div>
+                  <span class="px-2 py-1 rounded bg-fuchsia-500/20 text-fuchsia-400 text-xs font-mono font-bold">Bot: "Ngày 14"</span>
+                </div>
+                <span class="text-[10px] font-mono text-red-400 font-bold">Gap 1400ms</span>
+              </div>
+
+              <!-- Track C -->
+              <div id="track-c" onclick="selectTestTrack('track-c')" class="p-3.5 rounded-2xl bg-zinc-900 border border-white/10 hover:border-white/30 cursor-pointer transition flex items-center gap-3 group">
+                <span class="font-mono text-xs font-bold text-zinc-400 w-6">C</span>
+                <div class="flex-1 flex items-center gap-2">
+                  <span class="px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 text-xs font-mono font-bold">User: "Hủy đơn hàng"</span>
+                  <div class="w-16 h-1 bg-zinc-700 rounded"></div>
+                  <span class="px-2 py-1 rounded bg-fuchsia-500/20 text-fuchsia-400 text-xs font-mono font-bold">Bot: "Đã hủy"</span>
+                </div>
+                <span class="text-[10px] font-mono text-zinc-400">Gap 420ms</span>
+              </div>
+            </div>
+          `;
+
+        // --- TEST VISUAL 2: Waveform Boundary Setter ---
+        case 'test_waveform_slider':
+          return `
+            <div class="space-y-4">
+              <!-- Visual Waveform Canvas -->
+              <div class="h-28 bg-zinc-900 rounded-2xl border border-white/10 relative px-4 flex items-center overflow-hidden">
+                <!-- Word 1: "Tôi muốn đặt vé đi..." -->
+                <div class="w-[30%] flex items-center gap-1">
+                  <div class="w-1.5 h-10 bg-cyan-400 rounded-full"></div>
+                  <div class="w-1.5 h-16 bg-cyan-400 rounded-full"></div>
+                  <div class="w-1.5 h-8 bg-cyan-400 rounded-full"></div>
+                  <span class="text-[10px] font-mono text-cyan-400 font-bold ml-1">"Đặt vé đi..."</span>
+                </div>
+
+                <!-- Mid-sentence Pause -->
+                <div class="w-[35%] h-full bg-amber-500/10 border-x border-amber-500/30 flex items-center justify-center text-[10px] font-mono text-amber-300">
+                  Ngập ngừng 300ms
+                </div>
+
+                <!-- Word 2: "...Đà Nẵng" -->
+                <div class="w-[35%] flex items-center gap-1 pl-3">
+                  <div class="w-1.5 h-14 bg-cyan-400 rounded-full"></div>
+                  <div class="w-1.5 h-18 bg-cyan-400 rounded-full"></div>
+                  <div class="w-1.5 h-10 bg-cyan-400 rounded-full"></div>
+                  <span class="text-[10px] font-mono text-cyan-400 font-bold ml-1">"...Đà Nẵng"</span>
+                </div>
+
+                <!-- Red Movable Marker -->
+                <div id="test-endpoint-marker" class="absolute top-0 bottom-0 left-[35%] w-1.5 bg-red-500 shadow-xl flex flex-col justify-between items-center transition-all duration-75">
+                  <span class="text-[9px] font-mono bg-red-600 text-white px-1 rounded font-bold">VỊ TRÍ BẠN CHỌN</span>
+                  <i class="ph-fill ph-caret-down text-red-500"></i>
+                </div>
+              </div>
+
+              <!-- Slider to move the marker -->
+              <div class="space-y-2">
+                <input type="range" id="slider-test-endpoint" min="10" max="95" value="35" oninput="updateTestEndpointMarker(this.value)" class="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-red-500">
+                <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+                  <span>← Cắt ngang đoạn ngập ngừng (30%)</span>
+                  <span>Điểm kết thúc câu thật sự (85%) →</span>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // --- TEST VISUAL 3: Pipeline Node Repair ---
+        case 'test_node_repair':
+          return `
+            <div class="space-y-4">
+              <p class="text-xs text-zinc-400">Bấm vào node cần được kích hoạt tức thời khi mic phát hiện tiếng người nói:</p>
+              
+              <!-- Pipeline Node Diagram -->
+              <div class="grid grid-cols-3 gap-3">
+                <div id="node-mic" class="p-3.5 rounded-xl bg-zinc-900 border border-white/5 flex flex-col items-center justify-center text-center opacity-60">
+                  <i class="ph ph-microphone text-cyan-400 text-xl mb-1"></i>
+                  <span class="text-xs font-bold text-white">Mic Capture</span>
+                  <span class="text-[9px] text-zinc-500">Audio In</span>
+                </div>
+
+                <div id="node-vad" class="p-3.5 rounded-xl bg-zinc-900 border border-fuchsia-500/40 flex flex-col items-center justify-center text-center">
+                  <i class="ph-bold ph-lightning text-amber-400 text-xl mb-1 animate-pulse"></i>
+                  <span class="text-xs font-bold text-fuchsia-300">VAD Trigger</span>
+                  <span class="text-[9px] text-emerald-400">Barge-in Phát Hiện!</span>
+                </div>
+
+                <!-- The correct target to click -->
+                <div id="node-stop-tts" onclick="selectTestNode('node-stop-tts')" class="p-3.5 rounded-xl bg-zinc-900 border-2 border-dashed border-red-500 hover:border-red-400 cursor-pointer transition flex flex-col items-center justify-center text-center group">
+                  <i class="ph-bold ph-speaker-slash text-red-400 text-xl mb-1 group-hover:scale-110 transition"></i>
+                  <span class="text-xs font-bold text-white group-hover:text-red-300">Hủy Audio Loa</span>
+                  <span class="text-[9px] text-red-400 font-mono">BẤM VÀO ĐÂY</span>
+                </div>
+              </div>
+
+              <!-- Other nodes -->
+              <div class="grid grid-cols-2 gap-3 pt-2">
+                <div id="node-llm" onclick="selectTestNode('node-llm')" class="p-3 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/30 cursor-pointer text-center">
+                  <span class="text-xs font-semibold text-zinc-300">Tái huấn luyện model LLM</span>
+                  <span class="block text-[9px] text-zinc-500">Quá chậm (>1000ms)</span>
+                </div>
+                <div id="node-mic-gain" onclick="selectTestNode('node-mic-gain')" class="p-3 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/30 cursor-pointer text-center">
+                  <span class="text-xs font-semibold text-zinc-300">Giảm độ nhạy Micro</span>
+                  <span class="block text-[9px] text-zinc-500">Không liên quan đến loa</span>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // --- TEST VISUAL 4: Sensitivity Filter Balance ---
+        case 'test_filter_balance':
+          return `
+            <div class="space-y-4">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-zinc-400">Ngưỡng lọc thời gian tối thiểu (Min Speech Filter):</span>
+                <span id="test-filter-val" class="font-mono text-base font-bold text-indigo-400">100 ms</span>
+              </div>
+
+              <!-- Visual Audio Events Simulation Box -->
+              <div class="h-24 bg-zinc-900 rounded-xl border border-white/5 relative p-4 flex items-center justify-between overflow-hidden">
+                <!-- Cough event 80ms -->
+                <div class="flex flex-col items-center gap-1">
+                  <div class="w-4 h-10 bg-amber-500/80 rounded flex items-center justify-center text-[8px] font-bold text-zinc-950">80ms</div>
+                  <span class="text-[10px] text-amber-400 font-mono">Tiếng ho (Noise)</span>
+                </div>
+
+                <!-- Dotted Threshold Boundary Line -->
+                <div id="filter-line" class="h-full border-l-2 border-dashed border-indigo-400 flex items-center px-1">
+                  <span class="text-[9px] font-mono text-indigo-300 bg-indigo-500/20 px-1 py-0.5 rounded">Filter Boundary</span>
+                </div>
+
+                <!-- Speech event 400ms -->
+                <div class="flex flex-col items-center gap-1">
+                  <div class="w-16 h-12 bg-cyan-500 rounded flex items-center justify-center text-[9px] font-bold text-zinc-950">400ms</div>
+                  <span class="text-[10px] text-cyan-400 font-mono">Lệnh ngắt lời thật</span>
+                </div>
+              </div>
+
+              <!-- Slider control -->
+              <div class="space-y-1">
+                <input type="range" id="slider-filter" min="50" max="600" step="25" value="100" oninput="updateTestFilterSlider(this.value)" class="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+                  <span>50ms (Nhận nhầm tiếng ho)</span>
+                  <span class="text-indigo-400 font-bold">Mục tiêu: 200 - 350ms</span>
+                  <span>600ms (Bỏ lỡ tiếng người)</span>
+                </div>
+              </div>
+            </div>
+          `;
+      }
+      return '';
+    }
+
+    // ==============================================================
+    // INTERACTION HANDLERS & ANIMATIONS
+    // ==============================================================
+    
+    function initSlideVisualInteraction(slide) {
+      if (activeMode === 'learn') {
+        // Learn mode slides auto-allow continuing
+        enableActionBtn(true);
+      }
+    }
+
+    // Learn L1: Floor ownership animation
+    function playFloorAnimation() {
+      playTone(440, 'sine', 0.1);
+      const user = document.getElementById('visual-user-floor');
+      const agent = document.getElementById('visual-agent-floor');
+      user.classList.add('scale-105', 'shadow-lg', 'shadow-cyan-500/50');
+      setTimeout(() => {
+        user.classList.remove('scale-105', 'shadow-lg', 'shadow-cyan-500/50');
+        playTone(660, 'sine', 0.15);
+        agent.classList.add('scale-105', 'shadow-lg', 'shadow-fuchsia-500/50');
+        setTimeout(() => agent.classList.remove('scale-105', 'shadow-lg', 'shadow-fuchsia-500/50'), 600);
+      }, 700);
+    }
+
+    // Learn L2: Endpoint slider
+    function updateLearnEndpoint(val) {
+      document.getElementById('learn-endpoint-val').textContent = val + " ms";
+      const percent = ((val - 150) / (1200 - 150)) * 50 + 50;
+      document.getElementById('learn-endpoint-line').style.left = Math.min(percent, 92) + "%";
+    }
+
+    // Test T1: Select timeline track
+    function selectTestTrack(id) {
+      selectedAnswer = id;
+      ['track-a', 'track-b', 'track-c'].forEach(t => {
+        document.getElementById(t).className = "p-3.5 rounded-2xl bg-zinc-900 border border-white/10 hover:border-white/30 cursor-pointer transition flex items-center gap-3";
+      });
+      document.getElementById(id).className = "p-3.5 rounded-2xl bg-indigo-500/10 border-2 border-indigo-500 cursor-pointer transition flex items-center gap-3 shadow-lg shadow-indigo-500/20";
+      enableActionBtn(true, "Kiểm tra lựa chọn");
+      playTone(400, 'sine', 0.05);
+    }
+
+    // Test T2: Slider marker
+    function updateTestEndpointMarker(val) {
+      selectedAnswer = parseInt(val);
+      document.getElementById('test-endpoint-marker').style.left = val + "%";
+      enableActionBtn(true, "Xác nhận vị trí mốc");
+    }
+
+    // Test T3: Select node
+    function selectTestNode(nodeId) {
+      selectedAnswer = nodeId;
+      ['node-stop-tts', 'node-llm', 'node-mic-gain'].forEach(n => {
+        const el = document.getElementById(n);
+        if (el) el.classList.remove('border-indigo-500', 'bg-indigo-500/20');
+      });
+      document.getElementById(nodeId).classList.add('border-indigo-500', 'bg-indigo-500/20');
+      enableActionBtn(true, "Kiểm tra node");
+      playTone(400, 'sine', 0.05);
+    }
+
+    // Test T4: Filter balance slider
+    function updateTestFilterSlider(val) {
+      selectedAnswer = parseInt(val);
+      document.getElementById('test-filter-val').textContent = val + " ms";
+      enableActionBtn(true, "Kiểm tra bộ lọc");
+    }
+
+    // Handle Action click (Check / Continue)
+    function handleActionClick() {
+      const slides = activeMode === 'learn' ? learnSlides : testSlides;
+      const slide = slides[currentSlideIdx];
+
+      // If in Learn Mode or already answered in Test Mode, move to next slide
+      if (activeMode === 'learn' || isSlideAnswered) {
+        nextSlide();
+        return;
+      }
+
+      // Check logic for Test Mode
+      let isCorrect = false;
+      let feedbackMsg = "";
+
+      if (slide.visualType === 'test_timeline_spotter') {
+        isCorrect = (selectedAnswer === slide.correctId);
+        feedbackMsg = isCorrect ? slide.explanation : "Chưa đúng! Lượt A và C đều có thời gian chuyển lượt tự nhiên (<450ms).";
+      }
+      else if (slide.visualType === 'test_waveform_slider') {
+        const val = selectedAnswer || 35;
+        isCorrect = (val >= slide.targetMin && val <= slide.targetMax);
+        feedbackMsg = isCorrect ? slide.explanation : `Chưa chuẩn! Vị trí ${val}% nằm trước khi người dùng nói từ 'Đà Nẵng'. Cần đặt mốc ở sau từ cuối cùng (80%).`;
+      }
+      else if (slide.visualType === 'test_node_repair') {
+        isCorrect = (selectedAnswer === slide.correctNode);
+        feedbackMsg = isCorrect ? slide.explanation : "Chưa đúng! Tái huấn luyện model hay chỉnh mic không lập tức triệt tiêu âm thanh đang phát ra loa.";
+      }
+      else if (slide.visualType === 'test_filter_balance') {
+        const val = selectedAnswer || 100;
+        isCorrect = (val >= slide.targetMin && val <= slide.targetMax);
+        feedbackMsg = isCorrect ? slide.explanation : (val < slide.targetMin ? `Quá nhạy (${val}ms)! Tiếng ho 80ms vẫn làm bot ngắt lời nhầm.` : `Quá cao (${val}ms)! Bỏ sót câu nói thật của người dùng.`);
+      }
+
+      showFeedback(isCorrect, feedbackMsg);
+    }
+
+    // Feedback display
+    function showFeedback(isCorrect, msg) {
+      const bottomBar = document.getElementById('bottom-bar');
+      const icon = document.getElementById('feedback-icon');
+      const title = document.getElementById('feedback-title');
+      const desc = document.getElementById('feedback-desc');
+      const btn = document.getElementById('btn-action');
+      const card = document.getElementById('slide-card');
+
+      if (isCorrect) {
+        isSlideAnswered = true;
+        totalXp += 25;
+        document.getElementById('xp-counter').textContent = `${totalXp} XP`;
+        playSuccess();
+
+        bottomBar.className = "shrink-0 border-t border-emerald-500/30 bg-emerald-950/40 px-6 py-4 flex items-center justify-between transition-colors duration-200";
+        icon.className = "size-9 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0";
+        icon.innerHTML = '<i class="ph-bold ph-check text-base"></i>';
+        title.className = "text-xs font-bold text-emerald-300";
+        title.textContent = "Chính xác! (+25 XP)";
+        desc.className = "text-xs text-zinc-300";
+        desc.textContent = msg;
+
+        card.classList.add('glow-correct');
+        btn.className = "px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg shadow-emerald-500/30 transition active:scale-95 flex items-center gap-1.5";
+        document.getElementById('btn-action-text').textContent = "Tiếp tục thử thách";
+      } else {
+        isSlideAnswered = false;
+        playError();
+
+        bottomBar.className = "shrink-0 border-t border-red-500/30 bg-red-950/40 px-6 py-4 flex items-center justify-between transition-colors duration-200";
+        icon.className = "size-9 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center shrink-0";
+        icon.innerHTML = '<i class="ph-bold ph-x text-base"></i>';
+        title.className = "text-xs font-bold text-red-300";
+        title.textContent = "Chưa chính xác!";
+        desc.className = "text-xs text-zinc-300";
+        desc.textContent = msg;
+
+        card.classList.add('glow-error');
+        btn.className = "px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition active:scale-95 flex items-center gap-1.5";
+        document.getElementById('btn-action-text').textContent = "Thử lại";
+      }
+    }
+
+    function resetBottomBar(slide) {
+      const bottomBar = document.getElementById('bottom-bar');
+      const icon = document.getElementById('feedback-icon');
+      const title = document.getElementById('feedback-title');
+      const desc = document.getElementById('feedback-desc');
+      const btn = document.getElementById('btn-action');
+      const backBtn = document.getElementById('btn-back');
+
+      backBtn.disabled = (currentSlideIdx === 0);
+
+      bottomBar.className = "shrink-0 border-t border-white/10 bg-zinc-950 px-6 py-4 flex items-center justify-between transition-colors duration-200";
+      icon.className = "size-9 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center shrink-0";
+      icon.innerHTML = '<i class="ph-bold ph-info text-base"></i>';
+      title.className = "text-xs font-semibold text-zinc-200";
+      title.textContent = activeMode === 'learn' ? "Quan sát Graphic UI và đọc giải thích trực quan" : "Tương tác trực tiếp trên giao diện để hoàn thành bài test";
+      desc.className = "text-[11px] text-zinc-400 truncate";
+      desc.textContent = `Slide ${currentSlideIdx + 1} của ${activeMode === 'learn' ? learnSlides.length : testSlides.length}`;
+
+      btn.className = activeMode === 'learn' 
+        ? "px-6 py-2.5 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold text-xs shadow-lg shadow-fuchsia-600/30 transition active:scale-95 flex items-center gap-1.5"
+        : "px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 flex items-center gap-1.5";
+      
+      document.getElementById('btn-action-text').textContent = slide.actionText || "Tiếp tục";
+      btn.disabled = (activeMode === 'test');
+    }
+
+    function enableActionBtn(enable = true, text = null) {
+      const btn = document.getElementById('btn-action');
+      btn.disabled = !enable;
+      if (text) document.getElementById('btn-action-text').textContent = text;
+    }
+
+    function prevSlide() {
+      if (currentSlideIdx > 0) {
+        currentSlideIdx--;
+        selectedAnswer = null;
+        isSlideAnswered = false;
+        renderProgress();
+        renderSlide();
+      }
+    }
+
+    function nextSlide() {
+      const slides = activeMode === 'learn' ? learnSlides : testSlides;
+      if (currentSlideIdx < slides.length - 1) {
+        currentSlideIdx++;
+        selectedAnswer = null;
+        isSlideAnswered = false;
+        renderProgress();
+        renderSlide();
+      } else {
+        if (activeMode === 'learn') {
+          alert("🎉 Bạn đã hoàn thành Phần Học! Bây giờ hãy chuyển sang Phần Test để thử thách kỹ năng.");
+          switchMainMode('test');
+        } else {
+          alert("🏆 Xuất sắc! Bạn đã vượt qua toàn bộ các thử thách trong Phần Test với điểm số tối đa!");
+          restartCurrentMode();
+        }
+      }
+    }
+  </script>
+</body>
+</html>

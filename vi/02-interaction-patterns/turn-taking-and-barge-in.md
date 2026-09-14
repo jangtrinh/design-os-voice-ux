@@ -6,6 +6,8 @@
 
 ## 1. Bản Chất Của Tương Tác Hai Chiều (Full-Duplex vs Half-Duplex)
 
+![Kiến trúc giao tiếp song công toàn phần WebRTC Voice](../../assets/images/duplex-webrtc-flow.jpg)
+
 Trong nhiều thập kỷ, các hệ thống VUI truyền thống (như IVR tổng đài điện thoại, bộ đàm bộ đội) hoạt động ở chế độ **Half-Duplex** (Bán song công):
 - Một bên nói, một bên chỉ được nghe.
 - Người dùng bị khóa micro khi máy đang phát âm thanh.
@@ -95,6 +97,8 @@ graph TD
 ---
 
 ## 4. Kỹ Thuật Phục Hồi Trạng Thái (State Rollback Protocol)
+
+![Giao thức khôi phục trạng thái bộ nhớ và cắt tỉa lịch sử đàm thoại](../../assets/images/audible-boundary-rollback.jpg)
 
 Khi người dùng ngắt lời, điều gì sẽ xảy ra với bộ nhớ và ngữ cảnh đàm thoại?
 

@@ -36,6 +36,8 @@ graph TD
 
 ## 2. Auditory Buffer Limits: Echoic Memory & Cowan's 4-Chunk Limit
 
+![Cowan's 3-Item Auditory Working Memory Slotting](../assets/images/cowans-memory-slots.jpg)
+
 While vision enables scanning, rereading, and spatial indexing, **auditory processing is strictly serial**:
 
 - **Miller's Law (7 ± 2 items)**: Applies primarily to static, visually supported information.
@@ -55,6 +57,8 @@ While vision enables scanning, rereading, and spatial indexing, **auditory proce
 ---
 
 ## 3. Turn-Taking Dynamics
+
+![Auditory Fatigue Prevention and Frequency Smoothing Filter](../assets/images/auditory-fatigue-filter.jpg)
 
 In seminal research by Sacks, Schegloff, and Jefferson (1974), natural human conversation operates with a mean turn-transition gap of approximately **200 ms**:
 

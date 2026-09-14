@@ -43,6 +43,8 @@ Mục tiêu cốt lõi của bạn là giải quyết yêu cầu của người 
 - Sử dụng các từ đệm tự nhiên đầu câu khi phù hợp: "Dạ được chứ", "Vâng", "Để mình kiểm tra ngay".
 ```
 
+![Kiến trúc cổng kiểm soát và hàng rào bảo vệ Voice LLM](../../assets/images/prompt-guardrails-gate.jpg)
+
 ---
 
 ## 3. Điều Khiển Ngữ Điệu Bằng SSML & Prosody Tags
@@ -84,6 +86,8 @@ Khi làm việc với các hệ sinh thái TTS tiên tiến, Voice Designer có 
 ---
 
 ## 4. Slot Filling Đa Ý Định (Multi-Intent Slot Extraction Flow)
+
+![Cơ chế khớp lệnh và điền tham số thực thể đa ý định](../../assets/images/entity-slot-filling.jpg)
 
 ```mermaid
 stateDiagram-v2

@@ -60,3 +60,6 @@ Một thiết kế VUI tiêu chuẩn phải định nghĩa bộ âm thanh độc
 -24 dBFS ───────────────────────────────────────────── [Âm đệm xử lý nền (Thinking ambient pulse)]
 -∞ dBFS  ───────────────────────────────────────────── [Im lặng hoàn toàn]
 ```
+
+![Bậc thang phân cấp âm lượng decibel chuẩn hóa trong Voice AI](../../assets/images/decibel-ladder-levels.jpg)
+

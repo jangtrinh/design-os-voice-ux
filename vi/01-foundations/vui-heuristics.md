@@ -8,6 +8,8 @@
 
 ## 1. Khả Năng Nhận Biết Trạng Thái Hệ Thống (Visibility of System Status -> Acoustic Status Awareness)
 
+![Bảng chỉ báo 4 trạng thái âm thanh VUI](../../assets/images/acoustic-status-indicator.jpg)
+
 * **Nguyên lý gốc**: Hệ thống phải luôn thông báo cho người dùng biết chuyện gì đang diễn ra thông qua phản hồi kịp thời.
 * **Áp dụng cho VUI**: Vì không có thanh tiến trình (progress bar), hệ thống phải phát tín hiệu âm thanh hoặc lời nói cho 4 trạng thái:
   1. **Lắng nghe (Listening)**: Đèn LED sáng hoặc âm bíp thức dậy.
@@ -28,6 +30,8 @@
 ---
 
 ## 3. Quyền Kiểm Soát & Tự Do Của Người Dùng (User Control and Freedom)
+
+![Lối thoát khẩn cấp và quyền kiểm soát ngắt lời trong Voice AI](../../assets/images/emergency-exit-switch.jpg)
 
 * **Nguyên lý gốc**: Người dùng thường thực hiện sai sót do nhầm lẫn và cần một lối thoát khẩn cấp rõ ràng ("Emergency Exit").
 * **Áp dụng cho VUI**:

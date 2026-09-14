@@ -31,6 +31,8 @@ graph TD
 
 ### Ví Dụ Kịch Bản Đặt Phòng Khách Sạn:
 
+![3 Tầng bậc thang phục hồi lỗi Progressive Re-prompting](../../assets/images/reprompting-levels.jpg)
+
 - **Lần lỗi 1 (Tầng 1 - Gentle Nudge)**:
   - *Mục tiêu*: Giúp người dùng biết máy vẫn đang đợi mà không gây áp lực.
   - *Câu thoại*: `"Bạn muốn đặt phòng ở thành phố nào?"`

@@ -36,6 +36,8 @@
 
 ## 🥊 Phiên Tranh Biện 2: Ngắt Lời (Barge-In) vs Xung Đột Âm Thanh (Voice Collision)
 
+![Cơ chế phân xử xung đột âm thanh và cổng ngắt lời Barge-In](../../assets/images/barge-in-collision-gate.jpg)
+
 ### Lập Trường Các Bên:
 * **🎨 UX Designer**: *"Người dùng PHẢI có quyền ngắt lời bất kỳ lúc nào. Nếu máy nói dông dài mà không cho ngắt, đó là một trải nghiệm tra tấn thính giác."*
 * **⚡ Performance**: *"Cho phép ngắt lời liên tục nghĩa là micro phải streaming 2 chiều 24/7 qua WebRTC. Băng thông máy chủ và chi phí tính toán VAD sẽ tăng vọt 300%. Ngoài ra, nếu người dùng ở quán cà phê, tiếng người bên cạnh nói xen vào sẽ khiến máy liên tục bị ngắt lời nhầm!"*
