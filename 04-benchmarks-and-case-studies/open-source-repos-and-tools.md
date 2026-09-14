@@ -24,6 +24,9 @@ graph TD
 ## 2. In-Depth Analysis of 5 Landmark Frameworks
 
 ### 1. LiveKit Agents ([github.com/livekit/agents](https://github.com/livekit/agents))
+
+![LiveKit Agents Architecture Banner](../assets/images/realcase-livekit-agents.png)
+
 * **Core Purpose**: Industry-standard framework for building real-time, bi-directional full-duplex conversational voice agents over WebRTC.
 * **Core Value for UX Designers**:
   - Delivers **seamless, sub-100ms barge-in** latency, truncating downstream playback tracks the instant user speech onset is detected.
@@ -31,6 +34,9 @@ graph TD
   - Flexible orchestration across architectural tiers: supports cascaded pipelines (Deepgram + Claude/GPT + Cartesia) as well as native Speech-to-Speech backends (OpenAI Realtime API).
 
 ### 2. Pipecat AI ([github.com/pipecat-ai/pipecat](https://github.com/pipecat-ai/pipecat))
+
+![Pipecat AI Logo](../assets/images/realcase-pipecat.png)
+
 * **Core Purpose**: Open-source Python/WebRTC framework specializing in multi-stage audio, video, and multimodal conversational pipelines.
 * **Core Value for UX Designers**:
   - Event-driven, modular flow-based architecture enabling granular pipeline interception.

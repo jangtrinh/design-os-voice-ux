@@ -28,6 +28,8 @@ graph LR
 
 ## 2. The Gulf of Execution in VUI
 
+![The Gulf of Execution in VUI](../assets/images/gulf-of-execution-vui.jpg)
+
 Don Norman's *Gulf of Execution* describes the cognitive gap between a **user's intent** and the **actual actions required** to execute that intent on the system:
 
 * **In GUI**: Spotting a magnifying glass icon -> knowing where to click and type -> narrow gulf.
@@ -42,6 +44,9 @@ Don Norman's *Gulf of Execution* describes the cognitive gap between a **user's 
 ---
 
 ## 3. Acoustic Signifiers
+
+![Amazon Echo Acoustic Signifier Light Ring](../assets/images/realcase-amazon-echo-acoustic-signifier.jpg)
+*Real-world case: Amazon Echo smart speaker flashing cyan/blue light ring as a visual and acoustic status signifier during listening state.*
 
 Where GUIs rely on icons and colors to signal interactive states, VUIs utilize **Acoustic Signifiers** to convey system status directly to the listener's ears:
 

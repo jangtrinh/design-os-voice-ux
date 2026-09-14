@@ -27,6 +27,10 @@
   - Stringent safety filtering and synthetic voice constraints to prevent unauthorized biometric voice cloning and celebrity impersonation.
 
 ### 2. Google Gemini Live
+
+![Google Gemini Live Real Case](../assets/images/realcase-google-gemini-live.webp)
+*Official case: Google Gemini Live full-duplex conversational voice UI with real-time multimodal reasoning.*
+
 * **UX Breakthroughs**:
   - **Simultaneous Multimodality (Real-Time Voice + Video Streaming)**: Users can direct their device camera at a mechanical issue or diagram while holding a fluid, natural voice conversation to diagnose root causes.
   - Deep, native grounding in the Google Knowledge Graph and workspace ecosystem (Google Maps, Calendar, Gmail, YouTube).
@@ -34,6 +38,10 @@
   - Speaker diarization friction in noisy public environments, where ambient background voices can occasionally be mistaken for primary user intents.
 
 ### 3. Apple Intelligence Siri (Next Generation)
+
+![Apple Intelligence Siri Real Case](../assets/images/realcase-apple-intelligence-siri.jpg)
+*Official case: Apple Intelligence Siri conversational interface integrating onscreen context and ChatGPT integration (Apple Newsroom).*
+
 * **UX Breakthroughs**:
   - **Glowing Edge Display (Acoustic Visual Signifier)**: Replaces the isolated floating orb with an edge-to-edge organic light wave pulsating to speech rhythm, integrating system state directly into the physical hardware chassis.
   - **On-Screen Context Awareness**: Resolves deictic references deterministically (`"Send this photo to Nam"` -> automatically identifies the active image in the foreground viewport).
@@ -41,6 +49,10 @@
   - Open-ended conversational agility and prosodic fluidity remain bounded compared to dedicated native Speech-to-Speech models.
 
 ### 4. Hume AI Empathic Voice Interface (EVI)
+
+![Hume AI Empathic Voice Interface Real Case](../assets/images/realcase-hume-ai-evi.jpg)
+*Official case: Hume AI Empathic Voice Interface (EVI) real-time prosodic and affective speech visualizer.*
+
 * **UX Breakthroughs**:
   - **Prosodic Emotion Graph**: Analyzes 48 distinct acoustic nuances in human speech (confusion, frustration, enthusiasm, anxiety).
   - Dynamically modulates assistant pitch, tempo, and vocal warmth to de-escalate tension or align empathetically with user emotional states.
@@ -48,6 +60,10 @@
   - Susceptible to the "Uncanny Valley" if synthetic emotional expressiveness is exaggerated or misapplied to serious, factual inquiries.
 
 ### 5. Automotive VUI (Tesla Voice & Apple CarPlay)
+
+![In-Cabin Automotive CarPlay Real Case](../assets/images/realcase-automotive-carplay.jpg)
+*Real-world case: Volkswagen ID.4 wireless Apple CarPlay in-cabin voice and touchscreen visual integration.*
+
 * **UX Breakthroughs**:
   - **Safety-First Ergonomics**: Engineered strictly for high-cognitive-load *Eyes-Busy, Hands-Busy* operational environments.
   - Ultra-terse spoken feedback (strictly under 10 words per confirmation).

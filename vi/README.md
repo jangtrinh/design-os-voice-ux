@@ -3,6 +3,10 @@
 > Production-ready Voice & Conversational AI Knowledge Base, State Machines, Latency Budgets, and Audited Usability Protocols.
 > Thuộc hệ sinh thái mã nguồn mở **DESIGN:OS**.
 
+🌐 **Ngôn ngữ**: [English (Bản chính)](../README.md) | **Tiếng Việt (Bản dịch)**
+
+![DESIGN:OS Voice UX](../assets/images/voice-ux-hero.jpg)
+
 ---
 
 ## 🗺️ Bản Đồ Tri Thức (Knowledge Architecture)

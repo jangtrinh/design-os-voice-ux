@@ -10,6 +10,8 @@
 
 🌐 **Languages**: **English (Primary)** | [Tiếng Việt (Bản tiếng Việt)](./vi/README.md)
 
+![DESIGN:OS Voice UX](./assets/images/voice-ux-hero.jpg)
+
 ---
 
 ## 🗺️ Knowledge Architecture
