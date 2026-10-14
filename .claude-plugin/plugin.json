@@ -1,0 +1,21 @@
+{
+  "name": "design-os-voice-ux",
+  "description": "Production engineering handbook, full-duplex barge-in state machines, sub-500ms latency budgets, and 6-dimension audit rubric for real-time voice AI agents.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jang Trinh",
+    "url": "https://github.com/jangtrinh"
+  },
+  "homepage": "https://jangtrinh.github.io/design-os-voice-ux/",
+  "repository": "https://github.com/jangtrinh/design-os-voice-ux",
+  "license": "MIT",
+  "keywords": [
+    "voice-ai",
+    "voice-ux",
+    "barge-in",
+    "full-duplex",
+    "latency-budget",
+    "ai-agents",
+    "design-os"
+  ]
+}

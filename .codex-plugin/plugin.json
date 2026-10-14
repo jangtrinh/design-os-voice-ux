@@ -1,0 +1,42 @@
+{
+  "name": "design-os-voice-ux",
+  "description": "Production engineering handbook, full-duplex barge-in state machines, sub-500ms latency budgets, and 6-dimension audit rubric for real-time voice AI agents.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jang Trinh",
+    "url": "https://github.com/jangtrinh"
+  },
+  "homepage": "https://jangtrinh.github.io/design-os-voice-ux/",
+  "repository": "https://github.com/jangtrinh/design-os-voice-ux",
+  "license": "MIT",
+  "keywords": [
+    "voice-ai",
+    "voice-ux",
+    "barge-in",
+    "full-duplex",
+    "latency-budget",
+    "ai-agents",
+    "design-os"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "DESIGN:OS Voice UX",
+    "shortDescription": "Production engineering handbook, full-duplex barge-in state machines, sub-500ms latency budgets, and 6-dimension audit rubric for real-time voice AI agents.",
+    "longDescription": "Design and audit voice AI experiences that handle interruptions gracefully, mask tool-call latency with natural earcons/fillers, and degrade cleanly across noisy mobile networks.",
+    "developerName": "DESIGN:OS",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://jangtrinh.github.io/design-os-voice-ux/",
+    "privacyPolicyURL": "https://github.com/jangtrinh/design-os-voice-ux/blob/main/PRIVACY.md",
+    "defaultPrompt": [
+      "Audit our WebRTC voice agent architecture against the 6-dimension Voice UX rubric (latency, barge-in FSM, turn-taking, and error recovery).",
+      "Design a full-duplex barge-in finite state machine with acoustic echo cancellation guards and <200ms TTS cut-off.",
+      "Create a tool-call latency choreography spec for a voice banking agent when downstream API calls take 800ms–2500ms."
+    ],
+    "brandColor": "#202020",
+    "logo": "./docs/images/cover.png"
+  }
+}

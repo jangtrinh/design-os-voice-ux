@@ -1,0 +1,20 @@
+{
+  "name": "design-os-voice-ux",
+  "interface": {
+    "displayName": "DESIGN:OS Voice UX"
+  },
+  "plugins": [
+    {
+      "name": "design-os-voice-ux",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

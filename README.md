@@ -1,159 +1,327 @@
-# DESIGN:OS Voice UX
+# DESIGN:OS Voice UX & AI Agent Architecture (`design-os-voice-ux`)
 
-> Production-ready Voice User Interface (VUI) & Conversational AI Knowledge Base, Interaction State Machines, Latency Budgets, and Audited Usability Testing Protocols.
-> Part of the [DESIGN:OS](https://github.com/jangtrinh) open-source ecosystem.
+**Production engineering handbook, full-duplex barge-in state machines, sub-500ms latency budgets, and 6-dimension audit rubric for real-time voice AI agents.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![Audit Status](https://img.shields.io/badge/Audit-Tier%201%20Production%20Ready-success.svg)](./04-AUDIT-REPORT.md)
-[![Language: English](https://img.shields.io/badge/Language-English%20(Primary)-brightgreen.svg)](./README.md)
-[![Language: Vietnamese](https://img.shields.io/badge/Language-Ti%E1%BA%BFng%20Vi%E1%BB%87t%20(Secondary)-orange.svg)](./vi/README.md)
+Design and audit voice AI experiences that handle interruptions gracefully, mask tool-call latency with natural earcons/fillers, and degrade cleanly across noisy mobile networks.
 
-🌐 **Languages**: **English (Primary)** | [Tiếng Việt (Bản tiếng Việt)](./vi/README.md)
+<p align="center">
+  <img src="docs/images/cover.png" alt="DESIGN:OS Voice UX — 2:1 Axonometric Technical Architecture" width="840">
+</p>
 
-![DESIGN:OS Voice UX](./assets/images/voice-ux-hero.jpg)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-202020?style=flat-square&labelColor=202020&color=444444" alt="MIT License"></a>
+  <img src="https://img.shields.io/badge/Claude_Code_%C2%B7_Codex_%C2%B7_Gemini_%C2%B7_Antigravity-skill-202020?style=flat-square&labelColor=202020&color=444444" alt="Compatible agents">
+  <a href="commands/doctor.md"><img src="https://img.shields.io/badge/diagnostics-%2Fdoctor-202020?style=flat-square&labelColor=202020&color=444444" alt="Doctor command"></a>
+  <a href="https://jangtrinh.github.io/design-os-voice-ux/"><img src="https://img.shields.io/badge/live_docs-GitHub_Pages-202020?style=flat-square&labelColor=202020&color=444444" alt="Live GitHub Pages"></a>
+  <a href="https://buymeacoffee.com/jangtrinh"><img src="https://img.shields.io/badge/Buy_Me_a_Coffee-FFDD00?style=flat-square&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee"></a>
+</p>
+
+<p align="center">
+  <a href="#quickstart">Quickstart</a> · <a href="#what-it-makes">What it makes</a> · <a href="#installation">Install</a> · <a href="#how-it-works">How it works</a> · <a href="#commands--diagnostics">Commands</a> · <a href="#quality-bar--limitations">Limits</a>
+</p>
 
 ---
 
-## 🗺️ Knowledge Architecture
+## Why this exists
 
-```mermaid
-graph TD
-    A["DESIGN:OS Voice UX"] --> B["01. Foundations"]
-    A --> C["02. Interaction Patterns"]
-    A --> D["03. Conversational Design System"]
-    A --> E["04. Benchmarks & Tooling"]
-    A --> F["05. 5-Persona Debate"]
-    A --> G["06. Checklists & Testing"]
-    A --> H["07. Production Evidence"]
+Most voice AI demos work in a quiet room when the user speaks in complete sentences and waits politely, then collapse in production when users interrupt (`barge-in`), pause mid-thought, or trigger slow tool calls. **`design-os-voice-ux`** codifies the systems engineering and interaction design required for sub-500ms full-duplex voice agents.
 
-    B --> B1["Mental Models & Affordance"]
-    B --> B2["Conversational Psychology"]
-    B --> B3["NN/g VUI Heuristics"]
-    B --> B4["Microphone SNR & Front-End"]
+| Dimension | Generic AI / Manual Workflow | DESIGN:OS Voice UX (`DESIGN:OS`) |
+| :--- | :--- | :--- |
+| **Turn-Taking & Barge-In** | Half-duplex walkie-talkie pipelines that talk over the user | Full-duplex FSM with VAD debounce and <200ms TTS cancellation |
+| **Latency Budgeting** | Unbounded 3-second silences while waiting for LLM + TTS | Stage-by-stage p50/p95 latency budgets (VAD + STT + LLM TTFT + TTS first byte < 500ms) |
+| **Tool-Call Handling** | Dead air while an external API executes | Tiered acoustic fillers, progress earcons, and async state confirmation |
+| **Modality Handoff** | Forcing voice to read out 16-digit URLs or tables | Multimodal voice + visual card synchronization for high-density data |
+| **Privacy & Telemetry** | Opaque cloud telemetry or unverified third-party APIs | **Zero telemetry** — 100% local execution ([`PRIVACY.md`](PRIVACY.md) audited) |
 
-    C --> C1["Turn-Taking & Barge-In"]
-    C --> C2["Error Recovery & Repair"]
-    C --> C3["Earcons & Audio Feedback"]
-    C --> C4["Multimodal Handshake"]
-    C --> C5["AEC & Echo Control"]
-    C --> C6["Opus & Jitter Resilience"]
-    C --> C7["Semantic VAD Endpointing"]
+---
 
-    D --> D1["Persona & Tone of Voice"]
-    D --> D2["Prompt & Dialog Engineering"]
-    D --> D3["Latency Budgets & Pacing"]
-    D --> D4["S2S Prosody & Expression"]
-    D --> D5["Industry Verticals: Health, Bank, Auto, Telco"]
+## Quickstart
 
-    E --> E1["Industry Benchmarks"]
-    E --> E2["Open Source Frameworks"]
+### 1. Install the plugin or CLI
 
-    F --> F1["Architect vs UX vs Security"]
+**In Claude Code:**
 
-    G --> G1["Design Review Checklist"]
-    G --> G2["Wizard of Oz Usability Protocol"]
+```text
+/plugin marketplace add jangtrinh/design-os-voice-ux
+/plugin install design-os-voice-ux@design-os-voice-ux
+```
 
-    H --> H1["Transcripts Comparison"]
-    H --> H2["Reference Architectures"]
-    H --> H3["CI/CD Test Vectors"]
-    H --> H4["Voice Quality Scorecard"]
+**Or from your terminal (Codex, Gemini CLI, Antigravity, OpenCode, or standalone CLI):**
+
+```bash
+git clone https://github.com/jangtrinh/design-os-voice-ux.git
+cd design-os-voice-ux
+python3 scripts/self_check.py
+```
+
+### 2. Ask in plain English
+
+Open your project in your AI coding agent and describe what you need:
+
+> "Audit our WebRTC voice agent architecture against the 6-dimension Voice UX rubric (latency, barge-in FSM, turn-taking, and error recovery)."
+
+> "Design a full-duplex barge-in finite state machine with acoustic echo cancellation guards and <200ms TTS cut-off."
+
+> "Create a tool-call latency choreography spec for a voice banking agent when downstream API calls take 800ms–2500ms."
+
+### 3. Verify your setup
+
+```bash
+python3 scripts/self_check.py
 ```
 
 ---
 
-## 📋 Audit Pack & Governance Documents
+## What it makes
 
-- **[`01-MANIFEST.md`](./01-MANIFEST.md)**: Inventory of all 26 core specifications and engineering artifacts with Purpose, Audience, Lifecycle Status, and Empirical Evidence.
-- **[`02-AUDIT-BRIEF.md`](./02-AUDIT-BRIEF.md)**: Operational context, reference voice architectures (WebRTC / Native S2S), and 5 fatal failure modes.
-- **[`03-AUDIT-RUBRIC.md`](./03-AUDIT-RUBRIC.md)**: 100-Point scoring rubric across 4 pillars and 6 non-negotiable Hard-Fail Gates.
-- **[`04-AUDIT-REPORT.md`](./04-AUDIT-REPORT.md)**: Official verification report (92/100 Points, Tier 1 Production Ready certification).
-- **[`CONTEXT.md`](./CONTEXT.md)**: Canonical domain glossary and standardized terminology (Canonical Terms vs Anti-terms).
+Every deliverable produced by `design-os-voice-ux` is backed by a deterministic verification gate rather than freehand AI guesswork.
 
----
+<p align="center">
+  <img src="docs/images/cover.png" alt="DESIGN:OS Voice UX Output Specimen" width="840"><br>
+  <sub>Prompt: <code>"Audit our WebRTC voice agent architecture against the 6-dimension Voice UX rubric (latency, barge-in FSM, turn-taking, and error recovery)."</code></sub>
+</p>
 
-## 📚 Core Specifications
-
-### [01. Foundations (VUI Cognitive Foundations)](./01-foundations/)
-- **[`mental-models-and-affordance.md`](./01-foundations/mental-models-and-affordance.md)**: Bridging Don Norman's *Gulf of Execution* in invisible interfaces. Acoustic signifiers, ephemeral audio dynamics, and mental model scaffolding.
-- **[`conversational-psychology.md`](./01-foundations/conversational-psychology.md)**: Grice's 4 Conversational Maxims, turn construction units, and Cowan's working memory capacity (4-chunk limit).
-- **[`vui-heuristics.md`](./01-foundations/vui-heuristics.md)**: Translating Nielsen Norman Group's (NN/g) 10 Usability Heuristics into audio-first conversational environments.
-- **[`microphone-snr-acoustic-front-end.md`](./01-foundations/microphone-snr-acoustic-front-end.md)**: Physical acoustics, microphone arrays, beamforming, AGC, noise suppression, far-field physics, and ITU-T P.863 (POLQA) standards.
+| Deliverable / Mode | Best for | Output Format | Verification Gate |
+| :--- | :--- | :--- | :--- |
+| **Full-Duplex Barge-In FSM** | Specifying exact state transitions across `LISTENING`, `THINKING`, `SPEAKING`, and `INTERRUPTED` | `State Machine Spec + Mermaid` | `Zero deadlocks or double-talk states` |
+| **Sub-500ms Latency Budget** | Allocating millisecond budgets across transport, VAD, ASR, LLM, and streaming TTS | `Latency Budget Table` | `p50 <= 500ms / p95 <= 900ms gate` |
+| **6-Dimension Voice UX Audit** | Scoring an existing voice agent across turn-taking, prosody, repair, and safety | `Scored Audit Report` | `6-dimension rubric verification` |
 
 ---
 
-### [02. Interaction Patterns (Conversational Mechanics & Deep Acoustics)](./02-interaction-patterns/)
-- **[`turn-taking-and-barge-in.md`](./02-interaction-patterns/turn-taking-and-barge-in.md)**: Natural interruption handling (<80ms acoustic onset), Semantic End-of-Turn prediction, state rollback, and Audible Boundary Truncation.
-- **[`error-recovery-and-repair.md`](./02-interaction-patterns/error-recovery-and-repair.md)**: Conversational repair architecture, 3-tier progressive re-prompting, and non-blaming error culture.
-- **[`audio-feedback-and-earcons.md`](./02-interaction-patterns/audio-feedback-and-earcons.md)**: Earcon acoustics, sonic branding, and frequency allocation across core assistant states (Listening, Thinking, Speaking).
-- **[`multimodal-handshake.md`](./02-interaction-patterns/multimodal-handshake.md)**: Voice + GUI orchestration, Hands-busy/Eyes-free contexts, and selective Visual Offloading.
-- **[`deep-acoustics/aec-echo-control.md`](./02-interaction-patterns/deep-acoustics/aec-echo-control.md)**: Acoustic Echo Cancellation (AEC), ERL/ERLE budgets, Double-Talk Detection (DTD), speakerphone coupling, and preventing false self-barge-ins.
-- **[`deep-acoustics/opus-jitter-resilience.md`](./02-interaction-patterns/deep-acoustics/opus-jitter-resilience.md)**: Opus codec (RFC 6716), in-band FEC, Packet Loss Concealment (PLC), DTX/CNG, and WebRTC NetEQ adaptive jitter buffers.
-- **[`deep-acoustics/semantic-vad-endpointing.md`](./02-interaction-patterns/deep-acoustics/semantic-vad-endpointing.md)**: Neural VAD (Silero v5), fundamental pitch contour ($F_0$) turn-yielding cues, and autoregressive syntactic turn closure.
+## Installation
+
+Choose the setup that matches your AI coding agent. Every option installs the same canonical skill (`skills/design-os-voice-ux/SKILL.md`) and `/doctor` diagnostic suite.
+
+### Claude Code
+
+Run these two commands inside Claude Code:
+
+```text
+/plugin marketplace add jangtrinh/design-os-voice-ux
+/plugin install design-os-voice-ux@design-os-voice-ux
+```
+
+### OpenAI Codex
+
+Install to your personal Codex skills directory:
+
+```bash
+git clone https://github.com/jangtrinh/design-os-voice-ux.git /tmp/design-os-voice-ux
+mkdir -p ~/.codex/skills/design-os-voice-ux ~/.codex/prompts
+cp -R /tmp/design-os-voice-ux/skills/design-os-voice-ux/* ~/.codex/skills/design-os-voice-ux/
+cp /tmp/design-os-voice-ux/prompts/doctor.md ~/.codex/prompts/design-os-voice-ux-doctor.md
+rm -rf /tmp/design-os-voice-ux
+```
+
+### Gemini CLI & Google Antigravity
+
+```bash
+git clone https://github.com/jangtrinh/design-os-voice-ux.git /tmp/design-os-voice-ux
+mkdir -p ~/.gemini/skills/design-os-voice-ux
+cp -R /tmp/design-os-voice-ux/skills/design-os-voice-ux/* ~/.gemini/skills/design-os-voice-ux/
+rm -rf /tmp/design-os-voice-ux
+```
+
+### OpenCode, Cursor, Windsurf & Other Agent Harnesses
+
+```bash
+git clone https://github.com/jangtrinh/design-os-voice-ux.git /tmp/design-os-voice-ux
+mkdir -p ~/.agents/skills/design-os-voice-ux
+cp -R /tmp/design-os-voice-ux/skills/design-os-voice-ux/* ~/.agents/skills/design-os-voice-ux/
+rm -rf /tmp/design-os-voice-ux
+```
+
+<details>
+<summary>Verify or uninstall</summary>
+
+**Verify installation:**
+
+```bash
+python3 scripts/self_check.py
+```
+
+Or run `/doctor` inside Claude Code / Codex to inspect installed skill paths, plugin manifests, and gate health.
+
+**Uninstall:**
+
+```bash
+rm -rf ~/.claude/skills/design-os-voice-ux ~/.codex/skills/design-os-voice-ux ~/.gemini/skills/design-os-voice-ux ~/.agents/skills/design-os-voice-ux
+```
+
+</details>
 
 ---
 
-### [03. Conversational Design System (Production Standards & Verticals)](./03-conversational-design-system/)
-- **[`persona-and-tone.md`](./03-conversational-design-system/persona-and-tone.md)**: 4-axis persona framework, avoiding the Uncanny Valley, mitigating the ELIZA effect, and functional empathy.
-- **[`prompt-and-dialog-engineering.md`](./03-conversational-design-system/prompt-and-dialog-engineering.md)**: Writing for the ear, Voice LLM System Prompt architecture, and SSML prosodic markers.
-- **[`latency-budgets.md`](./03-conversational-design-system/latency-budgets.md)**: Conversational latency budgeting (<400ms target), conversational acoustic fillers, and streaming playback pipelines.
-- **[`s2s-prosody-expression.md`](./03-conversational-design-system/s2s-prosody-expression.md)**: Speech-to-Speech (S2S) prosodic dimensions ($F_0$, tempo, energy), affective grounding vs toxic positivity, and paralinguistic backchannels.
-- **[`verticals/healthcare-hipaa.md`](./03-conversational-design-system/verticals/healthcare-hipaa.md)**: Healthcare clinical triage, HIPAA ePHI compliance, real-time PII redaction, Emergency Severity Index (ESI), and 911 red-flag escape hatches.
-- **[`verticals/banking-voice-biometrics.md`](./03-conversational-design-system/verticals/banking-voice-biometrics.md)**: Voice biometrics (ECAPA-TDNN), Presentation Attack Detection (PAD), deepfake anti-spoofing, and multi-tier step-up authentication.
-- **[`verticals/automotive-infotainment.md`](./03-conversational-design-system/verticals/automotive-infotainment.md)**: In-car voice UX, ISO 15005 dialogue management, NHTSA driver distraction limits, in-cabin noise profiles, and ADAS emergency preemption.
-- **[`verticals/telephony-sip-ivr.md`](./03-conversational-design-system/verticals/telephony-sip-ivr.md)**: Telephony SIP trunking (RFC 3261), G.711 $\leftrightarrow$ Opus transcoding, RFC 4733 DTMF tone fallback, and warm SIP REFER with encrypted UUI context.
+## Usage & Prompt Cookbook
+
+Once installed, `skills/design-os-voice-ux/SKILL.md` activates automatically when your prompt matches its domain triggers. Browse [`docs/cookbook.md`](docs/cookbook.md) for copy-paste prompt recipes.
+
+**Generate & Scaffold**
+
+```text
+"Audit our WebRTC voice agent architecture against the 6-dimension Voice UX rubric (latency, barge-in FSM, turn-taking, and error recovery)."
+```
+
+**Audit & Verify**
+
+```text
+"Design a full-duplex barge-in finite state machine with acoustic echo cancellation guards and <200ms TTS cut-off."
+```
+
+**Export & Automate**
+
+```text
+"Create a tool-call latency choreography spec for a voice banking agent when downstream API calls take 800ms–2500ms."
+```
 
 ---
 
-### [04. Benchmarks & Tooling (Empirical Field Research)](./04-benchmarks-and-case-studies/)
-- **[`industry-benchmarks.md`](./04-benchmarks-and-case-studies/industry-benchmarks.md)**: Technical and UX comparative breakdown of OpenAI Realtime Voice, Google Gemini Live, Apple Siri, Hume AI EVI, and Tesla/CarPlay VUI.
-- **[`open-source-repos-and-tools.md`](./04-benchmarks-and-case-studies/open-source-repos-and-tools.md)**: Architecture analysis of LiveKit Agents, Pipecat AI, Silero VAD, and Red Hat PatternFly Conversation Design.
+## Commands & Diagnostics
+
+| Command | Environment | What it does |
+| :--- | :--- | :--- |
+| `/doctor` | Claude Code / Codex | Read-only diagnostic check of installed skill paths, plugin manifests, and runtime prerequisites |
+| `python3 scripts/self_check.py` | Terminal / CI | Deterministic offline verification of manifests, skill contracts, and governance files |
+| `python3 scripts/self_check.py` | Terminal / CI | Verify Voice UX skill contracts, rubric references, and AI-Ready repository delivery files |
 
 ---
 
-### [05. 5-Persona Debate (Strategic Trade-offs)](./05-debate-and-tradeoffs/)
-- **[`5-persona-debate.md`](./05-debate-and-tradeoffs/5-persona-debate.md)**: 5-way debate between Architect, Security Engineer, Performance Specialist, UX Lead, and Devil's Advocate on speech-to-speech models, privacy, and voice anti-patterns.
+## How it works
+
+1. **Intent Routing** — Your AI agent matches your request against `skills/design-os-voice-ux/SKILL.md` frontmatter triggers.
+2. **Progressive Context Loading** — Only the entry-point `SKILL.md` router loads initially; detailed recipes and scripts load on demand.
+3. **Deterministic Execution** — Domain scripts and contracts execute locally with reproducible inputs and outputs.
+4. **Gate Verification** — `scripts/self_check.py` and domain verifiers (`python3 scripts/self_check.py`) validate the artifact before completion.
+5. **Zero-Telemetry Delivery** — Verified files are written directly to your workspace with zero external network calls.
+
+```text
+User Prompt / CLI Invocation
+            │
+            ▼
+┌───────────────────────────────────────────────┐
+│ skills/design-os-voice-ux/SKILL.md
+│ Progressive disclosure router & hard rules    │
+└───────────┬───────────────────────────────────┘
+            │ loads on demand
+            ▼
+┌───────────────────────────────────────────────┐
+│ python3 scripts/self_check.py
+│ Deterministic build & contract enforcement    │
+└───────────┬───────────────────────────────────┘
+            │ verifies
+            ▼
+┌───────────────────────────────────────────────┐
+│ python3 scripts/self_check.py + /doctor       │
+│ Zero-telemetry local verification gate        │
+└───────────────────────────────────────────────┘
+```
+
+### What loads when
+
+`design-os-voice-ux` uses progressive context disclosure so your agent's context window stays fast and focused:
+
+| File | Loaded when |
+| :--- | :--- |
+| `skills/design-os-voice-ux/SKILL.md` | Always (~100–150 lines) — routing rules, triggers, and execution workflow |
+| `docs/cookbook.md` | When selecting multi-step prompt recipes or domain patterns |
+| `commands/doctor.md` / `prompts/doctor.md` | Only when running `/doctor` diagnostics |
+| `llms.txt` | When indexed by AI answer engines, RAG pipelines, or repo crawlers |
 
 ---
 
-### [06. Checklists & Usability Testing (QA & Protocols)](./06-checklists-and-heuristics/)
-- **[`vui-design-checklist.md`](./06-checklists-and-heuristics/vui-design-checklist.md)**: 25-item production release acceptance checklist.
-- **[`usability-testing-protocol.md`](./06-checklists-and-heuristics/usability-testing-protocol.md)**: Wizard of Oz (WoZ) test protocol, 4-phase test script, metrics (TCR, CER, SAS), and automated CI/CD audio test suites (Auto-T1, Auto-T2, Auto-T3).
+## File structure
+
+```text
+design-os-voice-ux/
+├── .claude-plugin/
+│   ├── plugin.json                 # Claude Code plugin manifest
+│   └── marketplace.json            # Claude Code marketplace catalog
+├── .codex-plugin/
+│   └── plugin.json                 # OpenAI Codex plugin & interface manifest
+├── .agents/
+│   └── plugins/marketplace.json    # Cross-agent local plugin registry
+├── .factory-plugin/
+│   ├── plugin.json                 # Factory / Droid plugin manifest
+│   └── marketplace.json            # Factory marketplace metadata
+├── skills/
+│   └── design-os-voice-ux/
+│       └── SKILL.md                # Canonical agent skill entrypoint
+├── commands/
+│   └── doctor.md                   # /doctor diagnostic slash command
+├── prompts/
+│   └── doctor.md                   # Codex diagnostic prompt mirror
+├── scripts/
+│   └── self_check.py               # Deterministic repository & skill self-check
+├── docs/
+│   ├── cookbook.md                 # Copy-paste prompt recipes by job
+│   └── llms.txt                    # GEO / LLM discovery index
+├── PRIVACY.md                      # Zero-telemetry & local-first privacy commitment
+├── SECURITY.md                     # Vulnerability disclosure & security policy
+├── CONTRIBUTING.md                 # Contribution workflow & verification rules
+├── CODE_OF_CONDUCT.md              # Contributor Covenant code of conduct
+├── CHANGELOG.md                    # Release history
+├── llms.txt                        # Root LLM indexing manifest
+├── LICENSE                         # MIT License
+└── README.md
+```
 
 ---
 
-## 🛠️ Production Evidence & Engineering Artifacts
+## Quality bar & Limitations
 
-- **[`examples/good-vs-bad/transcripts-comparison.md`](./examples/good-vs-bad/transcripts-comparison.md)**: Side-by-side production transcripts with acoustic root causes for hesitation pauses, echo false barge-in, emotional misalignment, and warm SIP transfers.
-- **[`architectures/voice-reference-architectures.md`](./architectures/voice-reference-architectures.md)**: Complete topology blueprints for WebRTC Native S2S, Carrier SIP SBC Telephony, and Embedded Automotive In-Cabin Voice.
-- **[`test-vectors/audio-and-conversation-suites.yaml`](./test-vectors/audio-and-conversation-suites.yaml)**: Machine-readable test vectors defining acoustic impairments (`snr_db`, `rt60_ms`, `packet_loss_pct`) and dialog stress cases.
-- **[`benchmarks/voice-quality-scorecard.md`](./benchmarks/voice-quality-scorecard.md)**: Unified 6-layer quantitative evaluation rubric with 6 non-negotiable Hard-Fail Gates.
+### It's working if...
 
----
+- `python3 scripts/self_check.py` prints `ok: design-os-voice-ux self-check passed (design-os-voice-ux)` and exits `0`.
+- `python3 scripts/self_check.py` passes with zero contract or test regressions.
+- Your AI coding agent loads `skills/design-os-voice-ux/SKILL.md` automatically when given any prompt from [`docs/cookbook.md`](docs/cookbook.md).
+- Network traffic during execution remains zero (guaranteed by [`PRIVACY.md`](PRIVACY.md)).
 
-## 🎓 Voice UX Academy Curriculum
+### When not to use
 
-A structured, evidence-based micro-learning curriculum specified in [`curriculum/`](./curriculum/).
-
-The academy is designed around an Uxcel/Brilliant-inspired micro-learning architecture featuring two distinct modes:
-
-| Mode | Pedagogical Focus | Interaction Model |
-|---|---|---|
-| **📖 Learn Mode** | Guided exploration of acoustic mental models. | Interactive Graphic UI Visuals (Floor Timeline, Waveform Endpointing, Latency Waterfall, Barge-in States). |
-| **🎯 Test Mode** | Formative skill assessment without passive text. | Direct tactile challenges (Timeline Error Spotter, Waveform Boundary Setter, Pipeline Node Repair, Debounce Filter Tuning). |
+- Asynchronous voice-note transcription apps where real-time conversational turn-taking is not required.
+- Training raw acoustic speech-to-text (ASR) neural network weights from scratch.
+- Purely text-based chat interfaces with no audio/speech modality.
 
 ---
 
-## 🎯 VUI Maturity Levels
+## DESIGN:OS Ecosystem
 
-1. **Level 1 — Command & Control (Unidirectional Dispatch)**:
-   - Static, rigid trigger commands (*"Turn on lights"*, *"Set timer 5 minutes"*).
-   - Zero conversational context; no cross-turn memory.
-2. **Level 2 — Slot-Filling Dialogue (Form-Based)**:
-   - Decision-tree or static form-filling dialogue (e.g., origin → destination → departure date).
-   - Brittle error handling requiring exact keyword corrections.
-3. **Level 3 — Cascaded Conversational Agent (Sequential Multi-Turn)**:
-   - Cascaded STT → LLM → TTS architecture.
-   - Rich natural language understanding across multiple turns; however, latency is high (1–2s) and barge-in is clumsy.
-4. **Level 4 — Native Speech-to-Speech Agent (Real-Time Duplex)**:
-   - Continuous bidirectional audio stream (Full-Duplex) with sub-400ms latency.
-   - Semantic interruption handling, prosody awareness, and expressive vocal inflections.
+`design-os-voice-ux` is one of the 13 open-source engines in the **`DESIGN:OS`** ecosystem:
+
+| Engine | Live Docs | Repository | Layer |
+| :--- | :--- | :--- | :--- |
+| **DESIGN:OS CLI** | [jangtrinh.github.io/design-os](https://jangtrinh.github.io/design-os/) | [`jangtrinh/design-os`](https://github.com/jangtrinh/design-os) | `cli` |
+| **Knowledge Builder** | [jangtrinh.github.io/design-os-knowledge-builder](https://jangtrinh.github.io/design-os-knowledge-builder/) | [`jangtrinh/design-os-knowledge-builder`](https://github.com/jangtrinh/design-os-knowledge-builder) | `compiler` |
+| **Figma Plugin & CLI** | [jangtrinh.github.io/design-os-figma-plugin](https://jangtrinh.github.io/design-os-figma-plugin/) | [`jangtrinh/design-os-figma-plugin`](https://github.com/jangtrinh/design-os-figma-plugin) | `plugin` |
+| **SVG Animation Engine** | [jangtrinh.github.io/design-os-svg-animation](https://jangtrinh.github.io/design-os-svg-animation/) | [`jangtrinh/design-os-svg-animation`](https://github.com/jangtrinh/design-os-svg-animation) | `engine` |
+| **3D Blender Agent** | [jangtrinh.github.io/design-os-3d-blender](https://jangtrinh.github.io/design-os-3d-blender/) | [`jangtrinh/design-os-3d-blender`](https://github.com/jangtrinh/design-os-3d-blender) | `3d / cad` |
+| **OPAH ONE Drone** | [jangtrinh.github.io/design-os-drone-showcase](https://jangtrinh.github.io/design-os-drone-showcase/) | [`jangtrinh/design-os-drone-showcase`](https://github.com/jangtrinh/design-os-drone-showcase) | `hardware` |
+| **GitHub Pages Engine** | [jangtrinh.github.io/design-os-github-page](https://jangtrinh.github.io/design-os-github-page/) | [`jangtrinh/design-os-github-page`](https://github.com/jangtrinh/design-os-github-page) | `pages` |
+| **Apple Design OS** | [jangtrinh.github.io/design-os-apple](https://jangtrinh.github.io/design-os-apple/) | [`jangtrinh/design-os-apple`](https://github.com/jangtrinh/design-os-apple) | `swiftui` |
+| **Agent Teacher** | [jangtrinh.github.io/design-os-pedagogy](https://jangtrinh.github.io/design-os-pedagogy/) | [`jangtrinh/design-os-pedagogy`](https://github.com/jangtrinh/design-os-pedagogy) | `pedagogy` |
+| **Origami CAD** | [jangtrinh.github.io/design-os-origami](https://jangtrinh.github.io/design-os-origami/) | [`jangtrinh/design-os-origami`](https://github.com/jangtrinh/design-os-origami) | `packaging` |
+| **Voice UX Architecture** | [jangtrinh.github.io/design-os-voice-ux](https://jangtrinh.github.io/design-os-voice-ux/) | [`jangtrinh/design-os-voice-ux`](https://github.com/jangtrinh/design-os-voice-ux) | `voice-ai` |
+| **Code2Flow** | [jangtrinh.github.io/design-os-code2flow](https://jangtrinh.github.io/design-os-code2flow/) | [`jangtrinh/design-os-code2flow`](https://github.com/jangtrinh/design-os-code2flow) | `ast / audit` |
+| **Generative UI** | [jangtrinh.github.io/design-os-generative-ui](https://jangtrinh.github.io/design-os-generative-ui/) | [`jangtrinh/design-os-generative-ui`](https://github.com/jangtrinh/design-os-generative-ui) | `runtime` |
+
+---
+
+## Contributing, Governance & License
+
+- **Contributing**: See [`CONTRIBUTING.md`](CONTRIBUTING.md) for pull request guidelines and verification gates (`python3 scripts/self_check.py`).
+- **Code of Conduct**: Governed by [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+- **Security & Privacy**: Zero telemetry — see [`SECURITY.md`](SECURITY.md) and [`PRIVACY.md`](PRIVACY.md).
+- **Changelog & LLM Index**: Track releases in [`CHANGELOG.md`](CHANGELOG.md) and machine-readable index in [`llms.txt`](llms.txt).
+- **License**: [MIT](LICENSE) © [Jang Trinh](https://github.com/jangtrinh).
+
+---
+
+If `design-os-voice-ux` saves you time, a star on GitHub helps other engineers and AI agents find it.
+
+<p align="left">
+  <a href="https://buymeacoffee.com/jangtrinh">
+    <img src="https://img.shields.io/badge/Buy_Me_a_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee">
+  </a>
+</p>
