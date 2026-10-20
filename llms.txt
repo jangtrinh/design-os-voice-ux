@@ -1,6 +1,6 @@
 # design-os-voice-ux
 
-> Open-source Voice UX & AI Agent Architecture reference: full-duplex barge-in FSMs, sub-500ms latency budgets, tool-call filler choreography, and 6-dimension audit rubric.
+> Source-available Voice UX & AI Agent Architecture reference: full-duplex barge-in FSMs, sub-500ms latency budgets, tool-call filler choreography, and 6-dimension audit rubric.
 
 Production engineering handbook & interactive audit rubric for real-time voice AI agents.
 

@@ -4,7 +4,7 @@
 # jekyll-seo-tag emits <title>, <meta name="description">, Open Graph and JSON-LD;
 # jekyll-sitemap emits sitemap.xml for Google Search Console.
 title: design-os-voice-ux
-description: Open-source Voice UX & AI Agent Architecture reference: full-duplex barge-in FSMs, sub-500ms latency budgets, tool-call filler choreography, and 6-dimension audit rubric.
+description: Source-available Voice UX & AI Agent Architecture reference: full-duplex barge-in FSMs, sub-500ms latency budgets, tool-call filler choreography, and 6-dimension audit rubric.
 url: https://jangtrinh.github.io
 baseurl: /design-os-voice-ux
 lang: en
@@ -18,7 +18,7 @@ nav:                        # one entry per Markdown page under docs/, in readin
   - { title: Deep dive, url: /deep-dive.html }
 footer:
   - { title: GitHub, url: https://github.com/jangtrinh/design-os-voice-ux }
-  - { title: MIT, url: https://github.com/jangtrinh/design-os-voice-ux/blob/main/LICENSE }
+  - { title: PolyForm Shield 1.0.0, url: https://github.com/jangtrinh/design-os-voice-ux/blob/main/LICENSE }
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
